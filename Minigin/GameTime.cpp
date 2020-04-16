@@ -15,7 +15,7 @@ void GameTime::Init()
 	m_FPSTimer = 0.f;
 	m_FPSCount = 0;
 
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 24);
+	auto font = dae::ResourceManager::GetInstance().LoadFont("../Data/Lingua.otf", 24);
 
 	m_pGameObject = std::make_shared<GameObject>();
 

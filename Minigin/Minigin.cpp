@@ -63,7 +63,7 @@ void dae::Minigin::Run()
 {
 	if(!m_IsInitialized)
 		Initialize();
-
+	
 	{
 		auto& renderer = Renderer::GetInstance();
 		auto& sceneManager = SceneManager::GetInstance();
@@ -89,4 +89,9 @@ void dae::Minigin::Run()
 std::shared_ptr<InputManager> dae::Minigin::GetInputManager()
 {
 	return m_Input;
+}
+
+void dae::Minigin::GetWindowSize(int& width, int& height)
+{
+	SDL_GetWindowSize(m_Window, &width, &height);
 }

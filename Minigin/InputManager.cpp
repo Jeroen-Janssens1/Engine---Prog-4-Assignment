@@ -14,6 +14,8 @@ InputManager::InputManager()
 	// in case your controller uses different mappings
 	m_XButtons = new int[int(ControllerButton::StructSize)];
 	m_Commands.resize(int(ControllerButton::StructSize));
+	m_CommandUsesPressed.resize(int(ControllerButton::StructSize));
+	m_CommandWasPressed.resize(int(ControllerButton::StructSize));
 	m_XButtons[int(ControllerButton::ButtonA)] = XINPUT_GAMEPAD_A;
 	m_Commands[int(ControllerButton::ButtonA)] = std::make_unique<NullCommand>();
 
@@ -37,12 +39,12 @@ InputManager::InputManager()
 		if (XInputGetState(i, &m_CurrentState) == ERROR_SUCCESS)
 			m_ControllerId = i;
 	}
-
-	// Map the base commands to each button
-	//m_ButtonA = std::make_unique<FireCommand>();
-	//m_ButtonB = std::make_unique<JumpCommand>();
-	//m_ButtonX = std::make_unique<DuckCommand>();
-	//m_ButtonY = std::make_unique<FartCommand>();
+	// all commands are set to checking for held down mode instead of checking for singular press mode
+	for (size_t i{}; i < m_CommandUsesPressed.size(); i++)
+	{
+		m_CommandUsesPressed[i] = false;
+		m_CommandWasPressed[i] = false;
+	}
 }
 
 bool InputManager::ProcessInput()
@@ -66,28 +68,43 @@ bool InputManager::ProcessInput()
 	}
 
 	// controller input
-	XInputGetState(m_ControllerId, &m_CurrentState);
+	//XInputGetState(m_ControllerId, &m_CurrentState);
 
 	// Execute function based on button pressed
 	for (int i{}; i < m_Commands.size(); i++)
 	{
 		if (IsPressed(ControllerButton(i)))
+		{
 			keepPlaying = m_Commands[i]->Execute();
+		}
 		if (!keepPlaying)
 			return keepPlaying;
 	}
-	/*if (IsPressed(ControllerButton::ButtonA)) m_ButtonA->Execute();
-	if (IsPressed(ControllerButton::ButtonB)) m_ButtonB->Execute();
-	if (IsPressed(ControllerButton::ButtonX)) m_ButtonX->Execute();
-	if (IsPressed(ControllerButton::ButtonY)) m_ButtonY->Execute();*/
 
 	
 
 	return keepPlaying;
 }
 
-bool InputManager::IsPressed(ControllerButton button) const
+bool InputManager::IsPressed(ControllerButton button)
 {
-	return m_CurrentState.Gamepad.wButtons & m_XButtons[int(button)];
+	// First check if the button is in the Pressed checking mode.
+	// If it is, check if the button was already pressed last frame,
+	// if it was we didn't press it this frame so we return false.
+	bool isPressed = m_CurrentState.Gamepad.wButtons & m_XButtons[int(button)];
+	if (m_CommandUsesPressed[int(button)])
+	{
+		if (m_CommandWasPressed[int(button)])
+		{
+			m_CommandWasPressed[int(button)] = isPressed;
+			return false;
+		}
+
+		
+	}
+	m_CommandWasPressed[int(button)] = isPressed;
+	// If the button isn't in Pressed checking mode we just check if the button
+	// is held down or not
+	return isPressed;
 }
 
