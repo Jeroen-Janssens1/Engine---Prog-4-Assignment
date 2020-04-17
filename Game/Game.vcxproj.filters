@@ -18,9 +18,18 @@
     <ClInclude Include="InputCommands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Prefabs\PlayerPrefab.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefabs\PlayerPrefab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputCommands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

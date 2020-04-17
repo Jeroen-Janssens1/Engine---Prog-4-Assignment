@@ -10,7 +10,7 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
-	for (int i{}; i < m_Components.size(); i++)
+	for (size_t i{}; i < m_Components.size(); i++)
 	{
 		m_Components[i]->Update();
 	}
@@ -18,7 +18,7 @@ void GameObject::Update()
 
 void GameObject::Render() const
 {
-	for (int i{}; i < m_Components.size(); i++)
+	for (size_t i{}; i < m_Components.size(); i++)
 	{
 		m_Components[i]->Render();
 	}

@@ -11,7 +11,7 @@ public:
 	{
 		m_Service = &m_DefaultService;
 	}
-	static T& GetAudio() { return *m_Service; }
+	static T& GetService() {  return *m_Service; }
 	static void RegisterAudioService(T* service)
 	{
 		m_Service = (service == nullptr) ? &m_DefaultService : service;

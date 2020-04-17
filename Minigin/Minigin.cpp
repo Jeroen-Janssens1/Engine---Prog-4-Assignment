@@ -15,7 +15,7 @@
 #include "GameTime.h"
 #include "MiniginPCH.h"
 #include "Minigin.h"
-#include "SDL.h"
+#include "ServiceLocator.h"
 using namespace std;
 using namespace std::chrono;
 
@@ -44,9 +44,9 @@ void dae::Minigin::Initialize()
 	ResourceManager::GetInstance().Init("../Data/");
 	// create the GameTime singleton and init it
 	GameTime::GetInstance().Init();
-	m_Input.reset();
-	m_Input = std::make_shared<InputManager>();
-
+	
+	ServiceLocator<InputManager, InputManager>::Init();
+	
 	m_IsInitialized = true;
 }
 
@@ -73,7 +73,7 @@ void dae::Minigin::Run()
 		{
 			const auto currentTime = high_resolution_clock::now();
 			
-			doContinue = m_Input->ProcessInput();
+			doContinue = ServiceLocator<InputManager, InputManager>::GetService().ProcessInput();
 			GameTime::GetInstance().Update();
 			sceneManager.Update();
 			renderer.Render();
@@ -85,12 +85,6 @@ void dae::Minigin::Run()
 
 	Cleanup();
 }
-
-std::shared_ptr<InputManager> dae::Minigin::GetInputManager()
-{
-	return m_Input;
-}
-
 void dae::Minigin::GetWindowSize(int& width, int& height)
 {
 	SDL_GetWindowSize(m_Window, &width, &height);

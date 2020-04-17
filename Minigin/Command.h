@@ -3,9 +3,16 @@
 #include "ServiceLocator.h"
 class Command
 {
+protected:
+	void (*Function)();
+
 public:
 	virtual ~Command() = default;
 	virtual bool Execute() = 0;
+	virtual void SetFunction(void (*function)())
+	{
+		Function = function;
+	}
 };
 
 class NullCommand : public Command

@@ -22,6 +22,9 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{68608f2f-0782-4b08-89af-d05756028bbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{9cb2102c-4e3c-4d9e-82f7-01737576e872}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MiniginPCH.h">
@@ -84,6 +87,15 @@
     <ClInclude Include="TileComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="BoxColliderComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsObjectComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsEngine.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MiniginPCH.cpp">
@@ -136,6 +148,15 @@
     </ClCompile>
     <ClCompile Include="TileComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxColliderComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsObjectComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsEngine.cpp">
+      <Filter>Physics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,9 @@
 #pragma once
+#include <Windows.h>
 #include <XInput.h>
 #include "Singleton.h"
+#include <vector>
+#include <memory>
 class Command;
 enum class ControllerButton
 {
@@ -8,6 +11,10 @@ enum class ControllerButton
 	ButtonB,
 	ButtonX,
 	ButtonY,
+	DPadUp,
+	DPadDown,
+	DPadLeft,
+	DPadRight,
 	StructSize // THIS MUST ALWAYS BE THE LAST ENTRY IN THE STRUCT!
 };
 
@@ -24,6 +31,7 @@ public:
 		m_Commands[int(button)].reset();
 		m_Commands[int(button)] = std::make_unique<T>();
 		m_CommandUsesPressed[int(button)] = usesPressedCheck;
+
 	}
 private:
 	int m_ControllerId;

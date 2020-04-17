@@ -74,3 +74,8 @@ std::shared_ptr<GameObject>& GameTime::GetRenderingObject()
 {
 	return m_pGameObject;
 }
+
+float GameTime::GetElapsed()
+{
+	return m_DeltaTime;
+}

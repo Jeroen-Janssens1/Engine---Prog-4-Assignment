@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseComponent.h"
+#include <vector>
 	class Texture2D;
 	class GameObject
 	{

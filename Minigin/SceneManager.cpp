@@ -4,10 +4,7 @@
 
 void dae::SceneManager::Update()
 {
-	for(auto& scene : m_Scenes)
-	{
-		scene->Update();
-	}
+	m_ActiveScene->Update();
 }
 
 void dae::SceneManager::Render()
@@ -37,7 +34,7 @@ void dae::SceneManager::SetActiveScene(std::string& name)
 
 void dae::SceneManager::SetActiveScene(int index)
 {
-	if (index < m_Scenes.size())
+	if (size_t(index) < m_Scenes.size())
 		m_ActiveScene = m_Scenes[index];
 }
 

@@ -1,12 +1,13 @@
 #pragma once
 #include "Command.h"
 #include "SceneManager.h"
-
-class JumpCommand : public Command
+ ////////////////////////////////////
+// Only for debugging purposes
+class NextSceneCommand : public Command
 {
 private:
 	static int index;
-	void Jump()
+	void NextScene()
 	{
 		std::cout << "You jumped!" << std::endl;
 		//ServiceLocator::GetAudio().Playsound(0);
@@ -15,45 +16,37 @@ private:
 	}
 
 public:
-	bool Execute() override { Jump(); return true; }
+	bool Execute() override { NextScene(); return true; }
 };
-int JumpCommand::index = 0;
+ // Debugging commands end here
+//////////////////////////////////////
 
 class FireCommand : public Command
 {
-private:
-	void Fire()
-	{
-		std::cout << "You fired!" << std::endl;
-		//ServiceLocator::GetAudio().Playsound(1);
-	}
-
 public:
-	bool Execute() override { Fire(); return true; }
+	bool Execute() override { Function(); return true; }
 };
 
-class DuckCommand : public Command
+class MoveLeftCommand : public Command
 {
-private:
-	void Duck()
-	{
-		std::cout << "You ducked!" << std::endl;
-		//ServiceLocator::GetAudio().Playsound(2);
-	}
-
 public:
-	bool Execute() override { Duck(); return true; }
+	bool Execute() override { Function(); return true; }
 };
 
-class FartCommand : public Command
+class MoveRightCommand : public Command
 {
-private:
-	void Fart()
-	{
-		std::cout << "You farted!" << std::endl;
-		//ServiceLocator::GetAudio().Playsound(3);
-	}
-
 public:
-	bool Execute() override { Fart(); return true; }
+	bool Execute() override { Function(); return true; }
+};
+
+class MoveUpCommand : public Command
+{
+public:
+	bool Execute() override { Function(); return true; }
+};
+
+class MoveDownCommand : public Command
+{
+public:
+	bool Execute() override { Function(); return true; }
 };

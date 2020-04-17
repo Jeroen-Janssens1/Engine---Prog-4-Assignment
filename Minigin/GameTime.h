@@ -15,6 +15,8 @@ public:
 
 	std::shared_ptr<GameObject>& GetRenderingObject();
 
+	float GetElapsed();
+
 private:
 	friend class Singleton<GameTime>;
 	GameTime() = default;

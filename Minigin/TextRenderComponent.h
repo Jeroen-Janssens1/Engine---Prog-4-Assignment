@@ -4,7 +4,7 @@
 #include "MiniginPCH.h"
 #include "Font.h"
 
-class TextRenderComponent :
+class TextRenderComponent final:
 	public RenderComponent
 {
 public:

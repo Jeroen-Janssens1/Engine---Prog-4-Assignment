@@ -28,6 +28,18 @@ InputManager::InputManager()
 	m_XButtons[int(ControllerButton::ButtonY)] = XINPUT_GAMEPAD_Y;
 	m_Commands[int(ControllerButton::ButtonY)] = std::make_unique<NullCommand>();
 
+	m_XButtons[int(ControllerButton::DPadUp)] = XINPUT_GAMEPAD_DPAD_UP;
+	m_Commands[int(ControllerButton::DPadUp)] = std::make_unique<NullCommand>();
+
+	m_XButtons[int(ControllerButton::DPadDown)] = XINPUT_GAMEPAD_DPAD_DOWN;
+	m_Commands[int(ControllerButton::DPadDown)] = std::make_unique<NullCommand>();
+
+	m_XButtons[int(ControllerButton::DPadLeft)] = XINPUT_GAMEPAD_DPAD_LEFT;
+	m_Commands[int(ControllerButton::DPadLeft)] = std::make_unique<NullCommand>();
+
+	m_XButtons[int(ControllerButton::DPadRight)] = XINPUT_GAMEPAD_DPAD_RIGHT;
+	m_Commands[int(ControllerButton::DPadRight)] = std::make_unique<NullCommand>();
+
 	// Get first active controller on device and recover its state.
 	ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
 
@@ -71,7 +83,7 @@ bool InputManager::ProcessInput()
 	//XInputGetState(m_ControllerId, &m_CurrentState);
 
 	// Execute function based on button pressed
-	for (int i{}; i < m_Commands.size(); i++)
+	for (size_t i{}; i < m_Commands.size(); i++)
 	{
 		if (IsPressed(ControllerButton(i)))
 		{
@@ -92,6 +104,7 @@ bool InputManager::IsPressed(ControllerButton button)
 	// If it is, check if the button was already pressed last frame,
 	// if it was we didn't press it this frame so we return false.
 	bool isPressed = m_CurrentState.Gamepad.wButtons & m_XButtons[int(button)];
+
 	if (m_CommandUsesPressed[int(button)])
 	{
 		if (m_CommandWasPressed[int(button)])
@@ -108,3 +121,13 @@ bool InputManager::IsPressed(ControllerButton button)
 	return isPressed;
 }
 
+// for multiplayer
+/*
+Store the number of players somewhere.
+When playing single player, this is 1
+When player coop or versus, this can be any number (this specific game would set it to 2)
+Check if the playerIndx in IsPressed is within the amount of players.
+If it is, check if it is within the amount of controller states, if it is this player is using
+a controler, otherwise he is using the keyboard.
+Check for controller/keyboard input accordingly.
+*/
