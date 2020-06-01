@@ -87,9 +87,6 @@
     <ClInclude Include="TileComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="BoxColliderComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicsObjectComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -147,9 +144,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TileComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="BoxColliderComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsObjectComponent.cpp">

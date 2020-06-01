@@ -7,7 +7,7 @@ namespace dae
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
-		std::shared_ptr<Scene> CreateScene(const std::string& name, bool isTileMap = false, const std::string& levelDataPath = "", int windowWidth = -1, int windowHeight = -1);
+		Scene* CreateScene(const std::string& name, bool isTileMap = false, const std::string& levelDataPath = "", int windowWidth = -1, int windowHeight = -1);
 
 		void SetActiveScene(std::string& name);
 		void SetActiveScene(int index);
@@ -18,7 +18,7 @@ namespace dae
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
-		std::vector<std::shared_ptr<Scene>> m_Scenes;
-		std::shared_ptr<Scene> m_ActiveScene;
+		std::vector<Scene*> m_Scenes;
+		Scene* m_ActiveScene;
 	};
 }

@@ -25,26 +25,18 @@ void PlayerPrefab::Initialize(std::shared_ptr<GameObject> thisSmart)
 
 	m_Transform->SetPosition(50, 50, 0);
 	renderComponent->SetTexture("Resources/levelSprites.png");
+
+	InputManager& input = ServiceLocator<InputManager, InputManager>::GetService();
+
+	input.MapCommand<MoveRightCommand>(ControllerButton::DPadRight);
+	input.MapCommand<MoveLeftCommand>(ControllerButton::DPadLeft);
+	input.MapCommand<MoveUpCommand>(ControllerButton::DPadUp);
+	input.MapCommand<MoveDownCommand>(ControllerButton::DPadDown);
 }
 
 void PlayerPrefab::Update()
 {
-	if (m_Input.IsPressed(ControllerButton::DPadDown))
-	{
-		MoveDown();
-	}
-	if (m_Input.IsPressed(ControllerButton::DPadUp))
-	{
-		MoveUp();
-	}
-	if (m_Input.IsPressed(ControllerButton::DPadLeft))
-	{
-		MoveLeft();
-	}
-	if (m_Input.IsPressed(ControllerButton::DPadRight))
-	{
-		MoveRight();
-	}
+
 }
 
 void PlayerPrefab::MoveUp()

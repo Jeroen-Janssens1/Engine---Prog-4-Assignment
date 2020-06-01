@@ -12,9 +12,9 @@ void dae::SceneManager::Render()
 	m_ActiveScene->Render();
 }
 
-std::shared_ptr<dae::Scene> dae::SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight)
+dae::Scene* dae::SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight)
 {
-	const auto scene = std::shared_ptr<Scene>(new Scene(name, isTileMap, levelDataPath, windowWidth, windowHeight));
+	const auto scene = new Scene(name, isTileMap, levelDataPath, windowWidth, windowHeight);
 	m_Scenes.push_back(scene);
 	return scene;
 }
@@ -22,7 +22,7 @@ std::shared_ptr<dae::Scene> dae::SceneManager::CreateScene(const std::string& na
 void dae::SceneManager::SetActiveScene(std::string& name)
 {
 	// TODO: Set as active scene
-	for (std::shared_ptr<Scene>& scene : m_Scenes)
+	for (auto scene : m_Scenes)
 	{
 		if (scene->GetName() == name)
 		{

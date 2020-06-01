@@ -4,7 +4,7 @@ class GameObject;
 class BaseComponent
 {
 public:
-	BaseComponent(std::shared_ptr<GameObject>& pOwner);
+	BaseComponent(GameObject* pOwner);
 	virtual ~BaseComponent() = default;
 	
 	virtual void Update()=0;
@@ -12,6 +12,6 @@ public:
 	
 
 private:
-	std::weak_ptr<GameObject> m_pOwner;
+	GameObject* m_pOwner;
 };
 

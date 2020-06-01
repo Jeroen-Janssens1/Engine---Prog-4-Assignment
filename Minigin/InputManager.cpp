@@ -17,28 +17,28 @@ InputManager::InputManager()
 	m_CommandUsesPressed.resize(int(ControllerButton::StructSize));
 	m_CommandWasPressed.resize(int(ControllerButton::StructSize));
 	m_XButtons[int(ControllerButton::ButtonA)] = XINPUT_GAMEPAD_A;
-	m_Commands[int(ControllerButton::ButtonA)] = std::make_unique<NullCommand>();
+	m_Commands[int(ControllerButton::ButtonA)] = new NullCommand();
 
 	m_XButtons[int(ControllerButton::ButtonB)] = XINPUT_GAMEPAD_B;
-	m_Commands[int(ControllerButton::ButtonB)] = std::make_unique<NullCommand>();
+	m_Commands[int(ControllerButton::ButtonB)] = new NullCommand();
 
 	m_XButtons[int(ControllerButton::ButtonX)] = XINPUT_GAMEPAD_X;
-	m_Commands[int(ControllerButton::ButtonX)] = std::make_unique<NullCommand>();
+	m_Commands[int(ControllerButton::ButtonX)] = new NullCommand();
 
 	m_XButtons[int(ControllerButton::ButtonY)] = XINPUT_GAMEPAD_Y;
-	m_Commands[int(ControllerButton::ButtonY)] = std::make_unique<NullCommand>();
+	m_Commands[int(ControllerButton::ButtonY)] = new NullCommand();
 
 	m_XButtons[int(ControllerButton::DPadUp)] = XINPUT_GAMEPAD_DPAD_UP;
-	m_Commands[int(ControllerButton::DPadUp)] = std::make_unique<NullCommand>();
+	m_Commands[int(ControllerButton::DPadUp)] = new NullCommand();
 
 	m_XButtons[int(ControllerButton::DPadDown)] = XINPUT_GAMEPAD_DPAD_DOWN;
-	m_Commands[int(ControllerButton::DPadDown)] = std::make_unique<NullCommand>();
+	m_Commands[int(ControllerButton::DPadDown)] = new NullCommand();
 
 	m_XButtons[int(ControllerButton::DPadLeft)] = XINPUT_GAMEPAD_DPAD_LEFT;
-	m_Commands[int(ControllerButton::DPadLeft)] = std::make_unique<NullCommand>();
+	m_Commands[int(ControllerButton::DPadLeft)] = new NullCommand();
 
 	m_XButtons[int(ControllerButton::DPadRight)] = XINPUT_GAMEPAD_DPAD_RIGHT;
-	m_Commands[int(ControllerButton::DPadRight)] = std::make_unique<NullCommand>();
+	m_Commands[int(ControllerButton::DPadRight)] = new NullCommand();
 
 	// Get first active controller on device and recover its state.
 	ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
@@ -80,8 +80,6 @@ bool InputManager::ProcessInput()
 	}
 
 	// controller input
-	//XInputGetState(m_ControllerId, &m_CurrentState);
-
 	// Execute function based on button pressed
 	for (size_t i{}; i < m_Commands.size(); i++)
 	{

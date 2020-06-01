@@ -69,7 +69,7 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 			int xPos = tileTypes[tileId].xPos;
 			int yPos = tileTypes[tileId].yPos;
 			std::shared_ptr<BaseComponent> addComponent;
-			auto go = std::make_shared<GameObject>();
+			auto go = new GameObject();
 			std::shared_ptr<TransformComponent> transformComponent = std::make_shared<TransformComponent>(TransformComponent{ go });
 			addComponent = std::static_pointer_cast<BaseComponent>(transformComponent);
 			go->AddComponent(addComponent);

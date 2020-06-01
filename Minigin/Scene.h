@@ -30,9 +30,9 @@ namespace dae
 {
 	class Scene
 	{
-		friend std::shared_ptr<Scene> SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight);
+		friend Scene* SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight);
 	public:
-		void Add(const std::shared_ptr<GameObject>& object);
+		void Add(const GameObject* pObject);
 
 		void Update();
 		void Render() const;
@@ -48,8 +48,8 @@ namespace dae
 		explicit Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight);
 
 		std::string m_Name;
-		std::vector < std::shared_ptr<GameObject>> m_Objects{};
-		std::vector<std::weak_ptr<TileComponent>> m_TileMap;
+		std::vector <GameObject*> m_Objects{};
+		std::vector<TileComponent*> m_TileMap;
 		int m_CellWidth;
 		int m_CellHeight;
 		int m_NrCols;

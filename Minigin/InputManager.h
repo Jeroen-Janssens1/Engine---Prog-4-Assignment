@@ -25,13 +25,11 @@ public:
 	~InputManager();
 	bool ProcessInput();
 	bool IsPressed(ControllerButton button);
-	template<typename T>
-	void MapCommand(ControllerButton button, bool usesPressedCheck = false)
+	void MapCommand(ControllerButton button, Command* command, bool usesPressedCheck = false)
 	{
-		m_Commands[int(button)].reset();
-		m_Commands[int(button)] = std::make_unique<T>();
+		delete m_Commands[int(button)];
+		m_Commands[int(button)] = command;
 		m_CommandUsesPressed[int(button)] = usesPressedCheck;
-
 	}
 private:
 	int m_ControllerId;
@@ -41,6 +39,6 @@ private:
 	std::vector<bool> m_CommandWasPressed;
 
 	// all commands for our buttons will be stored in here
-	std::vector < std::unique_ptr<Command>> m_Commands;
+	std::vector <Command*> m_Commands;
 	std::vector<bool> m_CommandUsesPressed;
 };

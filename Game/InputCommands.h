@@ -1,6 +1,7 @@
 #pragma once
 #include "Command.h"
 #include "SceneManager.h"
+#include "Prefabs\PlayerPrefab.h"
  ////////////////////////////////////
 // Only for debugging purposes
 class NextSceneCommand : public Command
@@ -9,7 +10,6 @@ private:
 	static int index;
 	void NextScene()
 	{
-		std::cout << "You jumped!" << std::endl;
 		//ServiceLocator::GetAudio().Playsound(0);
 		dae::SceneManager::GetInstance().SetActiveScene(index);
 		index = (index + 1) % dae::SceneManager::GetInstance().GetAmountOfScenes();
@@ -30,23 +30,47 @@ public:
 class MoveLeftCommand : public Command
 {
 public:
-	bool Execute() override { Function(); return true; }
+	MoveLeftCommand(std::shared_ptr<PlayerPrefab>& pPlayer)
+	{
+		m_pPlayer = pPlayer;
+	}
+	bool Execute() override { m_pPlayer.lock()->MoveLeft(); return true; }
+private:
+	std::weak_ptr<PlayerPrefab> m_pPlayer;
 };
 
 class MoveRightCommand : public Command
 {
 public:
-	bool Execute() override { Function(); return true; }
+	MoveRightCommand(std::shared_ptr<PlayerPrefab>& pPlayer)
+	{
+		m_pPlayer = pPlayer;
+	}
+	bool Execute() override { m_pPlayer.lock()->MoveRight(); return true; }
+private:
+	std::weak_ptr<PlayerPrefab> m_pPlayer;
 };
 
 class MoveUpCommand : public Command
 {
 public:
-	bool Execute() override { Function(); return true; }
+	MoveUpCommand(std::shared_ptr<PlayerPrefab>& pPlayer)
+	{
+		m_pPlayer = pPlayer;
+	}
+	bool Execute() override { m_pPlayer.lock()->MoveUp(); return true; }
+private:
+	std::weak_ptr<PlayerPrefab> m_pPlayer;
 };
 
 class MoveDownCommand : public Command
 {
 public:
-	bool Execute() override { Function(); return true; }
+	MoveDownCommand(std::shared_ptr<PlayerPrefab>& pPlayer)
+	{
+		m_pPlayer = pPlayer;
+	}
+	bool Execute() override { m_pPlayer.lock()->MoveDown(); return true; }
+private:
+	std::weak_ptr<PlayerPrefab> m_pPlayer;
 };
