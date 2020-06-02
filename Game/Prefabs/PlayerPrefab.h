@@ -1,5 +1,6 @@
 #pragma once
 #include "InputManager.h"
+#include "GameTime.h"
 #include "GameObject.h"
 #include <memory>
 #include "Command.h"
@@ -11,7 +12,7 @@ public:
 	PlayerPrefab();
 	~PlayerPrefab() = default;
 	
-	void Initialize(std::shared_ptr<GameObject> thisSmart);
+	void Initialize();
 	void Update() override;
 
 
@@ -22,6 +23,7 @@ public:
 	void MoveLeft();
 
 private:
-	std::shared_ptr<TransformComponent> m_Transform;
+	TransformComponent* m_Transform;
 	InputManager& m_Input;
+	GameTime& m_GameTime;
 };

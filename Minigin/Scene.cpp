@@ -4,6 +4,7 @@
 #include "BinaryReader.h"
 #include "RenderComponent.h"
 #include "TransformComponent.h"
+#include "GameTime.h"
 
 using namespace dae;
 
@@ -68,20 +69,16 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 			// add the tilecomponent to the tilemap
 			int xPos = tileTypes[tileId].xPos;
 			int yPos = tileTypes[tileId].yPos;
-			std::shared_ptr<BaseComponent> addComponent;
 			auto go = new GameObject();
-			std::shared_ptr<TransformComponent> transformComponent = std::make_shared<TransformComponent>(TransformComponent{ go });
-			addComponent = std::static_pointer_cast<BaseComponent>(transformComponent);
-			go->AddComponent(addComponent);
+			TransformComponent* transformComponent = new TransformComponent{ go };
+			go->AddComponent(transformComponent);
 			m_TileWidth = float(windowWidth) / m_NrCols;
 			m_TileHeight = float(windowHeight) / m_NrRows;
-			std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>(RenderComponent{
-				go, transformComponent, m_TileWidth, m_TileHeight, true, 10, 10, m_CellWidth, m_CellHeight, xPos, yPos });
-			addComponent = std::static_pointer_cast<BaseComponent>(renderComponent);
-			go->AddComponent(addComponent);
-			std::shared_ptr<TileComponent> tileComponent = std::make_shared<TileComponent>(TileComponent(xPos, yPos, renderComponent, transformComponent, go, tileSheetPath));
-			addComponent = std::static_pointer_cast<BaseComponent>(tileComponent);
-			go->AddComponent(addComponent);
+			RenderComponent* renderComponent = new RenderComponent{
+				go, transformComponent, m_TileWidth, m_TileHeight, true, 10, 10, m_CellWidth, m_CellHeight, xPos, yPos };
+			go->AddComponent(renderComponent);
+			TileComponent* tileComponent = new TileComponent(xPos, yPos, renderComponent, transformComponent, go, tileSheetPath);
+			go->AddComponent(tileComponent);
 
 			Add(go);
 			m_TileMap[i] = tileComponent;
@@ -114,12 +111,26 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 
 }
 
-Scene::~Scene() = default;
-
-void Scene::Add(const std::shared_ptr<GameObject>& object)
+Scene::~Scene()
 {
-	m_Objects.push_back(std::shared_ptr<GameObject>());
-	m_Objects[m_Objects.size()-1] = object;
+	/*for (int i{}; i < m_TileMap.size(); i++)
+	{
+		delete m_TileMap[i];
+		m_TileMap[i] = nullptr;
+	}*/
+	//m_TileMap.clear();
+	for (int i{}; i < m_Objects.size(); i++)
+	{
+		if (m_Objects[i] != ServiceLocator<GameTime, GameTime>::GetService().GetRenderingObject())
+			delete m_Objects[i];
+		m_Objects[i] = nullptr;
+	}
+	m_Objects.clear();
+}
+
+void Scene::Add(GameObject* object)
+{
+	m_Objects.push_back(object);
 }
 
 void Scene::Update()

@@ -6,6 +6,12 @@
 InputManager::~InputManager()
 {
 	delete[] m_XButtons;
+	for (int i{}; i < m_Commands.size(); i++)
+	{
+		delete m_Commands[i];
+		m_Commands[i] = nullptr;
+	}
+	m_Commands.clear();
 }
 
 InputManager::InputManager()
@@ -57,6 +63,13 @@ InputManager::InputManager()
 		m_CommandUsesPressed[i] = false;
 		m_CommandWasPressed[i] = false;
 	}
+}
+
+void InputManager::MapCommand(ControllerButton button, Command* command, bool usesPressedCheck)
+{
+	delete m_Commands[int(button)];
+	m_Commands[int(button)] = command;
+	m_CommandUsesPressed[int(button)] = usesPressedCheck;
 }
 
 bool InputManager::ProcessInput()

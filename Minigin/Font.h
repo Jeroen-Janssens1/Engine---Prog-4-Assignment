@@ -13,6 +13,8 @@ namespace dae
 		explicit Font(const std::string& fullPath, unsigned int size);
 		~Font();
 
+		void GetFileName(std::string& fileName) const;
+
 		Font(const Font &) = delete;
 		Font(Font &&) = delete;
 		Font & operator= (const Font &) = delete;
@@ -20,5 +22,6 @@ namespace dae
 	private:
 		_TTF_Font* m_Font;
 		unsigned int m_Size;
+		const std::string m_FileName;
 	};
 }

@@ -5,6 +5,11 @@
 
 GameObject::~GameObject()
 {
+	for (int i{}; i < m_Components.size(); i++)
+	{
+		delete m_Components[i];
+		m_Components[i] = nullptr;
+	}
 	m_Components.clear();
 }
 
@@ -24,7 +29,7 @@ void GameObject::Render() const
 	}
 }
 
-void GameObject::AddComponent(std::shared_ptr<BaseComponent>& component)
+void GameObject::AddComponent(BaseComponent* pComponent)
 {
-	m_Components.push_back(component);
+	m_Components.push_back(pComponent);
 }

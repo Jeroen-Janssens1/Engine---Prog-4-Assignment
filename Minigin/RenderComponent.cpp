@@ -4,7 +4,7 @@
 #include "ResourceManager.h"
 #include "TransformComponent.h"
 
-RenderComponent::RenderComponent(std::shared_ptr<GameObject>& pOwner, std::shared_ptr<TransformComponent>& pTransform,
+RenderComponent::RenderComponent(GameObject* pOwner, TransformComponent* pTransform,
 	float width, float height, bool isSpriteSheet,
 	int nrCols, int nrRows, int cellWidth, int cellHeight, int xPos, int yPos)
 	:BaseComponent{pOwner}
@@ -32,14 +32,14 @@ void RenderComponent::Render() const
 {
 	if (m_IsSpriteSheet)
 	{
-		dae::Renderer::GetInstance().RenderTexture(*m_Texture, m_pTransformParent.lock()->GetPosition().x, m_pTransformParent.lock()->GetPosition().y,
+		ServiceLocator<dae::Renderer, dae::Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y,
 			m_XPos, m_YPos, m_CellWidth, m_CellHeight, m_Width, m_Height);
 		return;
 	}
-	dae::Renderer::GetInstance().RenderTexture(*m_Texture, m_pTransformParent.lock()->GetPosition().x, m_pTransformParent.lock()->GetPosition().y);
+	ServiceLocator<dae::Renderer, dae::Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y);
 }
 
 void RenderComponent::SetTexture(const std::string& filename)
 {
-	m_Texture = dae::ResourceManager::GetInstance().LoadTexture(filename);
+	m_Texture = ServiceLocator<dae::ResourceManager, dae::ResourceManager>::GetService().LoadTexture(filename);
 }

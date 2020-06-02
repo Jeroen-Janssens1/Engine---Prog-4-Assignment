@@ -38,14 +38,15 @@ void dae::Minigin::Initialize()
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
-
-	Renderer::GetInstance().Init(m_Window);
-	// tell the resource manager where he can find the game data
-	ResourceManager::GetInstance().Init("../Data/");
-	// create the GameTime singleton and init it
-	GameTime::GetInstance().Init();
-	
+	// init all services
+	ServiceLocator<Renderer, Renderer>::Init();
+	ServiceLocator<Renderer, Renderer>::GetService().Init(m_Window);
 	ServiceLocator<InputManager, InputManager>::Init();
+	ServiceLocator<ResourceManager, ResourceManager>::Init();
+	ServiceLocator<SceneManager, SceneManager>::Init();
+	ServiceLocator<ResourceManager, ResourceManager>::GetService().Init("../Data/");
+	ServiceLocator<GameTime, GameTime>::Init();
+	ServiceLocator<GameTime, GameTime>::GetService().Init();
 	
 	m_IsInitialized = true;
 }
@@ -53,7 +54,7 @@ void dae::Minigin::Initialize()
 void dae::Minigin::Cleanup()
 {
 	
-	Renderer::GetInstance().Destroy();
+	ServiceLocator<Renderer, Renderer>::GetService().Destroy();
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;
 	SDL_Quit();
@@ -65,8 +66,9 @@ void dae::Minigin::Run()
 		Initialize();
 	
 	{
-		auto& renderer = Renderer::GetInstance();
-		auto& sceneManager = SceneManager::GetInstance();
+		auto& renderer = ServiceLocator<Renderer, Renderer>::GetService();
+		auto& sceneManager = ServiceLocator<SceneManager, SceneManager>::GetService();
+		auto& gameTime = ServiceLocator<GameTime, GameTime>::GetService();
 
 		bool doContinue = true;
 		while (doContinue)
@@ -74,7 +76,7 @@ void dae::Minigin::Run()
 			const auto currentTime = high_resolution_clock::now();
 			
 			doContinue = ServiceLocator<InputManager, InputManager>::GetService().ProcessInput();
-			GameTime::GetInstance().Update();
+			gameTime.Update();
 			sceneManager.Update();
 			renderer.Render();
 			

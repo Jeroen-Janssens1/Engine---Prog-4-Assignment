@@ -4,7 +4,13 @@
 #include "TransformComponent.h"
 #include "TextRenderComponent.h"
 #include "GameObject.h"
+#include "ServiceLocator.h"
 
+
+GameTime::~GameTime()
+{
+	delete m_pGameObject;
+}
 
 void GameTime::Init()
 {
@@ -15,18 +21,15 @@ void GameTime::Init()
 	m_FPSTimer = 0.f;
 	m_FPSCount = 0;
 
-	auto font = dae::ResourceManager::GetInstance().LoadFont("../Data/Lingua.otf", 24);
+	auto font = ServiceLocator<dae::ResourceManager, dae::ResourceManager>::GetService().LoadFont("../Data/Lingua.otf", 24);
 
-	m_pGameObject = std::make_shared<GameObject>();
+	m_pGameObject = new GameObject();
 
-	auto transformComponent = std::make_shared<TransformComponent>(TransformComponent{ m_pGameObject });
-	auto addComponent = std::static_pointer_cast<BaseComponent>(transformComponent);
-	m_pGameObject->AddComponent(addComponent);
+	auto transformComponent = new TransformComponent{ m_pGameObject };
+	m_pGameObject->AddComponent(transformComponent);
 
-	m_pTextRenderer = std::make_shared<TextRenderComponent>
-		(TextRenderComponent{ m_pGameObject, transformComponent, "0 FPS", font });
-	addComponent = std::static_pointer_cast<BaseComponent>(m_pTextRenderer);
-	m_pGameObject->AddComponent(addComponent);
+	m_pTextRenderer = new TextRenderComponent(m_pGameObject, transformComponent, "0 FPS", font);
+	m_pGameObject->AddComponent(m_pTextRenderer);
 
 	transformComponent->SetPosition(0, 0, 0);
 }
@@ -70,7 +73,7 @@ void GameTime::Reset()
 	m_FPSCount = 0;
 }
 
-std::shared_ptr<GameObject>& GameTime::GetRenderingObject()
+GameObject* GameTime::GetRenderingObject()
 {
 	return m_pGameObject;
 }

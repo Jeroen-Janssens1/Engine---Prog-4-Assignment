@@ -8,7 +8,7 @@
 		virtual void Update();
 		virtual void Render() const;
 
-		void AddComponent(std::shared_ptr<BaseComponent>& component);
+		void AddComponent(BaseComponent* pComponent);
 
 		GameObject() = default;
 		virtual ~GameObject();
@@ -18,5 +18,5 @@
 		GameObject& operator=(GameObject&& other) = delete;
 
 	private:
-		std::vector<std::shared_ptr<BaseComponent>> m_Components;
+		std::vector<BaseComponent*> m_Components;
 	};

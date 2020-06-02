@@ -11,8 +11,8 @@ private:
 	void NextScene()
 	{
 		//ServiceLocator::GetAudio().Playsound(0);
-		dae::SceneManager::GetInstance().SetActiveScene(index);
-		index = (index + 1) % dae::SceneManager::GetInstance().GetAmountOfScenes();
+		ServiceLocator<dae::SceneManager, dae::SceneManager>::GetService().SetActiveScene(index);
+		index = (index + 1) % ServiceLocator<dae::SceneManager, dae::SceneManager>::GetService().GetAmountOfScenes();
 	}
 
 public:
@@ -30,47 +30,47 @@ public:
 class MoveLeftCommand : public Command
 {
 public:
-	MoveLeftCommand(std::shared_ptr<PlayerPrefab>& pPlayer)
+	MoveLeftCommand(PlayerPrefab* pPlayer)
 	{
 		m_pPlayer = pPlayer;
 	}
-	bool Execute() override { m_pPlayer.lock()->MoveLeft(); return true; }
+	bool Execute() override { m_pPlayer->MoveLeft(); return true; }
 private:
-	std::weak_ptr<PlayerPrefab> m_pPlayer;
+	PlayerPrefab* m_pPlayer;
 };
 
 class MoveRightCommand : public Command
 {
 public:
-	MoveRightCommand(std::shared_ptr<PlayerPrefab>& pPlayer)
+	MoveRightCommand(PlayerPrefab* pPlayer)
 	{
 		m_pPlayer = pPlayer;
 	}
-	bool Execute() override { m_pPlayer.lock()->MoveRight(); return true; }
+	bool Execute() override { m_pPlayer->MoveRight(); return true; }
 private:
-	std::weak_ptr<PlayerPrefab> m_pPlayer;
+	PlayerPrefab* m_pPlayer;
 };
 
 class MoveUpCommand : public Command
 {
 public:
-	MoveUpCommand(std::shared_ptr<PlayerPrefab>& pPlayer)
+	MoveUpCommand(PlayerPrefab* pPlayer)
 	{
 		m_pPlayer = pPlayer;
 	}
-	bool Execute() override { m_pPlayer.lock()->MoveUp(); return true; }
+	bool Execute() override { m_pPlayer->MoveUp(); return true; }
 private:
-	std::weak_ptr<PlayerPrefab> m_pPlayer;
+	PlayerPrefab* m_pPlayer;
 };
 
 class MoveDownCommand : public Command
 {
 public:
-	MoveDownCommand(std::shared_ptr<PlayerPrefab>& pPlayer)
+	MoveDownCommand(PlayerPrefab* pPlayer)
 	{
 		m_pPlayer = pPlayer;
 	}
-	bool Execute() override { m_pPlayer.lock()->MoveDown(); return true; }
+	bool Execute() override { m_pPlayer->MoveDown(); return true; }
 private:
-	std::weak_ptr<PlayerPrefab> m_pPlayer;
+	PlayerPrefab* m_pPlayer;
 };

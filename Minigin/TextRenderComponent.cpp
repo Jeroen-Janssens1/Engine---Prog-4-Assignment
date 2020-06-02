@@ -9,13 +9,18 @@
 #include "TransformComponent.h"
 
 
-TextRenderComponent::TextRenderComponent(std::shared_ptr<GameObject>& pOwner, std::shared_ptr<TransformComponent>& pTransform, const std::string& text, const std::shared_ptr<dae::Font>& font)
+TextRenderComponent::TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, dae::Font* font)
 	:RenderComponent{pOwner, pTransform}
 	,m_Text{text}
 	,m_Font{font}
 	,m_NeedsUpdate{true}
 {
 	
+}
+
+TextRenderComponent::~TextRenderComponent()
+{
+	delete m_Texture;
 }
 
 void TextRenderComponent::Update()
@@ -28,13 +33,23 @@ void TextRenderComponent::Update()
 		{
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
 		}
-		auto texture = SDL_CreateTextureFromSurface(dae::Renderer::GetInstance().GetSDLRenderer(), surf);
+		auto texture = SDL_CreateTextureFromSurface(ServiceLocator<dae::Renderer, dae::Renderer>::GetService().GetSDLRenderer(), surf);
 		if (texture == nullptr)
 		{
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 		}
 		SDL_FreeSurface(surf);
-		m_Texture = std::make_shared<dae::Texture2D>(texture);
+		if (m_Texture != nullptr)
+		{
+			delete m_Texture;
+			m_Texture = nullptr;
+		}
+		if (m_Texture)
+		{
+			delete m_Texture;
+			m_Texture = nullptr;
+		}
+		m_Texture = new dae::Texture2D(texture, "");
 		m_NeedsUpdate = false;
 	}
 }
@@ -43,8 +58,8 @@ void TextRenderComponent::Render() const
 {
 	if (m_Texture != nullptr)
 	{
-		const auto pos = m_pTransformParent.lock()->GetPosition();
-		dae::Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
+		const auto pos = m_pTransformParent->GetPosition();
+		ServiceLocator<dae::Renderer, dae::Renderer>::GetService().RenderTexture(*m_Texture, pos.x, pos.y);
 	}
 }
 

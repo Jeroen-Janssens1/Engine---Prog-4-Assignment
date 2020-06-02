@@ -8,8 +8,8 @@ class TextRenderComponent final:
 	public RenderComponent
 {
 public:
-	TextRenderComponent(std::shared_ptr<GameObject>& pOwner, std::shared_ptr<TransformComponent>& pTransform, const std::string& text, const std::shared_ptr<dae::Font>& font);
-	~TextRenderComponent() = default;
+	TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, dae::Font* font);
+	virtual ~TextRenderComponent();
 
 	void Update() override;
 	void Render() const override;
@@ -20,6 +20,6 @@ public:
 protected:
 	bool m_NeedsUpdate;
 	std::string m_Text;
-	std::shared_ptr<dae::Font> m_Font;
+	dae::Font* m_Font;
 
 };

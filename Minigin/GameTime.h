@@ -3,24 +3,23 @@
 #include <chrono>
 class GameObject;
 class TextRenderComponent;
-class GameTime final : public dae::Singleton<GameTime>
+class GameTime final
 {
 public:
 #define TimePoint std::chrono::steady_clock::time_point
+	GameTime() = default;
+	~GameTime();
 
 	void Init();
 	void Update();
 	void Render();
 	void Reset();
 
-	std::shared_ptr<GameObject>& GetRenderingObject();
+	GameObject* GetRenderingObject();
 
 	float GetElapsed();
 
 private:
-	friend class Singleton<GameTime>;
-	GameTime() = default;
-
 	float m_DeltaTime;
 	TimePoint m_PrevTime;
 	TimePoint m_CurTime;
@@ -28,8 +27,8 @@ private:
 	float m_FPSTimer;
 	int m_FPSCount;
 
-	std::shared_ptr<GameObject> m_pGameObject;
+	GameObject* m_pGameObject;
 
-	std::shared_ptr<TextRenderComponent> m_pTextRenderer;
+	TextRenderComponent* m_pTextRenderer;
 };
 

@@ -3,6 +3,8 @@
 #include <SDL.h>
 #include "SceneManager.h"
 #include "Texture2D.h"
+#include "ServiceLocator.h"
+
 
 void dae::Renderer::Init(SDL_Window * window)
 {
@@ -17,7 +19,7 @@ void dae::Renderer::Render() const
 {
 	SDL_RenderClear(m_Renderer);
 
-	SceneManager::GetInstance().Render();
+	ServiceLocator<SceneManager, SceneManager>::GetService().Render();
 	
 	SDL_RenderPresent(m_Renderer);
 }

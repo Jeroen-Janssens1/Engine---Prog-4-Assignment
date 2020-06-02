@@ -10,9 +10,11 @@ namespace dae
 	/**
 	 * Simple RAII wrapper for the SDL renderer
 	 */
-	class Renderer final : public Singleton<Renderer>
+	class Renderer final
 	{
 	public:
+		Renderer() = default;
+		~Renderer() = default;
 		void Init(SDL_Window* window);
 		void Render() const;
 		void Destroy();

@@ -25,12 +25,7 @@ public:
 	~InputManager();
 	bool ProcessInput();
 	bool IsPressed(ControllerButton button);
-	void MapCommand(ControllerButton button, Command* command, bool usesPressedCheck = false)
-	{
-		delete m_Commands[int(button)];
-		m_Commands[int(button)] = command;
-		m_CommandUsesPressed[int(button)] = usesPressedCheck;
-	}
+	void MapCommand(ControllerButton button, Command* command, bool usesPressedCheck = false);
 private:
 	int m_ControllerId;
 	int* m_XButtons;

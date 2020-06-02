@@ -15,24 +15,14 @@ struct TileType
 	bool passableRight;
 };
 
-
-// Tile has to be a component
-// you add it to a gameobject!
-//struct Tile
-//{
-//	int xPos;
-//	int yPos;
-//	RenderComponent* renderer;
-//	TransformComponent* transform;
-//};
-
 namespace dae
 {
 	class Scene
 	{
 		friend Scene* SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight);
 	public:
-		void Add(const GameObject* pObject);
+
+		void Add(GameObject* pObject);
 
 		void Update();
 		void Render() const;

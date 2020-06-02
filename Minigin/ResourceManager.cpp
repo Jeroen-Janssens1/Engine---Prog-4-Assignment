@@ -8,6 +8,23 @@
 #include "Texture2D.h"
 #include "Font.h"
 
+dae::ResourceManager::~ResourceManager()
+{
+	for (int i{}; i < m_Textures.size(); i++)
+	{
+		delete m_Textures[i];
+		m_Textures[i] = nullptr;
+	}
+	m_Textures.clear();
+
+	for (int i{}; i < m_Fonts.size(); i++)
+	{
+		delete m_Fonts[i];
+		m_Fonts[i] = nullptr;
+	}
+	m_Fonts.clear();
+}
+
 void dae::ResourceManager::Init(const std::string& dataPath)
 {
 	m_DataPath = dataPath;
@@ -30,18 +47,42 @@ void dae::ResourceManager::Init(const std::string& dataPath)
 	}
 }
 
-std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::string& file) const
+dae::Texture2D* dae::ResourceManager::LoadTexture(const std::string& file)
 {
 	const auto fullPath = file;
-	auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.c_str());
+
+	// don't load new resources if they already exist
+	std::string fileName{};
+	for (auto texture : m_Textures)
+	{
+		texture->GetFileName(fileName);
+		if (fileName == file)
+		{
+			return texture;
+		}
+	}
+
+	auto texture = IMG_LoadTexture(ServiceLocator<dae::Renderer, dae::Renderer>::GetService().GetSDLRenderer(), fullPath.c_str());
 	if (texture == nullptr) 
 	{
 		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
 	}
-	return std::make_shared<Texture2D>(texture);
+
+	m_Textures.push_back(new Texture2D(texture, file));
+	return m_Textures.back();
 }
 
-std::shared_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& file, unsigned int size) const
+dae::Font* dae::ResourceManager::LoadFont(const std::string& file, unsigned int size)
 {
-	return std::make_shared<Font>(file, size);
+	std::string fileName{};
+	for (auto font : m_Fonts)
+	{
+		font->GetFileName(fileName);
+		if (fileName == file)
+		{
+			return font;
+		}
+	}
+	m_Fonts.push_back(new Font(file, size));
+	return m_Fonts.back();
 }

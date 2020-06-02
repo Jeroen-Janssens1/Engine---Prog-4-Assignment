@@ -8,7 +8,8 @@
 class TransformComponent final : public BaseComponent
 {
 public:
-	TransformComponent(std::shared_ptr<GameObject>& pOwner, float x = 0.f, float y = 0.f, float z = 0.f);
+	TransformComponent(GameObject* pOwner, float x = 0.f, float y = 0.f, float z = 0.f);
+	virtual ~TransformComponent() = default;
 	const glm::vec3& GetPosition() const { return m_Position; }
 	void SetPosition(float x, float y, float z);
 

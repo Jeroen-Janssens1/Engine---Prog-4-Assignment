@@ -12,6 +12,17 @@ void dae::SceneManager::Render()
 	m_ActiveScene->Render();
 }
 
+dae::SceneManager::~SceneManager()
+{
+	m_ActiveScene = nullptr;
+	for (int i{}; i < m_Scenes.size(); i++)
+	{
+		delete m_Scenes[i];
+		m_Scenes[i] = nullptr;
+	}
+	m_Scenes.clear();
+}
+
 dae::Scene* dae::SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight)
 {
 	const auto scene = new Scene(name, isTileMap, levelDataPath, windowWidth, windowHeight);
