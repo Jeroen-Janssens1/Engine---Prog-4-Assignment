@@ -5,7 +5,7 @@
 
 GameObject::~GameObject()
 {
-	for (int i{}; i < m_Components.size(); i++)
+	for (size_t i{}; i < m_Components.size(); i++)
 	{
 		delete m_Components[i];
 		m_Components[i] = nullptr;

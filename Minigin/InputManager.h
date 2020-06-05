@@ -1,7 +1,6 @@
 #pragma once
 #include <Windows.h>
 #include <XInput.h>
-#include "Singleton.h"
 #include <vector>
 #include <memory>
 class Command;

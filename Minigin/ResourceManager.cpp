@@ -10,14 +10,14 @@
 
 dae::ResourceManager::~ResourceManager()
 {
-	for (int i{}; i < m_Textures.size(); i++)
+	for (size_t i{}; i < m_Textures.size(); i++)
 	{
 		delete m_Textures[i];
 		m_Textures[i] = nullptr;
 	}
 	m_Textures.clear();
 
-	for (int i{}; i < m_Fonts.size(); i++)
+	for (size_t i{}; i < m_Fonts.size(); i++)
 	{
 		delete m_Fonts[i];
 		m_Fonts[i] = nullptr;

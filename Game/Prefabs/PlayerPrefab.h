@@ -4,7 +4,11 @@
 #include "GameObject.h"
 #include <memory>
 #include "Command.h"
+#include "box2d\b2_math.h"
+
+class b2World;
 class TransformComponent;
+class Box2DComponent;
 class PlayerPrefab final :
 	public GameObject
 {
@@ -12,7 +16,7 @@ public:
 	PlayerPrefab();
 	~PlayerPrefab() = default;
 	
-	void Initialize();
+	void Initialize(b2World* pPhysicsWorld);
 	void Update() override;
 
 
@@ -26,4 +30,9 @@ private:
 	TransformComponent* m_Transform;
 	InputManager& m_Input;
 	GameTime& m_GameTime;
+	Box2DComponent* m_pBox2D;
+
+	b2Vec2 m_Vel;
+
+	const float m_Speed = 300.f;
 };

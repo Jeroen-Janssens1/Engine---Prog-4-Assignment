@@ -48,6 +48,10 @@ void dae::Minigin::Initialize()
 	ServiceLocator<GameTime, GameTime>::Init();
 	ServiceLocator<GameTime, GameTime>::GetService().Init();
 	
+	// Init the physics engine
+
+
+
 	m_IsInitialized = true;
 }
 

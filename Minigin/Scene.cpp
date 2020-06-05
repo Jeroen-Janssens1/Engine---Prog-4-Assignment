@@ -5,6 +5,7 @@
 #include "RenderComponent.h"
 #include "TransformComponent.h"
 #include "GameTime.h"
+#include "Box2DComponent.h"
 
 using namespace dae;
 
@@ -12,6 +13,11 @@ unsigned int Scene::m_IdCounter = 0;
 
 Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight) : m_Name(name)
 {
+	// Set up the physics for this scene
+	b2Vec2 gravity(0.0f, 10.0f);
+	m_pPhysicsWorld = new b2World(gravity);
+
+
 	if (!isTileMap)
 		return;
 	// construct tile based info for this scene (tileMap vector) using the file
@@ -37,6 +43,9 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 		{
 			// Sprite Sheet data
 			binReader.Read<int>(tileTypes[i].tileId);
+			if (tileTypes[i].tileId == 0)
+				continue;
+
 			binReader.Read<int>(tileTypes[i].xPos);
 			binReader.Read<int>(tileTypes[i].yPos);
 
@@ -51,12 +60,15 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 			}
 		}
 
-		m_TileMap.resize(m_NrCols * m_NrRows);
+		//m_TileMap.resize(m_NrCols * m_NrRows);
 
-		for (size_t i{}; i < m_TileMap.size(); i++)
+		for (size_t i{}; i < m_NrCols * m_NrRows; i++)
 		{
 			int tileId;
 			binReader.Read<int>(tileId);
+			// if tile id = 0 it means there is no tile in this 'slot' of the map, thus we can just skip and read the next tileId straight away
+			if (tileId == 0)
+				continue;
 
 			// use tileId to create a tile of the correct type
 			// at this position in the tile map
@@ -77,11 +89,13 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 			RenderComponent* renderComponent = new RenderComponent{
 				go, transformComponent, m_TileWidth, m_TileHeight, true, 10, 10, m_CellWidth, m_CellHeight, xPos, yPos };
 			go->AddComponent(renderComponent);
-			TileComponent* tileComponent = new TileComponent(xPos, yPos, renderComponent, transformComponent, go, tileSheetPath);
-			go->AddComponent(tileComponent);
+			renderComponent->SetTexture(tileSheetPath);
+			//TileComponent* tileComponent = new TileComponent(xPos, yPos, go);
+			//go->AddComponent(tileComponent);
+
 
 			Add(go);
-			m_TileMap[i] = tileComponent;
+			//m_TileMap[i] = tileComponent;
 			// 5x6 map
 			// if i = 5, row = 1
 			// take i/nrCols and ground it
@@ -100,32 +114,27 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 			transformComponent->SetPosition(x, y, z);
 
 
-			// All of the collision data will be held by the
-			// collision and physics object components
-			// which currently aren't added yet!
+			// Add The Physics Data
+			if (tileTypes[tileId].usesPhysics)
+			{
+				auto collider = new Box2DComponent(go, transformComponent, m_pPhysicsWorld, m_TileWidth, m_TileHeight);
+				go->AddComponent(collider);
+			}
 		}
 	}
-
-	
-
-
 }
 
 Scene::~Scene()
 {
-	/*for (int i{}; i < m_TileMap.size(); i++)
-	{
-		delete m_TileMap[i];
-		m_TileMap[i] = nullptr;
-	}*/
-	//m_TileMap.clear();
-	for (int i{}; i < m_Objects.size(); i++)
+	for (size_t i{}; i < m_Objects.size(); i++)
 	{
 		if (m_Objects[i] != ServiceLocator<GameTime, GameTime>::GetService().GetRenderingObject())
 			delete m_Objects[i];
 		m_Objects[i] = nullptr;
 	}
 	m_Objects.clear();
+	m_TileMap.clear();
+	delete m_pPhysicsWorld;
 }
 
 void Scene::Add(GameObject* object)
@@ -135,6 +144,13 @@ void Scene::Add(GameObject* object)
 
 void Scene::Update()
 {
+	float timeStep = 1.f / 60.f;
+	int32 velocityIterations = 6;
+	int32 positionIterations = 2;
+	// update physics
+	m_pPhysicsWorld->Step(timeStep, velocityIterations,
+		positionIterations);
+
 	for(auto& object : m_Objects)
 	{
 		object->Update();
@@ -152,5 +168,10 @@ void Scene::Render() const
 std::string& dae::Scene::GetName()
 {
 	return m_Name;
+}
+
+b2World* dae::Scene::GetPhysicsWorld()
+{
+	return m_pPhysicsWorld;
 }
 

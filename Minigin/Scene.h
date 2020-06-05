@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "TileComponent.h"
 
+
+class b2World;
 struct TileType
 {
 	int tileId;
@@ -27,6 +29,7 @@ namespace dae
 		void Update();
 		void Render() const;
 		std::string& GetName();
+		b2World* GetPhysicsWorld();
 
 		~Scene();
 		Scene(const Scene& other) = delete;
@@ -37,6 +40,8 @@ namespace dae
 	private: 
 		explicit Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight);
 
+		b2World* m_pPhysicsWorld;
+		
 		std::string m_Name;
 		std::vector <GameObject*> m_Objects{};
 		std::vector<TileComponent*> m_TileMap;

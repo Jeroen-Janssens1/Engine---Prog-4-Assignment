@@ -15,7 +15,7 @@ void dae::SceneManager::Render()
 dae::SceneManager::~SceneManager()
 {
 	m_ActiveScene = nullptr;
-	for (int i{}; i < m_Scenes.size(); i++)
+	for (size_t i{}; i < m_Scenes.size(); i++)
 	{
 		delete m_Scenes[i];
 		m_Scenes[i] = nullptr;

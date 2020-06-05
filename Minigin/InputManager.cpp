@@ -6,7 +6,7 @@
 InputManager::~InputManager()
 {
 	delete[] m_XButtons;
-	for (int i{}; i < m_Commands.size(); i++)
+	for (size_t i{}; i < m_Commands.size(); i++)
 	{
 		delete m_Commands[i];
 		m_Commands[i] = nullptr;

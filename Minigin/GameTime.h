@@ -1,5 +1,4 @@
 #pragma once
-#include "Singleton.h"
 #include <chrono>
 class GameObject;
 class TextRenderComponent;

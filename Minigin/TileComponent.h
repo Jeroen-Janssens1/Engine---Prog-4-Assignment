@@ -8,8 +8,8 @@ class TileComponent final :
 {
 
 public:
-	TileComponent(int xPos, int yPos, RenderComponent* rendererReference, TransformComponent* transformReference,
-		GameObject* pOwner, const std::string& texturePath);
+	TileComponent(int xPos, int yPos,
+		GameObject* pOwner);
 	virtual ~TileComponent() = default;
 
 	void Update() override;
@@ -19,8 +19,6 @@ public:
 	int GetYPos();
 
 private:
-	RenderComponent* m_RendererReference;
-	TransformComponent* m_TransformReference;
 	int m_XPos;
 	int m_YPos;
 };

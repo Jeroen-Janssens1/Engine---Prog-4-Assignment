@@ -15,6 +15,9 @@ public:
 	void Update() override;
 	void Render() const override;
 
+	float GetWidth() const { return m_Width; }
+	float GetHeight() const { return m_Height; }
+
 	void SetTexture(const std::string& filename);
 
 protected:
