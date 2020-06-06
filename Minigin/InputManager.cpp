@@ -12,10 +12,24 @@ InputManager::~InputManager()
 		m_Commands[i] = nullptr;
 	}
 	m_Commands.clear();
+	for (size_t i{}; i < m_KbCommands.size(); i++)
+	{
+		delete m_KbCommands[i];
+		m_KbCommands[i] = nullptr;
+	}
 }
 
 InputManager::InputManager()
 {
+	// Set up the keyboard input
+	// take into account all VK code possibilities
+	m_KbCommands.resize(255, nullptr);
+	for (size_t i{}; i < m_KbCommands.size(); i++)
+		m_KbCommands[i] = new NullCommand();
+	m_KbCommandUsesPressed.resize(255, false);
+	m_KbCommandWasPressed.resize(255, false);
+
+	// Set up the controller input
 	// This array is used so that you can map your physical buttons to different XInput buttons
 	// in case your controller uses different mappings
 	m_XButtons = new int[int(ControllerButton::StructSize)];
@@ -46,6 +60,24 @@ InputManager::InputManager()
 	m_XButtons[int(ControllerButton::DPadRight)] = XINPUT_GAMEPAD_DPAD_RIGHT;
 	m_Commands[int(ControllerButton::DPadRight)] = new NullCommand();
 
+	m_XButtons[int(ControllerButton::Start)] = XINPUT_GAMEPAD_START;
+	m_Commands[int(ControllerButton::Start)] = new NullCommand();
+
+	m_XButtons[int(ControllerButton::ShoulderL)] = XINPUT_GAMEPAD_LEFT_SHOULDER;
+	m_Commands[int(ControllerButton::ShoulderL)] = new NullCommand();
+
+	m_XButtons[int(ControllerButton::ShoulderR)] = XINPUT_GAMEPAD_RIGHT_SHOULDER;
+	m_Commands[int(ControllerButton::ShoulderR)] = new NullCommand();
+
+	m_XButtons[int(ControllerButton::StickL)] = XINPUT_GAMEPAD_LEFT_THUMB;
+	m_Commands[int(ControllerButton::StickL)] = new NullCommand();
+
+	m_XButtons[int(ControllerButton::StickR)] = XINPUT_GAMEPAD_RIGHT_THUMB;
+	m_Commands[int(ControllerButton::StickR)] = new NullCommand();
+
+	m_XButtons[int(ControllerButton::Back)] = XINPUT_GAMEPAD_BACK;
+	m_Commands[int(ControllerButton::Back)] = new NullCommand();
+
 	// Get first active controller on device and recover its state.
 	ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
 
@@ -67,9 +99,37 @@ InputManager::InputManager()
 
 void InputManager::MapCommand(ControllerButton button, Command* command, bool usesPressedCheck)
 {
+	auto it = std::find(m_Commands.cbegin(), m_Commands.cend(), command);
+	// can't map an already existing command to the same button, instead make a new allocation of an identical command!
+	if (it != m_Commands.cend())
+		return;
+
+	it = std::find(m_KbCommands.cbegin(), m_KbCommands.cend(), command);
+	if (it != m_KbCommands.cend())
+		return;
+
+	// actual mapping code
 	delete m_Commands[int(button)];
 	m_Commands[int(button)] = command;
 	m_CommandUsesPressed[int(button)] = usesPressedCheck;
+}
+
+
+void InputManager::MapCommand(int keyboardCode, Command* command, bool usesPressedCheck)
+{
+	auto it = std::find(m_Commands.cbegin(), m_Commands.cend(), command);
+	// can't map an already existing command to the same button, instead make a new allocation of an identical command!
+	if (it != m_Commands.cend())
+		return;
+
+	it = std::find(m_KbCommands.cbegin(), m_KbCommands.cend(), command);
+	if (it != m_KbCommands.cend())
+		return;
+
+	// actual mapping code
+	delete m_KbCommands[keyboardCode];
+	m_KbCommands[keyboardCode] = command;
+	m_KbCommandUsesPressed[keyboardCode] = usesPressedCheck;
 }
 
 bool InputManager::ProcessInput()
@@ -103,6 +163,16 @@ bool InputManager::ProcessInput()
 		if (!keepPlaying)
 			return keepPlaying;
 	}
+	// keyboard input
+	for (size_t i{}; i < m_KbCommands.size(); i++)
+	{
+		if (IsPressed(int(i)))
+		{
+			keepPlaying = m_KbCommands[i]->Execute();
+		}
+		if (!keepPlaying)
+			return keepPlaying;
+	}
 
 	
 
@@ -127,6 +197,27 @@ bool InputManager::IsPressed(ControllerButton button)
 		
 	}
 	m_CommandWasPressed[int(button)] = isPressed;
+	// If the button isn't in Pressed checking mode we just check if the button
+	// is held down or not
+	return isPressed;
+}
+
+bool InputManager::IsPressed(int keyboardCode)
+{
+	// check keyboard input using GetKeyState
+	bool isPressed = (GetKeyState(keyboardCode) & 0x8000);
+
+	if (m_KbCommandUsesPressed[keyboardCode])
+	{
+		if (m_KbCommandWasPressed[keyboardCode])
+		{
+			m_KbCommandWasPressed[keyboardCode] = isPressed;
+			return false;
+		}
+
+
+	}
+	m_KbCommandWasPressed[keyboardCode] = isPressed;
 	// If the button isn't in Pressed checking mode we just check if the button
 	// is held down or not
 	return isPressed;

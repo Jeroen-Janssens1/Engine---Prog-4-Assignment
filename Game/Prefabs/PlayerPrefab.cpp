@@ -28,22 +28,26 @@ void PlayerPrefab::Initialize(b2World* pPhysicsWorld)
 	m_Transform->SetPosition(50, 50, 0);
 	renderComponent->SetTexture("Resources/levelSprites.png");
 
-	m_pBox2D = new Box2DComponent(this, m_Transform, pPhysicsWorld, renderComponent->GetWidth(), renderComponent->GetHeight(), 0.3f, 100.f, true);
+	m_pBox2D = new Box2DComponent(this, m_Transform, pPhysicsWorld, renderComponent->GetWidth(), renderComponent->GetHeight(), 0.0f, 1.f, true);
 	AddComponent(m_pBox2D);
 
+	// Controller Input
 	m_Input.MapCommand(ControllerButton::DPadRight, new MoveRightCommand(this));
 	m_Input.MapCommand(ControllerButton::DPadLeft, new MoveLeftCommand(this));
 	m_Input.MapCommand(ControllerButton::DPadUp, new MoveUpCommand(this));
-	m_Input.MapCommand(ControllerButton::DPadDown, new MoveDownCommand(this));
+
+	// Keyboard Input
+	m_Input.MapCommand('D', new MoveRightCommand(this));
+	m_Input.MapCommand('A', new MoveLeftCommand(this));
+	m_Input.MapCommand(' ', new MoveUpCommand(this));
 }
 
 void PlayerPrefab::Update()
 {
 	GameObject::Update();
-	if (m_Vel.LengthSquared() > pow(m_Speed, 2.f))
+	if (m_Vel.x > m_Speed)
 	{
-		m_Vel.Normalize();
-		m_Vel *= m_Speed;
+		m_Vel.x = m_Speed;
 	}
 
 	// apply gravity
@@ -63,7 +67,7 @@ void PlayerPrefab::MoveUp()
 	b2Vec2 curVel;
 	m_pBox2D->GetVelocity(curVel);
 	if(curVel.y > 0)
-		m_pBox2D->ApplyForce(b2Vec2(0.f, -100000));
+		m_pBox2D->ApplyForce(b2Vec2(0.f, -200));
 	//m_Vel.y += -m_Speed * m_GameTime.GetElapsed();
 	/*m_Transform->SetPosition(m_Transform->GetPosition().x, m_Transform->GetPosition().y - (30* m_GameTime.GetElapsed()),
 		m_Transform->GetPosition().z);*/

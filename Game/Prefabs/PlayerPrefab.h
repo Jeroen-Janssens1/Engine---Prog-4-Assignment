@@ -34,5 +34,5 @@ private:
 
 	b2Vec2 m_Vel;
 
-	const float m_Speed = 300.f;
+	const float m_Speed = 10000.f;
 };

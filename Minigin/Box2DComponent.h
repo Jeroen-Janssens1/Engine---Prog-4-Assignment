@@ -18,7 +18,10 @@ public:
 
 	void SetVelocity(float x, float y);
 
-	void GetVelocity(b2Vec2& velocity) const { velocity = m_pBody->GetLinearVelocity(); };
+	void GetVelocity(b2Vec2& velocity) const {
+		velocity.x = (m_pBody->GetLinearVelocity().x * 32.f);
+		velocity.y = (m_pBody->GetLinearVelocity().y * 32.f);
+	};
 
 	void ApplyForce(const b2Vec2& force);
 

@@ -8,15 +8,15 @@ Box2DComponent::Box2DComponent(GameObject* pOwner, TransformComponent* pTransfor
 	,m_pTransformParent{pTransform}
 {
 	// create the physics object (32 pixels = 1 unit)
-	width /= 16;
-	height /= 16;
+	width /= 32.f;
+	height /= 32.f;
 	b2BodyDef bodyDef;
 	if (isDynamic)
 		bodyDef.type = b2_dynamicBody;
 	if (isKinematic)
 		bodyDef.type = b2_kinematicBody;
 	
-	bodyDef.position.Set(pTransform->GetPosition().x / 16, pTransform->GetPosition().y / 16); // 0, 14
+	bodyDef.position.Set(pTransform->GetPosition().x / 32.f, pTransform->GetPosition().y / 32.f); // 0, 14
 
 	m_pBody = pPhysicsWorld->CreateBody(&bodyDef);
 	b2PolygonShape boxShape;
@@ -35,8 +35,8 @@ void Box2DComponent::Update()
 {
 	// Update the transform component so that it holds the correct position for this object
 	b2Transform transform = m_pBody->GetTransform();
-	float x = transform.p.x * 16;
-	float y = transform.p.y * 16;
+	float x = transform.p.x * 32.f;
+	float y = transform.p.y * 32.f;
 	m_pTransformParent->SetPosition(x, y, m_pTransformParent->GetPosition().z);
 }
 
@@ -47,14 +47,16 @@ void Box2DComponent::Render() const
 void Box2DComponent::SetPosition(float x, float y)
 {
 	// convert from pixels to units
-	x /= 16;
-	y /= 16;
+	x /= 32.f;
+	y /= 32.f;
 	// Set the position of the physics body
 	m_pBody->SetTransform(b2Vec2(x, y), 0.f);
 }
 
 void Box2DComponent::SetVelocity(float x, float y)
 {
+	x /= 32.f;
+	y /= 32.f;
 	m_pBody->SetLinearVelocity(b2Vec2(x, y));
 }
 
