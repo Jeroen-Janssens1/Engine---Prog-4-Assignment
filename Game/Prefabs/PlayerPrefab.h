@@ -16,7 +16,7 @@ public:
 	PlayerPrefab();
 	~PlayerPrefab() = default;
 	
-	void Initialize(b2World* pPhysicsWorld);
+	void Initialize(b2World* pPhysicsWorld, unsigned int controllerIndx);
 	void Update() override;
 
 

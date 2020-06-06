@@ -17,7 +17,7 @@ PlayerPrefab::PlayerPrefab()
 
 }
 
-void PlayerPrefab::Initialize(b2World* pPhysicsWorld)
+void PlayerPrefab::Initialize(b2World* pPhysicsWorld, unsigned int controllerIndx)
 {
 	m_Transform = new TransformComponent(this);
 	AddComponent(m_Transform);
@@ -25,21 +25,31 @@ void PlayerPrefab::Initialize(b2World* pPhysicsWorld)
 	auto renderComponent = new RenderComponent(this, m_Transform, 20, 20, true, 9, 9, 16, 16, 16, 0);
 	AddComponent(renderComponent);
 
-	m_Transform->SetPosition(50, 50, 0);
 	renderComponent->SetTexture("Resources/levelSprites.png");
+
+	// Controller Input
+	m_Input.MapCommand(controllerIndx, ControllerButton::DPadRight, new MoveRightCommand(this));
+	m_Input.MapCommand(controllerIndx, ControllerButton::DPadLeft, new MoveLeftCommand(this));
+	m_Input.MapCommand(controllerIndx, ControllerButton::DPadUp, new MoveUpCommand(this));
+
+	// Keyboard Input
+	if (controllerIndx == 0)
+	{
+		m_Input.MapCommand('D', new MoveRightCommand(this));
+		m_Input.MapCommand('A', new MoveLeftCommand(this));
+		m_Input.MapCommand('W', new MoveUpCommand(this));
+		m_Transform->SetPosition(50, 50, 0);
+	}
+	else
+	{
+		m_Input.MapCommand(VK_RIGHT, new MoveRightCommand(this));
+		m_Input.MapCommand(VK_LEFT, new MoveLeftCommand(this));
+		m_Input.MapCommand(VK_UP, new MoveUpCommand(this));
+		m_Transform->SetPosition(100, 50, 0);
+	}
 
 	m_pBox2D = new Box2DComponent(this, m_Transform, pPhysicsWorld, renderComponent->GetWidth(), renderComponent->GetHeight(), 0.0f, 1.f, true);
 	AddComponent(m_pBox2D);
-
-	// Controller Input
-	m_Input.MapCommand(ControllerButton::DPadRight, new MoveRightCommand(this));
-	m_Input.MapCommand(ControllerButton::DPadLeft, new MoveLeftCommand(this));
-	m_Input.MapCommand(ControllerButton::DPadUp, new MoveUpCommand(this));
-
-	// Keyboard Input
-	m_Input.MapCommand('D', new MoveRightCommand(this));
-	m_Input.MapCommand('A', new MoveLeftCommand(this));
-	m_Input.MapCommand(' ', new MoveUpCommand(this));
 }
 
 void PlayerPrefab::Update()
