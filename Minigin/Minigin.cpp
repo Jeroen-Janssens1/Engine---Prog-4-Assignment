@@ -17,12 +17,13 @@
 #include "MiniginPCH.h"
 #include "Minigin.h"
 #include "ServiceLocator.h"
+#include "PhysicsVariables.h"
 #include "SDL_ttf.h"
 
 using namespace std;
 using namespace std::chrono;
 
-void dae::Minigin::Initialize()
+void Minigin::Initialize()
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
 	{
@@ -60,16 +61,17 @@ void dae::Minigin::Initialize()
 	ServiceLocator<InputManager, InputManager>::Init();
 	ServiceLocator<ResourceManager, ResourceManager>::Init();
 	ServiceLocator<SceneManager, SceneManager>::Init();
-	ServiceLocator<ResourceManager, ResourceManager>::GetService().Init("../Data/");
 	ServiceLocator<GameTime, GameTime>::Init();
-	ServiceLocator<GameTime, GameTime>::GetService().Init();
 	ServiceLocator<SoundManager, SoundManager>::Init();
+	ServiceLocator<PhysicsVariables, PhysicsVariables>::Init();
+	ServiceLocator<ResourceManager, ResourceManager>::GetService().Init("../Data/");
+	ServiceLocator<GameTime, GameTime>::GetService().Init();
 
 
 	m_IsInitialized = true;
 }
 
-void dae::Minigin::Cleanup()
+void Minigin::Cleanup()
 {
 	
 	ServiceLocator<Renderer, Renderer>::GetService().Destroy();
@@ -78,7 +80,7 @@ void dae::Minigin::Cleanup()
 	SDL_Quit();
 }
 
-void dae::Minigin::Run()
+void Minigin::Run()
 {
 	if(!m_IsInitialized)
 		Initialize();
@@ -105,7 +107,7 @@ void dae::Minigin::Run()
 
 	Cleanup();
 }
-void dae::Minigin::GetWindowSize(int& width, int& height)
+void Minigin::GetWindowSize(int& width, int& height)
 {
 	SDL_GetWindowSize(m_Window, &width, &height);
 }

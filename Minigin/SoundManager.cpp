@@ -5,11 +5,11 @@
 
 SoundManager::~SoundManager()
 {
-	for (int i{}; i < m_SoundStreams.size(); i++)
+	for (size_t i{}; i < m_SoundStreams.size(); i++)
 	{
 		delete m_SoundStreams[i];
 	}
-	for (int i{}; i < m_SoundEffects.size(); i++)
+	for (size_t i{}; i < m_SoundEffects.size(); i++)
 	{
 		delete m_SoundEffects[i];
 	}

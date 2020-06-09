@@ -215,23 +215,29 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClInclude Include="BinaryReader.h" />
     <ClInclude Include="Box2DComponent.h" />
     <ClInclude Include="Command.h" />
+    <ClInclude Include="Components.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Minigin.h" />
     <ClInclude Include="MiniginPCH.h" />
+    <ClInclude Include="ObserverComponent.h" />
+    <ClInclude Include="ObserverEvents.h" />
+    <ClInclude Include="PhysicsVariables.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ServiceLocator.h" />
+    <ClInclude Include="Services.h" />
     <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SoundStream.h" />
     <ClInclude Include="SpriteAnimatorComponent.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="SubjectComponent.h" />
     <ClInclude Include="TextRenderComponent.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TileComponent.h" />
@@ -255,6 +261,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MiniginPCH.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="ObserverComponent.cpp" />
+    <ClCompile Include="PhysicsVariables.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -265,6 +273,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll" "$(OutputPath)" /R /Y</Com
     <ClCompile Include="SoundStream.cpp" />
     <ClCompile Include="SpriteAnimatorComponent.cpp" />
     <ClCompile Include="State.cpp" />
+    <ClCompile Include="SubjectComponent.cpp" />
     <ClCompile Include="TextRenderComponent.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TileComponent.cpp" />

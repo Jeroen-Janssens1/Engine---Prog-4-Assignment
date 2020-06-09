@@ -1,7 +1,6 @@
 #pragma once
+#include <string>
 struct SDL_Texture;
-namespace dae
-{
 	/**
 	 * Simple RAII wrapper for an SDL_Texture
 	 */
@@ -23,4 +22,3 @@ namespace dae
 
 		std::string m_FileName;
 	};
-}

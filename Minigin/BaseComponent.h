@@ -12,7 +12,6 @@ public:
 
 	virtual void SetIsEnabled(bool value) { m_IsEnabled = value; };
 	bool GetIsEnabled() const { return m_IsEnabled; };
-	
 
 protected:
 	GameObject* m_pOwner;

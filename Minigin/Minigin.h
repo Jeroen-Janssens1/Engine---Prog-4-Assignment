@@ -1,8 +1,7 @@
 #pragma once
 struct SDL_Window;
 class InputManager;
-namespace dae
-{
+
 	class Minigin
 	{
 	public:
@@ -16,4 +15,3 @@ namespace dae
 		SDL_Window* m_Window{};
 		bool m_IsInitialized=false;
 	};
-}

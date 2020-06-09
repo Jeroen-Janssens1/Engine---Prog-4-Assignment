@@ -112,6 +112,20 @@
     <ClInclude Include="AnimatorIncludes.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="ObserverComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SubjectComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ObserverEvents.h" />
+    <ClInclude Include="Components.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsVariables.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Services.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">
@@ -188,6 +202,15 @@
     </ClCompile>
     <ClCompile Include="SpriteAnimatorComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ObserverComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SubjectComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsVariables.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -31,16 +31,16 @@ void RenderComponent::Render() const
 {
 	if (m_IsSpriteSheet)
 	{
-		ServiceLocator<dae::Renderer, dae::Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y,
+		ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y,
 			m_XPos, m_YPos, m_CellWidth, m_CellHeight, m_Width, m_Height);
 		return;
 	}
-	ServiceLocator<dae::Renderer, dae::Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y);
+	ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y);
 }
 
 void RenderComponent::SetTexture(const std::string& filename)
 {
-	m_Texture = ServiceLocator<dae::ResourceManager, dae::ResourceManager>::GetService().LoadTexture(filename);
+	m_Texture = ServiceLocator<ResourceManager, ResourceManager>::GetService().LoadTexture(filename);
 }
 
 void RenderComponent::SetSpritePos(int xPos, int yPos)

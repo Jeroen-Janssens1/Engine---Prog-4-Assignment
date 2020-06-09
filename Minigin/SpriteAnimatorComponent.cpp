@@ -14,7 +14,7 @@ SpriteAnimatorComponent::SpriteAnimatorComponent(GameObject* pOwner, std::vector
 	for (size_t i{}; i < m_Animations.size(); i++)
 	{
 		transitions = m_Animations[i]->GetTransitions();
-		for (int j{}; j < transitions.size(); j++)
+		for (size_t j{}; j < transitions.size(); j++)
 		{
 			if (std::find(m_Transitions.cbegin(), m_Transitions.cend(), transitions[j]) == m_Transitions.cend())
 			{
@@ -26,9 +26,9 @@ SpriteAnimatorComponent::SpriteAnimatorComponent(GameObject* pOwner, std::vector
 
 SpriteAnimatorComponent::~SpriteAnimatorComponent()
 {
-	for (int i{}; i < m_Animations.size(); i++)
+	for (size_t i{}; i < m_Animations.size(); i++)
 		delete m_Animations[i];
-	for (int i{}; i < m_Transitions.size(); i++)
+	for (size_t i{}; i < m_Transitions.size(); i++)
 		delete m_Transitions[i];
 	m_Animations.clear();
 	m_Transitions.clear();
@@ -62,7 +62,7 @@ void SpriteAnimatorComponent::ResetAnimator()
 void SpriteAnimatorComponent::SetTrigger(const std::string& name)
 {
 	std::string triggerName;
-	for (int i{}; i < m_Transitions.size(); i++)
+	for (size_t i{}; i < m_Transitions.size(); i++)
 	{
 		if (m_Transitions[i]->GetConditionName(triggerName))
 		{
@@ -78,7 +78,7 @@ void SpriteAnimatorComponent::SetTrigger(const std::string& name)
 void SpriteAnimatorComponent::ResetTrigger(const std::string& name)
 {
 	std::string triggerName;
-	for (int i{}; i < m_Transitions.size(); i++)
+	for (size_t i{}; i < m_Transitions.size(); i++)
 	{
 		if (m_Transitions[i]->GetConditionName(triggerName))
 		{
@@ -94,7 +94,7 @@ void SpriteAnimatorComponent::ResetTrigger(const std::string& name)
 void SpriteAnimatorComponent::SetBool(const std::string& name, bool value)
 {
 	std::string boolName;
-	for (int i{}; i < m_Transitions.size(); i++)
+	for (size_t i{}; i < m_Transitions.size(); i++)
 	{
 		if (m_Transitions[i]->GetConditionName(boolName))
 		{

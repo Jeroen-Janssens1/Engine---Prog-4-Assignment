@@ -21,7 +21,7 @@ void GameTime::Init()
 	m_FPSTimer = 0.f;
 	m_FPSCount = 0;
 
-	auto font = ServiceLocator<dae::ResourceManager, dae::ResourceManager>::GetService().LoadFont("../Data/Lingua.otf", 24);
+	auto font = ServiceLocator<ResourceManager, ResourceManager>::GetService().LoadFont("Resources/Lingua.otf", 24);
 
 	m_pGameObject = new GameObject();
 

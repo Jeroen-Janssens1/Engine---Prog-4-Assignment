@@ -25,7 +25,7 @@ public:
 	void SetSpritePos(int xPos, int yPos);
 
 protected:
-	dae::Texture2D* m_Texture;
+	Texture2D* m_Texture;
 	TransformComponent* m_pTransformParent;
 	int m_CellWidth;
 	int m_CellHeight;

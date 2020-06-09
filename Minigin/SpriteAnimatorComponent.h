@@ -4,7 +4,7 @@
 class Animation;
 class Transition;
 class State;
-class SpriteAnimatorComponent :
+class SpriteAnimatorComponent final :
 	public BaseComponent
 {
 public:

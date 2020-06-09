@@ -1,0 +1,10 @@
+#pragma once
+#include "BaseComponent.h"
+#include "Box2DComponent.h"
+#include "ObserverComponent.h"
+#include "RenderComponent.h"
+#include "SpriteAnimatorComponent.h"
+#include "SubjectComponent.h"
+#include "TextRenderComponent.h"
+#include "TileComponent.h"
+#include "TransformComponent.h"

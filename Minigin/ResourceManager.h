@@ -1,7 +1,5 @@
 #pragma once
 
-namespace dae
-{
 	class Texture2D;
 	class Font;
 	class ResourceManager final
@@ -26,4 +24,3 @@ namespace dae
 		std::vector<Texture2D*> m_Textures;
 		std::vector<Font*> m_Fonts;
 	};
-}

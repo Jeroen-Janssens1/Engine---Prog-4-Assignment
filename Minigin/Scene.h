@@ -17,11 +17,9 @@ struct TileType
 	bool passableRight;
 };
 
-namespace dae
-{
 	class Scene
 	{
-		friend Scene* SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight);
+		friend Scene* SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath);
 	public:
 
 		void Add(GameObject* pObject);
@@ -33,6 +31,8 @@ namespace dae
 		std::string& GetName();
 		b2World* GetPhysicsWorld();
 
+		void SetGravity(const b2Vec2& gravity) { m_pPhysicsWorld->SetGravity(gravity); }
+
 		~Scene();
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;
@@ -40,7 +40,7 @@ namespace dae
 		Scene& operator=(Scene&& other) = delete;
 
 	private: 
-		explicit Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight);
+		explicit Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath);
 
 		b2World* m_pPhysicsWorld;
 		InputManager* m_pInputManager;
@@ -57,5 +57,3 @@ namespace dae
 
 		static unsigned int m_IdCounter; 
 	};
-
-}

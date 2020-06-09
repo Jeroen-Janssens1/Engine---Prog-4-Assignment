@@ -1,8 +1,6 @@
 #pragma once
 
 struct _TTF_Font;
-namespace dae
-{
 	/**
 	 * Simple RAII wrapper for an _TTF_Font
 	 */
@@ -24,4 +22,3 @@ namespace dae
 		unsigned int m_Size;
 		const std::string m_FileName;
 	};
-}

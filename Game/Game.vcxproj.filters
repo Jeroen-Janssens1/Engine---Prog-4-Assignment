@@ -13,16 +13,28 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Prefabs">
-      <UniqueIdentifier>{2d74f875-4868-4eeb-bf73-0fb2d0831a16}</UniqueIdentifier>
+    <Filter Include="Observers And Subjects">
+      <UniqueIdentifier>{68bbdfcd-0818-4769-ac41-73d07917134b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{889933c8-fc8b-4c46-89a8-fe2afeadd264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts\Player">
+      <UniqueIdentifier>{99067164-39ec-4871-a796-24ca67006d60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputCommands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Prefabs\PlayerPrefab.h">
-      <Filter>Prefabs</Filter>
+    <ClInclude Include="Achievement.h">
+      <Filter>Observers And Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSubject.h">
+      <Filter>Observers And Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerBehaviour.h">
+      <Filter>Scripts\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -32,8 +44,14 @@
     <ClCompile Include="InputCommands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Prefabs\PlayerPrefab.cpp">
-      <Filter>Prefabs</Filter>
+    <ClCompile Include="Achievement.cpp">
+      <Filter>Observers And Subjects</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSubject.cpp">
+      <Filter>Observers And Subjects</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerBehaviour.cpp">
+      <Filter>Scripts\Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

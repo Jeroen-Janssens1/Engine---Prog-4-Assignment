@@ -1,4 +1,5 @@
 #pragma once
+#include "BaseComponent.h"
 #include "InputManager.h"
 #include "GameTime.h"
 #include "GameObject.h"
@@ -6,19 +7,16 @@
 #include "Command.h"
 #include "box2d\b2_math.h"
 
-class b2World;
-class TransformComponent;
-class Box2DComponent;
-class SpriteAnimatorComponent;
-class PlayerPrefab final :
-	public GameObject
+class PlayerBehaviour :
+	public BaseComponent
 {
 public:
-	PlayerPrefab();
-	~PlayerPrefab() = default;
-	
-	void Initialize(InputManager* pInput, b2World* pPhysicsWorld, unsigned int controllerIndx);
+	PlayerBehaviour(GameObject* pOwner);
+	~PlayerBehaviour() = default;
+
+	void Initialize(InputManager * pInput, b2World * pPhysicsWorld, unsigned int controllerIndx);
 	void Update() override;
+	virtual void Render() const override {};
 
 
 
@@ -38,4 +36,6 @@ private:
 	b2Vec2 m_JumpForce;
 
 	const float m_Speed = 10000.f;
+
 };
+

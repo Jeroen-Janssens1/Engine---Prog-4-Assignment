@@ -1,8 +1,9 @@
 #pragma once
 #include "BaseComponent.h"
+#include "Box2D.h"
 
 class TransformComponent;
-class Box2DComponent : public BaseComponent
+class Box2DComponent final : public BaseComponent
 {
 public:
 	Box2DComponent(GameObject* pOwner, TransformComponent* pTransform, b2World* pPhysicsWorld, float width, float height, 

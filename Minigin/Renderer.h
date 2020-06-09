@@ -3,8 +3,6 @@
 struct SDL_Window;
 struct SDL_Renderer;
 
-namespace dae
-{
 	class Texture2D;
 	/**
 	 * Simple RAII wrapper for the SDL renderer
@@ -26,5 +24,3 @@ namespace dae
 	private:
 		SDL_Renderer* m_Renderer{};
 	};
-}
-

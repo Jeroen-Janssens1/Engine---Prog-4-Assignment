@@ -1,4 +1,4 @@
-#include "PlayerPrefab.h"
+#include "PlayerBehaviour.h"
 #include "TransformComponent.h"
 #include "ServiceLocator.h"
 #include "InputManager.h"
@@ -11,25 +11,35 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "AnimatorIncludes.h"
+#include "InputSubject.h"
+#include "Achievement.h"
+#include "Services.h"
 
-PlayerPrefab::PlayerPrefab()
-	:GameObject()
-	,m_GameTime{ServiceLocator<GameTime, GameTime>::GetService()}
+PlayerBehaviour::PlayerBehaviour(GameObject* pOwner)
+	:BaseComponent(pOwner)
+	, m_GameTime{ GameTimeService }
 {
 
 }
 
-void PlayerPrefab::Initialize(InputManager* pInput, b2World* pPhysicsWorld, unsigned int controllerIndx)
+void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, unsigned int controllerIndx)
 {
 	m_pInput = pInput;
-	m_Transform = new TransformComponent(this);
-	AddComponent(m_Transform);
+	m_Transform = new TransformComponent(m_pOwner);
+	m_pOwner->AddComponent(m_Transform);
 
-	auto renderComponent = new RenderComponent(this, m_Transform, 64, 64, true, 32, 32, 16, 0);
-	AddComponent(renderComponent);
+	// this object is both the observer and the notifier. Doesn't normally happen but this is purely for testing purposes
+	auto* achievementObserver = new Achievement(m_pOwner);
+	m_pOwner->AddComponent(achievementObserver);
+	auto* inputSubject = new InputSubject(m_pOwner);
+	inputSubject->AddObserver(achievementObserver);
+	m_pOwner->AddComponent(inputSubject);
+
+	auto renderComponent = new RenderComponent(m_pOwner, m_Transform, 64, 64, true, 32, 32, 16, 0);
+	m_pOwner->AddComponent(renderComponent);
 
 	renderComponent->SetTexture("Resources/AvatarSheet.png");
-	
+
 
 	// after setting up the render component, create all the animations you need
 	int nrOfAnimations = 6;
@@ -101,10 +111,10 @@ void PlayerPrefab::Initialize(InputManager* pInput, b2World* pPhysicsWorld, unsi
 	animations[0]->AddTransition(transition);
 	animations[1]->AddTransition(transition);
 	animations[5]->AddTransition(transition);
-	
+
 	transition = new Transition(animations[4], true, false, "Attack2");
 	animations[3]->AddTransition(transition);
-	
+
 	transition = new Transition(animations[5], true, false, "Attack3");
 	animations[4]->AddTransition(transition);
 
@@ -114,8 +124,8 @@ void PlayerPrefab::Initialize(InputManager* pInput, b2World* pPhysicsWorld, unsi
 	animations[5]->AddTransition(transition);
 
 	//Make the actual animator component, this component will take care of all the deletion of the animations and transitions
-	m_pAnimator = new SpriteAnimatorComponent(this, animations);
-	AddComponent(m_pAnimator);
+	m_pAnimator = new SpriteAnimatorComponent(m_pOwner, animations);
+	m_pOwner->AddComponent(m_pAnimator);
 
 	// Controller Input
 	m_pInput->MapCommand(controllerIndx, ControllerButton::DPadRight, new MoveRightCommand(this));
@@ -138,14 +148,14 @@ void PlayerPrefab::Initialize(InputManager* pInput, b2World* pPhysicsWorld, unsi
 		m_Transform->SetPosition(100, 50, 0);
 	}
 
-	m_pBox2D = new Box2DComponent(this, m_Transform, pPhysicsWorld, renderComponent->GetWidth(), renderComponent->GetHeight(), 1.f, 0.1f, true);
-	AddComponent(m_pBox2D);
-	
+	m_pBox2D = new Box2DComponent(m_pOwner, m_Transform, pPhysicsWorld, renderComponent->GetWidth(), renderComponent->GetHeight(), 1.f, 0.1f, true);
+	m_pOwner->AddComponent(m_pBox2D);
+
 }
 
-void PlayerPrefab::Update()
+void PlayerBehaviour::Update()
 {
-	GameObject::Update();
+	//GameObject::Update();
 
 	if (m_pInput->IsPressed('0'))
 	{
@@ -182,7 +192,7 @@ void PlayerPrefab::Update()
 		m_pAnimator->ResetTrigger("Attack3");
 	}
 
-	if (m_pAnimator->GetCurrentStateName() == "Attack1" || m_pAnimator->GetCurrentStateName() == "Attack2" 
+	if (m_pAnimator->GetCurrentStateName() == "Attack1" || m_pAnimator->GetCurrentStateName() == "Attack2"
 		|| m_pAnimator->GetCurrentStateName() == "Attack3")
 		return;
 	if (m_Vel.x > m_Speed)
@@ -206,40 +216,27 @@ void PlayerPrefab::Update()
 	m_pBox2D->GetVelocity(curVel);
 	m_pBox2D->SetVelocity(m_Vel.x, curVel.y);
 	m_Vel.x = 0;
-	
+
 }
 
-void PlayerPrefab::MoveUp()
+void PlayerBehaviour::MoveUp()
 {
 	b2Vec2 curVel;
 	m_pBox2D->GetVelocity(curVel);
 	if (curVel.y > 0)
 		m_JumpForce = b2Vec2(0.f, -200.f);
-	//m_Vel.y += -m_Speed * m_GameTime.GetElapsed();
-	/*m_Transform->SetPosition(m_Transform->GetPosition().x, m_Transform->GetPosition().y - (30* m_GameTime.GetElapsed()),
-		m_Transform->GetPosition().z);*/
 }
 
-void PlayerPrefab::MoveDown()
+void PlayerBehaviour::MoveDown()
 {
-	//m_Vel.y += m_Speed * m_GameTime.GetElapsed();
-
-	/*m_Transform->SetPosition(m_Transform->GetPosition().x, m_Transform->GetPosition().y + (30 * m_GameTime.GetElapsed()),
-		m_Transform->GetPosition().z);*/
 }
 
-void PlayerPrefab::MoveRight()
+void PlayerBehaviour::MoveRight()
 {
 	m_Vel.x += m_Speed * m_GameTime.GetElapsed();
-
-	/*m_Transform->SetPosition(m_Transform->GetPosition().x + (30 * m_GameTime.GetElapsed()), m_Transform->GetPosition().y,
-		m_Transform->GetPosition().z);*/
 }
 
-void PlayerPrefab::MoveLeft()
+void PlayerBehaviour::MoveLeft()
 {
 	m_Vel.x += -m_Speed * m_GameTime.GetElapsed();
-
-	/*m_Transform->SetPosition(m_Transform->GetPosition().x - (30 * m_GameTime.GetElapsed()), m_Transform->GetPosition().y,
-		m_Transform->GetPosition().z);*/
 }

@@ -8,7 +8,7 @@ class TextRenderComponent final:
 	public RenderComponent
 {
 public:
-	TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, dae::Font* font);
+	TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, Font* font);
 	virtual ~TextRenderComponent();
 
 	void Update() override;
@@ -20,6 +20,6 @@ public:
 protected:
 	bool m_NeedsUpdate;
 	std::string m_Text;
-	dae::Font* m_Font;
+	Font* m_Font;
 
 };

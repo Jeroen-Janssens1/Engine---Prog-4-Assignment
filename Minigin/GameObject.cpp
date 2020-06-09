@@ -3,6 +3,11 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
+GameObject::GameObject(const std::string& tag)
+	:m_Tag{tag}
+{
+}
+
 GameObject::~GameObject()
 {
 	for (size_t i{}; i < m_Components.size(); i++)

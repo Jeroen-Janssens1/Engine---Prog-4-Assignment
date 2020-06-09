@@ -1,7 +1,4 @@
 #pragma once
-
-namespace dae
-{
 	class Scene;
 	class SceneManager final
 	{
@@ -14,7 +11,7 @@ namespace dae
 		SceneManager& operator=(const SceneManager& other) = delete;
 		SceneManager& operator=(SceneManager&& other) = delete;
 
-		Scene* CreateScene(const std::string& name, bool isTileMap = false, const std::string& levelDataPath = "", int windowWidth = -1, int windowHeight = -1);
+		Scene* CreateScene(const std::string& name, bool isTileMap = false, const std::string& levelDataPath = "");
 
 		void SetActiveScene(std::string& name);
 		void SetActiveScene(int index);
@@ -27,4 +24,3 @@ namespace dae
 		std::vector<Scene*> m_Scenes;
 		Scene* m_ActiveScene;
 	};
-}

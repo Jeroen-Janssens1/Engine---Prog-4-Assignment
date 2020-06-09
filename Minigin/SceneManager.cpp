@@ -2,17 +2,17 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
-void dae::SceneManager::Update()
+void SceneManager::Update()
 {
 	m_ActiveScene->Update();
 }
 
-void dae::SceneManager::Render()
+void SceneManager::Render()
 {
 	m_ActiveScene->Render();
 }
 
-dae::SceneManager::~SceneManager()
+SceneManager::~SceneManager()
 {
 	m_ActiveScene = nullptr;
 	for (size_t i{}; i < m_Scenes.size(); i++)
@@ -23,14 +23,14 @@ dae::SceneManager::~SceneManager()
 	m_Scenes.clear();
 }
 
-dae::Scene* dae::SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight)
+Scene* SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath)
 {
-	const auto scene = new Scene(name, isTileMap, levelDataPath, windowWidth, windowHeight);
+	const auto scene = new Scene(name, isTileMap, levelDataPath);
 	m_Scenes.push_back(scene);
 	return scene;
 }
 
-void dae::SceneManager::SetActiveScene(std::string& name)
+void SceneManager::SetActiveScene(std::string& name)
 {
 	// TODO: Set as active scene
 	for (auto scene : m_Scenes)
@@ -43,13 +43,13 @@ void dae::SceneManager::SetActiveScene(std::string& name)
 	}
 }
 
-void dae::SceneManager::SetActiveScene(int index)
+void SceneManager::SetActiveScene(int index)
 {
 	if (size_t(index) < m_Scenes.size())
 		m_ActiveScene = m_Scenes[index];
 }
 
-int dae::SceneManager::GetAmountOfScenes()
+int SceneManager::GetAmountOfScenes()
 {
 	return int(m_Scenes.size());
 }

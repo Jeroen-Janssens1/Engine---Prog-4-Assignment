@@ -7,16 +7,15 @@
 #include "GameTime.h"
 #include "Box2DComponent.h"
 #include "InputManager.h"
+#include "PhysicsVariables.h"
 
-using namespace dae;
 
 unsigned int Scene::m_IdCounter = 0;
 
-Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight) : m_Name(name)
+Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath) : m_Name(name)
 {
 	// Set up the physics for this scene
-	b2Vec2 gravity(0.0f, 10.0f);
-	m_pPhysicsWorld = new b2World(gravity);
+	m_pPhysicsWorld = new b2World(b2Vec2(0.f, 10.f));
 
 	m_pInputManager = new InputManager();
 
@@ -37,6 +36,13 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 
 		binReader.Read<int>(m_NrCols);
 		binReader.Read<int>(m_NrRows);
+		int tileWidth{};
+		binReader.Read<int>(tileWidth);
+		m_TileWidth = float(tileWidth);
+		int tileHeight;
+		binReader.Read<int>(tileHeight);
+		m_TileHeight = float(tileHeight);
+
 
 		std::vector<TileType> tileTypes;
 		tileTypes.resize(nrOfTileTypes);
@@ -53,18 +59,9 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 
 			// physics / collision data
 			binReader.Read<bool>(tileTypes[i].usesPhysics);
-			if (tileTypes[i].usesPhysics)
-			{
-				binReader.Read<bool>(tileTypes[i].passableBottom);
-				binReader.Read<bool>(tileTypes[i].passableTop);
-				binReader.Read<bool>(tileTypes[i].passableLeft);
-				binReader.Read<bool>(tileTypes[i].passableRight);
-			}
 		}
 
-		//m_TileMap.resize(m_NrCols * m_NrRows);
-
-		for (size_t i{}; i < m_NrCols * m_NrRows; i++)
+		for (int i{}; i < m_NrCols * m_NrRows; i++)
 		{
 			int tileId;
 			binReader.Read<int>(tileId);
@@ -86,8 +83,6 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 			auto go = new GameObject();
 			TransformComponent* transformComponent = new TransformComponent{ go };
 			go->AddComponent(transformComponent);
-			m_TileWidth = float(windowWidth) / m_NrCols;
-			m_TileHeight = float(windowHeight) / m_NrRows;
 			RenderComponent* renderComponent = new RenderComponent{
 				go, transformComponent, m_TileWidth, m_TileHeight, true, m_CellWidth, m_CellHeight, xPos, yPos };
 			go->AddComponent(renderComponent);
@@ -99,8 +94,8 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 			int curRow = int(i) / m_NrCols;
 			int curCol = (i - (m_NrCols*curRow)) % m_NrCols;
 			// scale tiles according to window size
-			float x = (curCol * m_TileWidth);
-			float y = (curRow * m_TileHeight);
+			float x = (curCol * m_TileWidth) + (m_TileWidth/2);
+			float y = (curRow * m_TileHeight) + (m_TileHeight / 2);
 			float z = 0;
 			transformComponent->SetPosition(x, y, z);
 
@@ -138,13 +133,11 @@ void Scene::Update()
 {
 	// process scene specific input
 	m_pInputManager->ProcessInput();
+	auto& physicsVars = ServiceLocator<PhysicsVariables, PhysicsVariables>::GetService();
 
-	float timeStep = 1.f / 60.f;
-	int32 velocityIterations = 6;
-	int32 positionIterations = 2;
 	// update physics
-	m_pPhysicsWorld->Step(timeStep, velocityIterations,
-		positionIterations);
+	m_pPhysicsWorld->Step(physicsVars.GetTimeStep(), physicsVars.GetVelocityIterations(),
+		physicsVars.GetPositionIterations());
 
 	for(auto& object : m_Objects)
 	{
@@ -160,12 +153,12 @@ void Scene::Render() const
 	}
 }
 
-std::string& dae::Scene::GetName()
+std::string& Scene::GetName()
 {
 	return m_Name;
 }
 
-b2World* dae::Scene::GetPhysicsWorld()
+b2World* Scene::GetPhysicsWorld()
 {
 	return m_pPhysicsWorld;
 }

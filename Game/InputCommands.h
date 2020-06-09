@@ -2,7 +2,7 @@
 #include "Command.h"
 #include "SceneManager.h"
 #include "SoundManager.h"
-#include "Prefabs\PlayerPrefab.h"
+#include "PlayerBehaviour.h"
  ////////////////////////////////////
 // Only for debugging purposes
 class NextSceneCommand : public Command
@@ -12,8 +12,8 @@ private:
 	void NextScene()
 	{
 		//ServiceLocator::GetAudio().Playsound(0);
-		ServiceLocator<dae::SceneManager, dae::SceneManager>::GetService().SetActiveScene(index);
-		index = (index + 1) % ServiceLocator<dae::SceneManager, dae::SceneManager>::GetService().GetAmountOfScenes();
+		ServiceLocator<SceneManager, SceneManager>::GetService().SetActiveScene(index);
+		index = (index + 1) % ServiceLocator<SceneManager, SceneManager>::GetService().GetAmountOfScenes();
 	}
 
 public:
@@ -31,49 +31,49 @@ public:
 class MoveLeftCommand : public Command
 {
 public:
-	MoveLeftCommand(PlayerPrefab* pPlayer)
+	MoveLeftCommand(PlayerBehaviour* pPlayer)
 	{
 		m_pPlayer = pPlayer;
 	}
 	bool Execute() override { m_pPlayer->MoveLeft(); return true; }
 private:
-	PlayerPrefab* m_pPlayer;
+	PlayerBehaviour* m_pPlayer;
 };
 
 class MoveRightCommand : public Command
 {
 public:
-	MoveRightCommand(PlayerPrefab* pPlayer)
+	MoveRightCommand(PlayerBehaviour* pPlayer)
 	{
 		m_pPlayer = pPlayer;
 	}
 	bool Execute() override { m_pPlayer->MoveRight(); return true; }
 private:
-	PlayerPrefab* m_pPlayer;
+	PlayerBehaviour* m_pPlayer;
 };
 
 class MoveUpCommand : public Command
 {
 public:
-	MoveUpCommand(PlayerPrefab* pPlayer)
+	MoveUpCommand(PlayerBehaviour* pPlayer)
 	{
 		m_pPlayer = pPlayer;
 	}
 	bool Execute() override { m_pPlayer->MoveUp(); return true; }
 private:
-	PlayerPrefab* m_pPlayer;
+	PlayerBehaviour* m_pPlayer;
 };
 
 class MoveDownCommand : public Command
 {
 public:
-	MoveDownCommand(PlayerPrefab* pPlayer)
+	MoveDownCommand(PlayerBehaviour* pPlayer)
 	{
 		m_pPlayer = pPlayer;
 	}
 	bool Execute() override { m_pPlayer->MoveDown(); return true; }
 private:
-	PlayerPrefab* m_pPlayer;
+	PlayerBehaviour* m_pPlayer;
 };
 
 class PlayMusic : public Command
