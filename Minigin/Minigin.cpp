@@ -4,6 +4,7 @@
 #include <thread>
 #include "InputManager.h"
 #include "SceneManager.h"
+#include "SoundManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include <SDL.h>
@@ -16,12 +17,14 @@
 #include "MiniginPCH.h"
 #include "Minigin.h"
 #include "ServiceLocator.h"
+#include "SDL_ttf.h"
+
 using namespace std;
 using namespace std::chrono;
 
 void dae::Minigin::Initialize()
 {
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
@@ -38,6 +41,19 @@ void dae::Minigin::Initialize()
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
+	// Initialize SDL_ttf
+	if (TTF_Init() == -1)
+	{
+		std::cerr << "Core::Initialize( ), error when calling TTF_Init: " << TTF_GetError() << std::endl;
+		return;
+	}
+
+	// init sdl audio
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		throw std::runtime_error(std::string("Core::Initialize( ), error when calling Mix_OpenAudio!: ") + Mix_GetError());
+	}
+
 	// init all services
 	ServiceLocator<Renderer, Renderer>::Init();
 	ServiceLocator<Renderer, Renderer>::GetService().Init(m_Window);
@@ -47,9 +63,7 @@ void dae::Minigin::Initialize()
 	ServiceLocator<ResourceManager, ResourceManager>::GetService().Init("../Data/");
 	ServiceLocator<GameTime, GameTime>::Init();
 	ServiceLocator<GameTime, GameTime>::GetService().Init();
-	
-	// Init the physics engine
-
+	ServiceLocator<SoundManager, SoundManager>::Init();
 
 
 	m_IsInitialized = true;

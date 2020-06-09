@@ -1,6 +1,7 @@
 #pragma once
 #include "Command.h"
 #include "SceneManager.h"
+#include "SoundManager.h"
 #include "Prefabs\PlayerPrefab.h"
  ////////////////////////////////////
 // Only for debugging purposes
@@ -73,4 +74,53 @@ public:
 	bool Execute() override { m_pPlayer->MoveDown(); return true; }
 private:
 	PlayerPrefab* m_pPlayer;
+};
+
+class PlayMusic : public Command
+{
+public:
+	PlayMusic(std::string& name)
+		:m_Name{name}
+	{
+	}
+	bool Execute() override {
+		ServiceLocator<SoundManager, SoundManager>::GetService().EditSound(m_Name, SoundManager::Action::Play);
+		return true;
+	}
+
+private:
+	std::string m_Name;
+};
+
+class StopMusic : public Command
+{
+public:
+	StopMusic(std::string& name)
+		:m_Name{ name }
+	{
+	}
+	bool Execute() override {
+		ServiceLocator<SoundManager, SoundManager>::GetService().EditSound(m_Name, SoundManager::Action::Stop);
+		return true;
+	}
+
+private:
+	std::string m_Name;
+};
+
+class PlayEffect : public Command
+{
+public:
+	PlayEffect(std::string& name, int loops)
+		:m_Name{ name }
+		,m_Loops(loops)
+	{
+	}
+	bool Execute() override { ServiceLocator<SoundManager, SoundManager>::GetService().EditSound(
+		m_Name, SoundManager::Action::Play, m_Loops, false); return true;
+	}
+
+private:
+	std::string m_Name;
+	int m_Loops;
 };

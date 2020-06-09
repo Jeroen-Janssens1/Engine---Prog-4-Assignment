@@ -9,6 +9,7 @@
 class b2World;
 class TransformComponent;
 class Box2DComponent;
+class SpriteAnimatorComponent;
 class PlayerPrefab final :
 	public GameObject
 {
@@ -16,7 +17,7 @@ public:
 	PlayerPrefab();
 	~PlayerPrefab() = default;
 	
-	void Initialize(b2World* pPhysicsWorld, unsigned int controllerIndx);
+	void Initialize(InputManager* pInput, b2World* pPhysicsWorld, unsigned int controllerIndx);
 	void Update() override;
 
 
@@ -28,11 +29,13 @@ public:
 
 private:
 	TransformComponent* m_Transform;
-	InputManager& m_Input;
+	InputManager* m_pInput;
 	GameTime& m_GameTime;
 	Box2DComponent* m_pBox2D;
+	SpriteAnimatorComponent* m_pAnimator;
 
 	b2Vec2 m_Vel;
+	b2Vec2 m_JumpForce;
 
 	const float m_Speed = 10000.f;
 };

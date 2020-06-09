@@ -3,5 +3,6 @@
 
 BaseComponent::BaseComponent(GameObject* pOwner)
 	:m_pOwner{pOwner}
+	,m_IsEnabled(true)
 {
 }

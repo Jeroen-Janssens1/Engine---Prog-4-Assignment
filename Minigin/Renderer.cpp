@@ -70,7 +70,8 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, float x, float y, in
 		dst.w = static_cast<int>(width);
 		dst.h = static_cast<int>(height);
 	}
-
+	dst.x -= dst.w / 2;
+	dst.y -= dst.h / 2;
 	src.x = xPos;
 	src.y = yPos;
 	src.w = srcWidth;

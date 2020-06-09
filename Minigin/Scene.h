@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "TileComponent.h"
 
-
+class InputManager;
 class b2World;
 struct TileType
 {
@@ -26,6 +26,8 @@ namespace dae
 
 		void Add(GameObject* pObject);
 
+		InputManager* GetInputManager() const { return m_pInputManager; }
+
 		void Update();
 		void Render() const;
 		std::string& GetName();
@@ -41,6 +43,7 @@ namespace dae
 		explicit Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath, int windowWidth, int windowHeight);
 
 		b2World* m_pPhysicsWorld;
+		InputManager* m_pInputManager;
 		
 		std::string m_Name;
 		std::vector <GameObject*> m_Objects{};

@@ -37,6 +37,7 @@ void Box2DComponent::Update()
 	b2Transform transform = m_pBody->GetTransform();
 	float x = transform.p.x * 32.f;
 	float y = transform.p.y * 32.f;
+
 	m_pTransformParent->SetPosition(x, y, m_pTransformParent->GetPosition().z);
 }
 

@@ -25,6 +25,11 @@ public:
 
 	void ApplyForce(const b2Vec2& force);
 
+	void SetIsEnabled(bool value) override { 
+		m_IsEnabled = value;
+		m_pBody->SetEnabled(value);
+	}
+
 private:
 	TransformComponent* m_pTransformParent;
 	b2Body* m_pBody;

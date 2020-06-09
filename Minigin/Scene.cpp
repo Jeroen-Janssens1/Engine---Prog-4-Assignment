@@ -6,6 +6,7 @@
 #include "TransformComponent.h"
 #include "GameTime.h"
 #include "Box2DComponent.h"
+#include "InputManager.h"
 
 using namespace dae;
 
@@ -17,6 +18,7 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 	b2Vec2 gravity(0.0f, 10.0f);
 	m_pPhysicsWorld = new b2World(gravity);
 
+	m_pInputManager = new InputManager();
 
 	if (!isTileMap)
 		return;
@@ -87,23 +89,12 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 			m_TileWidth = float(windowWidth) / m_NrCols;
 			m_TileHeight = float(windowHeight) / m_NrRows;
 			RenderComponent* renderComponent = new RenderComponent{
-				go, transformComponent, m_TileWidth, m_TileHeight, true, 10, 10, m_CellWidth, m_CellHeight, xPos, yPos };
+				go, transformComponent, m_TileWidth, m_TileHeight, true, m_CellWidth, m_CellHeight, xPos, yPos };
 			go->AddComponent(renderComponent);
 			renderComponent->SetTexture(tileSheetPath);
-			//TileComponent* tileComponent = new TileComponent(xPos, yPos, go);
-			//go->AddComponent(tileComponent);
 
 
 			Add(go);
-			//m_TileMap[i] = tileComponent;
-			// 5x6 map
-			// if i = 5, row = 1
-			// take i/nrCols and ground it
-			// if i = 9, 9/6 = 1.8, grounded = 1
-			// for col, i/nrCols % nrCols;
-			// now col = 9/6 % 6 = 4
-			// calculate the actual position for the transform component using the location in the tilemap together
-			// with the window width and height
 
 			int curRow = int(i) / m_NrCols;
 			int curCol = (i - (m_NrCols*curRow)) % m_NrCols;
@@ -135,6 +126,7 @@ Scene::~Scene()
 	m_Objects.clear();
 	m_TileMap.clear();
 	delete m_pPhysicsWorld;
+	delete m_pInputManager;
 }
 
 void Scene::Add(GameObject* object)
@@ -144,6 +136,9 @@ void Scene::Add(GameObject* object)
 
 void Scene::Update()
 {
+	// process scene specific input
+	m_pInputManager->ProcessInput();
+
 	float timeStep = 1.f / 60.f;
 	int32 velocityIterations = 6;
 	int32 positionIterations = 2;

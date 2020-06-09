@@ -9,9 +9,13 @@ public:
 	
 	virtual void Update()=0;
 	virtual void Render() const = 0;
+
+	virtual void SetIsEnabled(bool value) { m_IsEnabled = value; };
+	bool GetIsEnabled() const { return m_IsEnabled; };
 	
 
-private:
+protected:
 	GameObject* m_pOwner;
+	bool m_IsEnabled;
 };
 

@@ -18,6 +18,7 @@ namespace dae
 
 		void SetActiveScene(std::string& name);
 		void SetActiveScene(int index);
+		Scene* GetActiveScene()const { return m_ActiveScene; };
 		int GetAmountOfScenes();
 
 		void Update();

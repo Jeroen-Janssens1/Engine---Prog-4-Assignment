@@ -17,7 +17,8 @@ void GameObject::Update()
 {
 	for (size_t i{}; i < m_Components.size(); i++)
 	{
-		m_Components[i]->Update();
+		if(m_Components[i]->GetIsEnabled())
+			m_Components[i]->Update();
 	}
 }
 
@@ -25,7 +26,8 @@ void GameObject::Render() const
 {
 	for (size_t i{}; i < m_Components.size(); i++)
 	{
-		m_Components[i]->Render();
+		if(m_Components[i]->GetIsEnabled())
+			m_Components[i]->Render();
 	}
 }
 
