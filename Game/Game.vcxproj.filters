@@ -13,24 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Prefabs">
+      <UniqueIdentifier>{2d74f875-4868-4eeb-bf73-0fb2d0831a16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputCommands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Prefabs\PlayerPrefab.h">
-      <Filter>Header Files</Filter>
+      <Filter>Prefabs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Prefabs\PlayerPrefab.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="InputCommands.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Prefabs\PlayerPrefab.cpp">
+      <Filter>Prefabs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
