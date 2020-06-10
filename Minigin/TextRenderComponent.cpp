@@ -21,6 +21,7 @@ TextRenderComponent::TextRenderComponent(GameObject* pOwner, TransformComponent*
 TextRenderComponent::~TextRenderComponent()
 {
 	delete m_Texture;
+
 }
 
 void TextRenderComponent::Update()
@@ -39,11 +40,6 @@ void TextRenderComponent::Update()
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 		}
 		SDL_FreeSurface(surf);
-		if (m_Texture != nullptr)
-		{
-			delete m_Texture;
-			m_Texture = nullptr;
-		}
 		if (m_Texture)
 		{
 			delete m_Texture;

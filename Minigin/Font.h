@@ -13,6 +13,9 @@ struct _TTF_Font;
 
 		void GetFileName(std::string& fileName) const;
 
+		void SetSize(unsigned int size);
+		unsigned int GetSize() const { return m_Size; }
+
 		Font(const Font &) = delete;
 		Font(Font &&) = delete;
 		Font & operator= (const Font &) = delete;

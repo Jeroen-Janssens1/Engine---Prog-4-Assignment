@@ -24,3 +24,9 @@ void Font::GetFileName(std::string& fileName) const
 {
 	fileName = m_FileName;
 }
+
+void Font::SetSize(unsigned int size)
+{
+	TTF_CloseFont(m_Font);
+	m_Font = TTF_OpenFont(m_FileName.c_str(), size);
+}

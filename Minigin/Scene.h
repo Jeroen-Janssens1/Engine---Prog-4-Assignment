@@ -26,7 +26,7 @@ struct TileType
 
 		InputManager* GetInputManager() const { return m_pInputManager; }
 
-		void Update();
+		bool Update();
 		void Render() const;
 		std::string& GetName();
 		b2World* GetPhysicsWorld();

@@ -73,6 +73,18 @@ void GameTime::Reset()
 	m_FPSCount = 0;
 }
 
+void GameTime::SetFont(const std::string& path)
+{
+	auto font = ServiceLocator<ResourceManager, ResourceManager>::GetService().LoadFont(path, 36);
+
+	m_pTextRenderer->SetFont(font);
+}
+
+void GameTime::SetFontSize(unsigned int size)
+{
+	m_pTextRenderer->SetFontSize(size);
+}
+
 GameObject* GameTime::GetRenderingObject()
 {
 	return m_pGameObject;

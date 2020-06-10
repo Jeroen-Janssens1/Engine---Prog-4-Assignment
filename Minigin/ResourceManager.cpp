@@ -78,7 +78,7 @@ Font* ResourceManager::LoadFont(const std::string& file, unsigned int size)
 	for (auto font : m_Fonts)
 	{
 		font->GetFileName(fileName);
-		if (fileName == file)
+		if (fileName == file && font->GetSize() == size)
 		{
 			return font;
 		}

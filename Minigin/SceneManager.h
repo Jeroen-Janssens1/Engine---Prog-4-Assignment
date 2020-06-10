@@ -18,7 +18,7 @@
 		Scene* GetActiveScene()const { return m_ActiveScene; };
 		int GetAmountOfScenes();
 
-		void Update();
+		bool Update();
 		void Render();
 	private:
 		std::vector<Scene*> m_Scenes;

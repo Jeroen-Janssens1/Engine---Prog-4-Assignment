@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "SoundManager.h"
 #include "PlayerBehaviour.h"
+#include "MainMenu.h"
  ////////////////////////////////////
 // Only for debugging purposes
 class NextSceneCommand : public Command
@@ -123,4 +124,46 @@ public:
 private:
 	std::string m_Name;
 	int m_Loops;
+};
+
+class MenuSelectUpCommand : public Command
+{
+public:
+	MenuSelectUpCommand(MainMenu* menu)
+		:m_Menu{menu}
+	{
+	}
+	bool Execute() override { m_Menu->SelectUp(); return true; }
+
+private:
+	MainMenu* m_Menu;
+
+};
+
+class MenuSelectDownCommand : public Command
+{
+public:
+	MenuSelectDownCommand(MainMenu* menu)
+		:m_Menu{ menu }
+	{
+	}
+	bool Execute() override { m_Menu->SelectDown(); return true; }
+
+private:
+	MainMenu* m_Menu;
+
+};
+
+class MenuConfirmSelectionCommand : public Command
+{
+public:
+	MenuConfirmSelectionCommand(MainMenu* menu)
+		:m_Menu{ menu }
+	{
+	}
+	bool Execute() override { return m_Menu->ConfirmSelection(); }
+
+private:
+	MainMenu* m_Menu;
+
 };

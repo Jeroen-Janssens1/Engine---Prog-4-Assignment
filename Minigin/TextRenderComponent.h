@@ -15,6 +15,10 @@ public:
 	void Render() const override;
 
 	void SetText(const std::string& text);
+
+	void SetFont(Font* font) { m_Font = font; m_NeedsUpdate = true; }
+
+	void SetFontSize(unsigned int size) { m_Font->SetSize(size); m_NeedsUpdate = true; }
 	
 
 protected:

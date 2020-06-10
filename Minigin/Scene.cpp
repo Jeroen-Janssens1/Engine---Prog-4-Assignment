@@ -129,10 +129,10 @@ void Scene::Add(GameObject* object)
 	m_Objects.push_back(object);
 }
 
-void Scene::Update()
+bool Scene::Update()
 {
 	// process scene specific input
-	m_pInputManager->ProcessInput();
+	bool keepPlaying = m_pInputManager->ProcessInput();
 	auto& physicsVars = ServiceLocator<PhysicsVariables, PhysicsVariables>::GetService();
 
 	// update physics
@@ -143,6 +143,8 @@ void Scene::Update()
 	{
 		object->Update();
 	}
+
+	return keepPlaying;
 }
 
 void Scene::Render() const

@@ -95,13 +95,14 @@ void Minigin::Run()
 		{
 			const auto currentTime = high_resolution_clock::now();
 			
-			doContinue = ServiceLocator<InputManager, InputManager>::GetService().ProcessInput();
 			gameTime.Update();
-			sceneManager.Update();
+			doContinue = sceneManager.Update();
 			renderer.Render();
+			if(doContinue)
+				doContinue = ServiceLocator<InputManager, InputManager>::GetService().ProcessInput();
 			
-			auto sleepTime = duration_cast<duration<float>>(currentTime + milliseconds(MsPerFrame) - high_resolution_clock::now());
-			this_thread::sleep_for(sleepTime);
+			//auto sleepTime = duration_cast<duration<float>>(currentTime + milliseconds(MsPerFrame) - high_resolution_clock::now());
+			//this_thread::sleep_for(sleepTime);
 		}
 	}
 

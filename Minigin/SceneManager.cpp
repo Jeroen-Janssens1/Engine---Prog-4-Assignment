@@ -2,9 +2,9 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
-void SceneManager::Update()
+bool SceneManager::Update()
 {
-	m_ActiveScene->Update();
+	return m_ActiveScene->Update();
 }
 
 void SceneManager::Render()

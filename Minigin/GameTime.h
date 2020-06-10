@@ -1,5 +1,6 @@
 #pragma once
 #include <chrono>
+#include <string>
 class GameObject;
 class TextRenderComponent;
 class GameTime final
@@ -13,6 +14,9 @@ public:
 	void Update();
 	void Render();
 	void Reset();
+
+	void SetFont(const std::string& path);
+	void SetFontSize(unsigned int size);
 
 	GameObject* GetRenderingObject();
 
