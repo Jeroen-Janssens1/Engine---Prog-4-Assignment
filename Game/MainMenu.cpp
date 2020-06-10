@@ -99,21 +99,23 @@ bool MainMenu::ConfirmSelection()
 	switch (m_SelectedButton)
 	{
 	case SinglePlayer:
-		
+		SceneService.SetActiveScene(1);
 		return true;
 		break;
 	case Coop:
-
+		SceneService.SetActiveScene(1);
 		return true;
 		break;
 	case Versus:
-
+		SceneService.SetActiveScene(1);
 		return true;
 		break;
 	case Exit:
 		return false;
 		break;
 	}
+
+	return true;
 }
 
 void MainMenu::MoveSelector()
