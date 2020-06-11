@@ -38,6 +38,7 @@ void SceneManager::SetActiveScene(std::string& name)
 		if (scene->GetName() == name)
 		{
 			m_ActiveScene = scene;
+			m_ActiveScene->OnLoad();
 			return;
 		}
 	}
@@ -46,7 +47,10 @@ void SceneManager::SetActiveScene(std::string& name)
 void SceneManager::SetActiveScene(int index)
 {
 	if (size_t(index) < m_Scenes.size())
+	{
 		m_ActiveScene = m_Scenes[index];
+		m_ActiveScene->OnLoad();
+	}
 }
 
 int SceneManager::GetAmountOfScenes()

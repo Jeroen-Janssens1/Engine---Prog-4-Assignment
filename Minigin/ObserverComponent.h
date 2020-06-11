@@ -12,6 +12,7 @@ public:
 	virtual ~ObserverComponent();
 
 	void AddSubject(SubjectComponent* subject) { m_Subjects.push_front(subject); };
+	void OnLoad() override {}
 
 	ObserverComponent(const ObserverComponent& other) = delete;
 	ObserverComponent(ObserverComponent&& other) = delete;

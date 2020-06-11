@@ -12,6 +12,7 @@ public:
 
 	void Update() override;
 	void Render() const override;
+	void OnLoad() override {}
 
 	//b2Body* GetPhysicsBody() const { return m_pBody; }
 

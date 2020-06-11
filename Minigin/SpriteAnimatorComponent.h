@@ -13,6 +13,7 @@ public:
 
 	virtual void Update() override;
 	virtual void Render() const override;
+	void OnLoad() override {}
 
 	void ResetAnimator();
 

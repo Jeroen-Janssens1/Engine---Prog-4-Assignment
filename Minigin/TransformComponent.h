@@ -15,6 +15,7 @@ public:
 
 	void Update() override;
 	void Render() const override;
+	void OnLoad() override {}
 
 private:
 	glm::vec3 m_Position;

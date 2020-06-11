@@ -26,6 +26,8 @@ struct TileType
 
 		InputManager* GetInputManager() const { return m_pInputManager; }
 
+		void OnLoad();
+
 		bool Update();
 		void Render() const;
 		std::string& GetName();

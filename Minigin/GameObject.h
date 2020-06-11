@@ -10,6 +10,11 @@
 		virtual void Render() const;
 
 		void AddComponent(BaseComponent* pComponent);
+
+		void OnLoad();
+
+		bool GetIsEnabled() const { return m_IsEnabled; }
+		void SetIsEnabled(bool value) { m_IsEnabled = value; }
 		
 		// This function is extremely slow! Do not use it in update and drawing/rendering functions!
 		template<typename T>
@@ -33,4 +38,5 @@
 	private:
 		std::vector<BaseComponent*> m_Components;
 		std::string m_Tag;
+		bool m_IsEnabled;
 	};

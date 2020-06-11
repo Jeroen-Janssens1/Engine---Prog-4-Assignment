@@ -14,6 +14,7 @@ public:
 
 	void Update() override;
 	void Render() const override;
+	void OnLoad() override {}
 
 	int GetXPos();
 	int GetYPos();

@@ -21,6 +21,7 @@ public:
 
 	void Update() override {}
 	void Render() const override {}
+	void OnLoad() override {}
 
 protected:
 	std::list<ObserverComponent*> m_Observers;

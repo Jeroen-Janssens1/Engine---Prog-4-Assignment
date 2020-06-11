@@ -5,6 +5,7 @@
 
 GameObject::GameObject(const std::string& tag)
 	:m_Tag{tag}
+	,m_IsEnabled{true}
 {
 }
 
@@ -39,4 +40,12 @@ void GameObject::Render() const
 void GameObject::AddComponent(BaseComponent* pComponent)
 {
 	m_Components.push_back(pComponent);
+}
+
+void GameObject::OnLoad()
+{
+	for (size_t i{}; i < m_Components.size(); i++)
+	{
+		m_Components[i]->OnLoad();
+	}
 }

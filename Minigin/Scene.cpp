@@ -129,6 +129,14 @@ void Scene::Add(GameObject* object)
 	m_Objects.push_back(object);
 }
 
+void Scene::OnLoad()
+{
+	for (auto& object : m_Objects)
+	{
+		object->OnLoad();
+	}
+}
+
 bool Scene::Update()
 {
 	// process scene specific input
@@ -141,7 +149,8 @@ bool Scene::Update()
 
 	for(auto& object : m_Objects)
 	{
-		object->Update();
+		if(object->GetIsEnabled())
+			object->Update();
 	}
 
 	return keepPlaying;
@@ -151,7 +160,8 @@ void Scene::Render() const
 {
 	for (const auto& object : m_Objects)
 	{
-		object->Render();
+		if(object->GetIsEnabled())
+			object->Render();
 	}
 }
 

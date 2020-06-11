@@ -1,19 +1,21 @@
 #include "MiniginPCH.h"
 #include "TextRenderComponent.h"
-#include <SDL.h>
 #include <SDL_ttf.h>
 #include "Renderer.h"
 #include "Font.h"
 #include "Texture2D.h"
 #include "Renderer.h"
 #include "TransformComponent.h"
+#include "Texture2D.h"
 
 
-TextRenderComponent::TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, Font* font)
-	:RenderComponent{pOwner, pTransform}
+TextRenderComponent::TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, Font* font, SDL_Color color)
+	:BaseComponent{pOwner}
 	,m_Text{text}
 	,m_Font{font}
 	,m_NeedsUpdate{true}
+	,m_pTransformParent{pTransform}
+	,m_Color{color}
 {
 	
 }
@@ -28,8 +30,7 @@ void TextRenderComponent::Update()
 {
 	if (m_NeedsUpdate)
 	{
-		const SDL_Color color = { 255, 255, 255 }; // only white text for now
-		const auto surf = TTF_RenderText_Blended(m_Font->GetFont() , m_Text.c_str(), color);
+		const auto surf = TTF_RenderText_Blended(m_Font->GetFont() , m_Text.c_str(), m_Color);
 		if (surf == nullptr)
 		{
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());

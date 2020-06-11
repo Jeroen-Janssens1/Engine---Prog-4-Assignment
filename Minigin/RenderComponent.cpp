@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "TransformComponent.h"
+#include "Texture2D.h"
 
 RenderComponent::RenderComponent(GameObject* pOwner, TransformComponent* pTransform,
 	float width, float height, bool isSpriteSheet, int cellWidth, int cellHeight, int xPos, int yPos)

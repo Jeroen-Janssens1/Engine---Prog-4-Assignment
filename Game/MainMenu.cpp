@@ -18,12 +18,13 @@ void MainMenu::Initialize(int width, int height, Font* font)
 	float gapSize = (height - (offset * 2)) / 4;
 	auto* go = new GameObject();
 	auto* tc = new TransformComponent(go);
-	auto* textRenderComp = new TextRenderComponent(go, tc, "SINGLE PLAYER", font);
+	auto* textRenderComp = new TextRenderComponent(go, tc, "SINGLE PLAYER", font, {255, 255, 0});
 	go->AddComponent(tc);
 	go->AddComponent(textRenderComp);
 	tc->SetPosition(width / 2.f, offset, 0.f);
 	m_Scene->Add(go);
 	m_Buttons.push_back(tc);
+	m_ButtonRenders.push_back(textRenderComp);
 
 	go = new GameObject();
 	tc = new TransformComponent(go);
@@ -33,6 +34,7 @@ void MainMenu::Initialize(int width, int height, Font* font)
 	tc->SetPosition(width / 2.f, offset + gapSize, 0.f);
 	m_Scene->Add(go);
 	m_Buttons.push_back(tc);
+	m_ButtonRenders.push_back(textRenderComp);
 
 	go = new GameObject();
 	tc = new TransformComponent(go);
@@ -42,6 +44,7 @@ void MainMenu::Initialize(int width, int height, Font* font)
 	tc->SetPosition(width / 2.f, offset + (gapSize * 2), 0.f);
 	m_Scene->Add(go);
 	m_Buttons.push_back(tc);
+	m_ButtonRenders.push_back(textRenderComp);
 
 	go = new GameObject();
 	tc = new TransformComponent(go);
@@ -51,6 +54,7 @@ void MainMenu::Initialize(int width, int height, Font* font)
 	tc->SetPosition(width / 2.f, offset + (gapSize * 3), 0.f);
 	m_Scene->Add(go);
 	m_Buttons.push_back(tc);
+	m_ButtonRenders.push_back(textRenderComp);
 
 	go = new GameObject();
 	m_SelectionIcon = new TransformComponent(go);
@@ -82,35 +86,53 @@ void MainMenu::Render() const
 
 }
 
+void MainMenu::OnLoad()
+{
+	m_ButtonRenders[int(m_SelectedButton)]->SetColor({ 255, 255, 255 });
+	m_SelectedButton = Buttons::SinglePlayer;
+	MainMenu::MoveSelector();
+	m_ButtonRenders[int(m_SelectedButton)]->SetColor({ 255, 255, 0 });
+}
+
 void MainMenu::SelectUp()
 {
 	m_SelectedButton = Buttons((int(m_SelectedButton) - 1) % m_Buttons.size());
 	MoveSelector();
+	m_ButtonRenders[int(m_SelectedButton)]->SetColor(SDL_Color{ 255, 255, 0 });
+	if (int(m_SelectedButton) == m_Buttons.size() - 1)
+		m_ButtonRenders.front()->SetColor(SDL_Color{ 255, 255, 255 });
+	else
+		m_ButtonRenders[int(m_SelectedButton) + 1]->SetColor(SDL_Color{ 255, 255, 255 });
 }
 
 void MainMenu::SelectDown()
 {
 	m_SelectedButton = Buttons((int(m_SelectedButton) + 1) % m_Buttons.size());
 	MoveSelector();
+	m_ButtonRenders[int(m_SelectedButton)]->SetColor(SDL_Color{ 255, 255, 0 });
+	if (int(m_SelectedButton) == 0)
+		m_ButtonRenders.back()->SetColor(SDL_Color{ 255, 255, 255 });
+	else
+		m_ButtonRenders[int(m_SelectedButton) - 1]->SetColor(SDL_Color{ 255, 255, 255 });
 }
 
 bool MainMenu::ConfirmSelection()
 {
 	switch (m_SelectedButton)
 	{
-	case SinglePlayer:
+	case Buttons::SinglePlayer:
 		SceneService.SetActiveScene(1);
 		return true;
 		break;
-	case Coop:
+	case Buttons::Coop:
 		SceneService.SetActiveScene(1);
 		return true;
 		break;
-	case Versus:
+	case Buttons::Versus:
 		SceneService.SetActiveScene(1);
 		return true;
 		break;
-	case Exit:
+	case Buttons::Exit:
 		return false;
 		break;
 	}

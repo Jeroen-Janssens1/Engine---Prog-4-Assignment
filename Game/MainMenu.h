@@ -4,6 +4,7 @@
 class Scene;
 class Font;
 class TransformComponent;
+class TextRenderComponent;
 class MainMenu : public BaseComponent
 {
 public:
@@ -15,13 +16,15 @@ public:
 
 	void Render() const override;
 
+	void OnLoad() override;
+
 	void SelectUp();
 	void SelectDown();
 
 	bool ConfirmSelection();
 
 private:
-	enum Buttons
+	enum class Buttons
 	{
 		SinglePlayer,
 		Coop,
@@ -34,6 +37,7 @@ private:
 	Buttons m_SelectedButton;
 	Scene* m_Scene;
 	std::vector<TransformComponent*> m_Buttons;
+	std::vector<TextRenderComponent*> m_ButtonRenders;
 	TransformComponent* m_SelectionIcon;
 };
 

@@ -1,10 +1,10 @@
 #pragma once
 #include "BaseComponent.h"
-#include "Texture2D.h"
 #include "MiniginPCH.h"
 
 class TransformComponent;
-class RenderComponent :
+class Texture2D;
+class RenderComponent final :
 	public BaseComponent
 {
 public:
@@ -14,6 +14,7 @@ public:
 
 	void Update() override;
 	void Render() const override;
+	void OnLoad() override {}
 
 	float GetWidth() const { return m_Width; }
 	float GetHeight() const { return m_Height; }
