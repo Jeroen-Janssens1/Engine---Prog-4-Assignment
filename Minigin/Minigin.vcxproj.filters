@@ -125,8 +125,10 @@
     <ClInclude Include="PhysicsVariables.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Services.h" />
     <ClInclude Include="PhysicsContactListener.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Services.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
