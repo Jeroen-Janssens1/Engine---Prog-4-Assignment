@@ -3,8 +3,8 @@
 #include "GameObject.h"
 #include "SubjectComponent.h"
 
-ObserverComponent::ObserverComponent(GameObject* pOwner)
-	:BaseComponent(pOwner)
+ObserverComponent::ObserverComponent(GameObject* pOwner, const std::string& tag)
+	:BaseComponent(pOwner, tag)
 {
 }
 

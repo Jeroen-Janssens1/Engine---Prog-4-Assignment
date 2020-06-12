@@ -11,10 +11,7 @@ struct TileType
 	int xPos;
 	int yPos;
 	bool usesPhysics;
-	bool passableBottom;
-	bool passableLeft;
-	bool passableTop;
-	bool passableRight;
+	std::string tag;
 };
 
 	class Scene

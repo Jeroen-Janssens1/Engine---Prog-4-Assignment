@@ -7,7 +7,7 @@ class SubjectComponent :
 	public BaseComponent
 {
 public:
-	SubjectComponent(GameObject* pOwner);
+	SubjectComponent(GameObject* pOwner, const std::string& tag = "");
 	virtual ~SubjectComponent();
 
 	SubjectComponent(const SubjectComponent& other) = delete;

@@ -16,9 +16,9 @@ struct SDL_Renderer;
 		void Render() const;
 		void Destroy();
 
-		void RenderTexture(const Texture2D& texture, float x, float y) const;
-		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
-		void RenderTexture(const Texture2D& texture, float x, float y, int xPos, int yPos, int srcWidth, int srcHeight, float width = -1.f, float height = -1.f) const;
+		void RenderTexture(const Texture2D& texture, float x, float y, bool isFlipped = false) const;
+		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height, bool isFlipped = false) const;
+		void RenderTexture(const Texture2D& texture, float x, float y, int xPos, int yPos, int srcWidth, int srcHeight, float width = -1.f, float height = -1.f, bool isFlipped = false) const;
 
 		SDL_Renderer* GetSDLRenderer() const { return m_Renderer; }
 	private:

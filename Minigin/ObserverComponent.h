@@ -8,7 +8,7 @@ class ObserverComponent :
 	public BaseComponent
 {
 public:
-	ObserverComponent(GameObject* pOwner);
+	ObserverComponent(GameObject* pOwner, const std::string& tag = "");
 	virtual ~ObserverComponent();
 
 	void AddSubject(SubjectComponent* subject) { m_Subjects.push_front(subject); };

@@ -9,8 +9,9 @@
 #include "Texture2D.h"
 
 
-TextRenderComponent::TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, Font* font, SDL_Color color)
-	:BaseComponent{pOwner}
+TextRenderComponent::TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, Font* font,
+	SDL_Color color, const std::string& tag)
+	:BaseComponent{pOwner, tag}
 	,m_Text{text}
 	,m_Font{font}
 	,m_NeedsUpdate{true}

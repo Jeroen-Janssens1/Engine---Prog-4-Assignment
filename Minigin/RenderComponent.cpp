@@ -5,9 +5,9 @@
 #include "TransformComponent.h"
 #include "Texture2D.h"
 
-RenderComponent::RenderComponent(GameObject* pOwner, TransformComponent* pTransform,
+RenderComponent::RenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& tag,
 	float width, float height, bool isSpriteSheet, int cellWidth, int cellHeight, int xPos, int yPos)
-	:BaseComponent{pOwner}
+	:BaseComponent{pOwner, tag}
 	,m_pTransformParent{pTransform}
 	,m_Texture{}
 	,m_IsSpriteSheet{isSpriteSheet}
@@ -19,6 +19,7 @@ RenderComponent::RenderComponent(GameObject* pOwner, TransformComponent* pTransf
 	,m_YPos{yPos}
 	,m_Width{width} // actual width and height in pixels in the game
 	,m_Height{height}
+	,m_IsFlipped{false}
 {
 	
 }
@@ -33,10 +34,10 @@ void RenderComponent::Render() const
 	if (m_IsSpriteSheet)
 	{
 		ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y,
-			m_XPos, m_YPos, m_CellWidth, m_CellHeight, m_Width, m_Height);
+			m_XPos, m_YPos, m_CellWidth, m_CellHeight, m_Width, m_Height, m_IsFlipped);
 		return;
 	}
-	ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y);
+	ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y, m_IsFlipped);
 }
 
 void RenderComponent::SetTexture(const std::string& filename)

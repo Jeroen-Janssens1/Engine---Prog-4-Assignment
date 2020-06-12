@@ -13,17 +13,20 @@
 
 		void OnLoad();
 
+		const std::string& GetTag() const { return m_Tag; }
+
 		bool GetIsEnabled() const { return m_IsEnabled; }
 		void SetIsEnabled(bool value) { m_IsEnabled = value; }
 		
 		// This function is extremely slow! Do not use it in update and drawing/rendering functions!
 		template<typename T>
-		T* GetComponent() const
+		T* GetComponent(const std::string& tag = "") const
 		{
 			for (size_t i{}; i < m_Components.size(); i++)
 			{
-				if (dynamic_cast<T*>(m_Components[i]))
-					return (T*)m_Components[i];
+				if (tag.empty() || tag == m_Components[i]->GetTag())
+					if (dynamic_cast<T*>(m_Components[i]))
+						return (T*)m_Components[i];
 			}
 			return nullptr;
 		}

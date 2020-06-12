@@ -22,6 +22,12 @@
     <Filter Include="Scripts\Player">
       <UniqueIdentifier>{99067164-39ec-4871-a796-24ca67006d60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts\Levels">
+      <UniqueIdentifier>{30c1918b-c201-489d-bb4e-2348f1a9a1e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts\Menus">
+      <UniqueIdentifier>{3cf467b5-fb68-4e4f-8be8-2a3efd54d824}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputCommands.h">
@@ -36,8 +42,11 @@
     <ClInclude Include="PlayerBehaviour.h">
       <Filter>Scripts\Player</Filter>
     </ClInclude>
+    <ClInclude Include="LevelBehaviour.h">
+      <Filter>Scripts\Levels</Filter>
+    </ClInclude>
     <ClInclude Include="MainMenu.h">
-      <Filter>Header Files</Filter>
+      <Filter>Scripts\Menus</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,8 +65,11 @@
     <ClCompile Include="PlayerBehaviour.cpp">
       <Filter>Scripts\Player</Filter>
     </ClCompile>
+    <ClCompile Include="LevelBehaviour.cpp">
+      <Filter>Scripts\Levels</Filter>
+    </ClCompile>
     <ClCompile Include="MainMenu.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Scripts\Menus</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

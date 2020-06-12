@@ -8,7 +8,8 @@ class RenderComponent final :
 	public BaseComponent
 {
 public:
-	RenderComponent(GameObject* pOwner, TransformComponent* pTransform, float width=-1.f, float height=-1.f, bool isSpriteSheet = false,
+	RenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& tag = "",
+		float width=-1.f, float height=-1.f, bool isSpriteSheet = false,
 		int cellWidth = 0, int cellHeight = 0, int xPos = 0, int yPos = 0);
 	virtual ~RenderComponent()=default;
 
@@ -25,6 +26,8 @@ public:
 	void SetTexture(const std::string& filename);
 	void SetSpritePos(int xPos, int yPos);
 
+	void SetIsFlipped(bool value) { m_IsFlipped = value; }
+
 protected:
 	Texture2D* m_Texture;
 	TransformComponent* m_pTransformParent;
@@ -35,5 +38,6 @@ protected:
 	bool m_IsSpriteSheet;
 	float m_Width;
 	float m_Height;
+	bool m_IsFlipped;
 };
 

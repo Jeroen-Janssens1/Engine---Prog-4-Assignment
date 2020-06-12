@@ -8,7 +8,7 @@ class SpriteAnimatorComponent final :
 	public BaseComponent
 {
 public:
-	SpriteAnimatorComponent(GameObject* pOwner, std::vector<Animation*>& animations);
+	SpriteAnimatorComponent(GameObject* pOwner, std::vector<Animation*>& animations, const std::string& tag = "");
 	~SpriteAnimatorComponent();
 
 	virtual void Update() override;

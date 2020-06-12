@@ -11,7 +11,8 @@ class TextRenderComponent final:
 	public BaseComponent
 {
 public:
-	TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, Font* font, SDL_Color color = SDL_Color{255, 255, 255});
+	TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, Font* font,
+		SDL_Color color = SDL_Color{255, 255, 255}, const std::string& tag = "");
 	virtual ~TextRenderComponent();
 
 	void Update() override;

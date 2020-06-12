@@ -104,7 +104,7 @@
 
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x64\SDL2_mixer.dll" "$(OutputPath)" /R /Y
 
-xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y</Command>
+xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -127,7 +127,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2\lib\x86\SDL2.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x86\SDL2_mixer.dll" "$(OutputPath)" /R /Y
 
-xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y</Command>
+xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,7 +152,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2\lib\x86\SDL2.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x86\SDL2_mixer.dll" "$(OutputPath)" /R /Y
 
-xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y</Command>
+xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -176,13 +176,14 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y</Command>
 
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x64\SDL2_mixer.dll" "$(OutputPath)" /R /Y
 
-xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y</Command>
+xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Achievement.h" />
     <ClInclude Include="InputCommands.h" />
     <ClInclude Include="InputSubject.h" />
+    <ClInclude Include="LevelBehaviour.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="PlayerBehaviour.h" />
   </ItemGroup>
@@ -194,6 +195,7 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y</Command>
   <ItemGroup>
     <ClCompile Include="Achievement.cpp" />
     <ClCompile Include="InputSubject.cpp" />
+    <ClCompile Include="LevelBehaviour.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="InputCommands.cpp" />
     <ClCompile Include="MainMenu.cpp" />

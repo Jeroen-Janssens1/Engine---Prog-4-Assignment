@@ -126,6 +126,9 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Services.h" />
+    <ClInclude Include="PhysicsContactListener.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">

@@ -3,8 +3,8 @@
 #include "Animation.h"
 #include "Transition.h"
 
-SpriteAnimatorComponent::SpriteAnimatorComponent(GameObject* pOwner, std::vector<Animation*>& animations)
-	:BaseComponent(pOwner)
+SpriteAnimatorComponent::SpriteAnimatorComponent(GameObject* pOwner, std::vector<Animation*>& animations, const std::string& tag)
+	:BaseComponent(pOwner, tag)
 	,m_Animations{animations}
 {
 	m_ActiveAnimation = m_Animations[0];

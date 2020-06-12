@@ -33,7 +33,7 @@ void Renderer::Destroy()
 	}
 }
 
-void Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
+void Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, bool isFlipped) const
 {
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
@@ -41,10 +41,18 @@ void Renderer::RenderTexture(const Texture2D& texture, const float x, const floa
 	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
 	dst.x -= dst.w / 2;
 	dst.y -= dst.h / 2;
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	if (isFlipped)
+	{
+		SDL_Point center{};
+		center.x = dst.x;
+		center.y = dst.y;
+		SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, 0, &center, SDL_RendererFlip::SDL_FLIP_HORIZONTAL);
+	}
+	else
+		SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
+void Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height, bool isFlipped) const
 {
 	SDL_Rect dst;
 	dst.x = static_cast<int>(x);
@@ -53,10 +61,18 @@ void Renderer::RenderTexture(const Texture2D& texture, const float x, const floa
 	dst.h = static_cast<int>(height);
 	dst.x -= dst.w / 2;
 	dst.y -= dst.h / 2;
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	if (isFlipped)
+	{
+		SDL_Point center{};
+		center.x = dst.x;
+		center.y = dst.y;
+		SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, 0, &center, SDL_RendererFlip::SDL_FLIP_HORIZONTAL);
+	}
+	else
+		SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void Renderer::RenderTexture(const Texture2D& texture, float x, float y, int xPos, int yPos, int srcWidth, int srcHeight, float width, float height) const
+void Renderer::RenderTexture(const Texture2D& texture, float x, float y, int xPos, int yPos, int srcWidth, int srcHeight, float width, float height, bool isFlipped) const
 {
 	SDL_Rect dst;
 	SDL_Rect src;
@@ -80,5 +96,13 @@ void Renderer::RenderTexture(const Texture2D& texture, float x, float y, int xPo
 	src.y = yPos;
 	src.w = srcWidth;
 	src.h = srcHeight;
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst);
+	if (isFlipped)
+	{
+		SDL_Point center{};
+		center.x = dst.x;
+		center.y = dst.y;
+		SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst, 0, &center, SDL_RendererFlip::SDL_FLIP_HORIZONTAL);
+	}
+	else
+		SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst);
 }

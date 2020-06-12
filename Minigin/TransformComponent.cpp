@@ -1,8 +1,8 @@
 #include "MiniginPCH.h"
 #include "TransformComponent.h"
 
-TransformComponent::TransformComponent(GameObject* pOwner, float x, float y, float z)
-	:BaseComponent{pOwner}
+TransformComponent::TransformComponent(GameObject* pOwner, float x, float y, float z, const std::string& tag)
+	:BaseComponent{pOwner, tag}
 	,m_Position{x, y, z}
 {
 	

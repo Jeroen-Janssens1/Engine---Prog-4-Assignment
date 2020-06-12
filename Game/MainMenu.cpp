@@ -58,7 +58,7 @@ void MainMenu::Initialize(int width, int height, Font* font)
 
 	go = new GameObject();
 	m_SelectionIcon = new TransformComponent(go);
-	auto* rc = new RenderComponent(go, m_SelectionIcon, 8, 8, true, 6, 8, 20, 40);
+	auto* rc = new RenderComponent(go, m_SelectionIcon, "", 8, 8, true, 6, 8, 20, 40);
 	rc->SetTexture("Resources/Player1.png");
 	go->AddComponent(m_SelectionIcon);
 	go->AddComponent(rc);
