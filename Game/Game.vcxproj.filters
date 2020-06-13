@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -28,11 +20,15 @@
     <Filter Include="Scripts\Menus">
       <UniqueIdentifier>{3cf467b5-fb68-4e4f-8be8-2a3efd54d824}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core Game Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Scripts\Enemies">
+      <UniqueIdentifier>{ca742253-9d75-4f02-94d4-22a84ac78661}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="InputCommands.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Achievement.h">
       <Filter>Observers And Subjects</Filter>
     </ClInclude>
@@ -48,13 +44,22 @@
     <ClInclude Include="MainMenu.h">
       <Filter>Scripts\Menus</Filter>
     </ClInclude>
+    <ClInclude Include="InputCommands.h">
+      <Filter>Core Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenBehaviour.h">
+      <Filter>Scripts\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Bubble.h">
+      <Filter>Scripts\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Core Game Files</Filter>
     </ClCompile>
     <ClCompile Include="InputCommands.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Core Game Files</Filter>
     </ClCompile>
     <ClCompile Include="Achievement.cpp">
       <Filter>Observers And Subjects</Filter>
@@ -70,6 +75,12 @@
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
       <Filter>Scripts\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenBehaviour.cpp">
+      <Filter>Scripts\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Bubble.cpp">
+      <Filter>Scripts\Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

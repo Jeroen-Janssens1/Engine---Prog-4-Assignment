@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
+#include "Scene.h"
 
 GameObject::GameObject(const std::string& tag)
 	:m_Tag{tag}
@@ -17,6 +18,12 @@ GameObject::~GameObject()
 		m_Components[i] = nullptr;
 	}
 	m_Components.clear();
+}
+
+// use this function if you want to delete an object from a scene, never use delete yourself!
+void GameObject::Destroy()
+{
+	m_ParentScene->Remove(m_Indx);
 }
 
 void GameObject::Update()

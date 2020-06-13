@@ -54,6 +54,8 @@ void Minigin::Initialize()
 	{
 		throw std::runtime_error(std::string("Core::Initialize( ), error when calling Mix_OpenAudio!: ") + Mix_GetError());
 	}
+	m_pContactFilter = new PhysicsContactFilter();
+	m_pContactListener = new PhysicsContactListener();
 
 	// init all services
 	ServiceLocator<Renderer, Renderer>::Init();
@@ -64,6 +66,8 @@ void Minigin::Initialize()
 	ServiceLocator<GameTime, GameTime>::Init();
 	ServiceLocator<SoundManager, SoundManager>::Init();
 	ServiceLocator<PhysicsVariables, PhysicsVariables>::Init();
+	ServiceLocator<PhysicsVariables, PhysicsVariables>::GetService().SetContactListener(m_pContactListener);
+	ServiceLocator<PhysicsVariables, PhysicsVariables>::GetService().SetContactFilter(m_pContactFilter);
 	ServiceLocator<ResourceManager, ResourceManager>::GetService().Init("../Data/");
 	ServiceLocator<GameTime, GameTime>::GetService().Init();
 
@@ -73,7 +77,8 @@ void Minigin::Initialize()
 
 void Minigin::Cleanup()
 {
-	
+	delete m_pContactFilter;
+	delete m_pContactListener;
 	ServiceLocator<Renderer, Renderer>::GetService().Destroy();
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;

@@ -131,6 +131,9 @@
     <ClInclude Include="Services.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsContactFilter.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseComponent.cpp">

@@ -1,22 +1,23 @@
 #pragma once
 #include "BaseComponent.h"
 #include "Box2D.h"
-#include "PhysicsVariables.h"
 
+class b2Fixture;
+class PhysicsVariables;
 class TransformComponent;
 class Box2DComponent final : public BaseComponent
 {
 public:
 	Box2DComponent(GameObject* pOwner, TransformComponent* pTransform, b2World* pPhysicsWorld, float width, float height, 
 		const std::string& tag = "", float friction = 0.f, float density = 0.f, bool fixedRotation = true, b2Vec2 posOffset = b2Vec2(0.f, 0.f), 
-		bool isSensor = false, bool isDynamic = false, bool isKinematic = false);
-	virtual ~Box2DComponent() = default;
+		bool isSensor = false, bool isDynamic = false, bool isKinematic = false, bool usesGravity = true);
+	virtual ~Box2DComponent();
 
 	void Update() override;
 	void Render() const override;
 	void OnLoad() override {};
 
-	void AddFixture(float width, float height, float friction = 0.f, float density = 0.f, b2Vec2 posOffset = b2Vec2(0.f, 0.f), bool isSensor = false);
+	b2Fixture* AddFixture(float width, float height, float friction = 0.f, float density = 0.f, b2Vec2 posOffset = b2Vec2(0.f, 0.f), bool isSensor = false);
 
 	void SetPosition(float x, float y);
 
@@ -40,7 +41,7 @@ public:
 private:
 	TransformComponent* m_pTransformParent;
 	b2Body* m_pBody;
-	PhysicsVariables m_PhysicVars;
+	//PhysicsVariables m_PhysicVars;
 	BaseComponent* m_CollisionCallbackScript;
 };
 

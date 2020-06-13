@@ -20,6 +20,7 @@ struct TileType
 	public:
 
 		void Add(GameObject* pObject);
+		void Remove(int indx);
 
 		InputManager* GetInputManager() const { return m_pInputManager; }
 
@@ -46,6 +47,7 @@ struct TileType
 		
 		std::string m_Name;
 		std::vector <GameObject*> m_Objects{};
+		std::vector <int> m_ToRemoveObjects{};
 		std::vector<TileComponent*> m_TileMap;
 		int m_CellWidth;
 		int m_CellHeight;

@@ -27,6 +27,7 @@ public:
 	void SetSpritePos(int xPos, int yPos);
 
 	void SetIsFlipped(bool value) { m_IsFlipped = value; }
+	bool GetIsFlipped() const { return m_IsFlipped; }
 
 protected:
 	Texture2D* m_Texture;

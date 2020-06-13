@@ -4,6 +4,9 @@
 class GameObject;
 class b2Contact;
 class Box2DComponent;
+class b2Fixture;
+struct b2Manifold;
+struct b2ContactImpulse;
 class BaseComponent
 {
 public:
@@ -17,6 +20,9 @@ public:
 	// for collision callback functionality within custom scripts/components (a little like in Unity's OnTriggerEnter and Exit functions
 	virtual void OnContactBegin(b2Contact*, Box2DComponent*, Box2DComponent*) { };
 	virtual void OnContactEnd(b2Contact*, Box2DComponent*, Box2DComponent*) { };
+	virtual void PreSolve(b2Contact*, const b2Manifold*, Box2DComponent*, Box2DComponent*) {};
+	virtual void PostSolve(b2Contact*, const b2ContactImpulse*, Box2DComponent*, Box2DComponent*) {};
+	virtual bool ShouldCollide(b2Fixture*, b2Fixture*, Box2DComponent*, Box2DComponent*) { return true; };
 
 	GameObject* GetGameObject() const { return m_pOwner; }
 

@@ -1,20 +1,14 @@
 #include "PlayerBehaviour.h"
-#include "TransformComponent.h"
-#include "ServiceLocator.h"
-#include "InputManager.h"
 #include "InputCommands.h"
-#include "GameTime.h"
-#include "RenderComponent.h"
-#include "SceneManager.h"
-#include "Box2DComponent.h"
 #include "glm\common.hpp"
-#include "SceneManager.h"
 #include "Scene.h"
 #include "AnimatorIncludes.h"
 #include "InputSubject.h"
 #include "Achievement.h"
 #include "Services.h"
-#include "ContactListener.h"
+#include "Bubble.h"
+#include "Components.h"
+#include "ZenBehaviour.h"
 
 #include <iostream>
 
@@ -28,7 +22,13 @@ PlayerBehaviour::PlayerBehaviour(GameObject* pOwner)
 
 void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, unsigned int controllerIndx, float xPos, float yPos)
 {
-	m_IsGrounded = false;
+	m_AttackTimer = m_AttackCooldown;
+	m_Lives = 4;
+	m_SpawnPos.x = xPos;
+	m_SpawnPos.y = yPos;
+	m_IsHit = false;
+	m_NrOfOverlappers = 0;
+	m_IgnoreCollisions = false;
 	m_pInput = pInput;
 	m_pTransform = new TransformComponent(m_pOwner);
 	m_pOwner->AddComponent(m_pTransform);
@@ -41,7 +41,7 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 
 
 	// after setting up the render component, create all the animations you need
-	int nrOfAnimations = 2;
+	int nrOfAnimations = 3;
 	std::vector<Animation*> animations{};
 	b2Vec2 framePos{};
 	framePos.x = 0;
@@ -54,12 +54,20 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 			nrOfFrames = 2;
 		else if (i == 1)
 			nrOfFrames = 4;
+		else if (i == 2)
+		{
+			nrOfFrames = 8;
+			framePos.y = 54;
+		}
 		framePos.x = 0;
 		// for this you first need to set up the frame positions
 		for (int j{}; j < nrOfFrames; j++)
 		{
 			framePositions.push_back(framePos);
-			framePos.x += 18;
+			if (j == 3 && i == 2)
+				framePos.x = 0;
+			else
+				framePos.x += 18;
 		}
 		// Then you push back the new animation
 		if (i == 0)
@@ -68,12 +76,19 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 		}
 		else if (i == 1)
 			animations.push_back(new Animation("Walking", m_pRenderComp, framePositions, 0.15f));
+		else if (i == 2)
+			animations.push_back(new Animation("Death", m_pRenderComp, framePositions, 0.15f, false, true));
 	}
 	// now you need to set up the transitions
 	Transition* transition = new Transition(animations[1], true, false, "Walking");
 	animations[0]->AddTransition(transition);
 	transition = new Transition(animations[0], true, false, "Still");
 	animations[1]->AddTransition(transition);
+	transition = new Transition(animations[2], true, false, "Death");
+	animations[0]->AddTransition(transition);
+	animations[1]->AddTransition(transition);
+	transition = new Transition(animations[0]);
+	animations[2]->AddTransition(transition);
 
 	//Make the actual animator component, this component will take care of all the deletion of the animations and transitions
 	m_pAnimator = new SpriteAnimatorComponent(m_pOwner, animations);
@@ -85,6 +100,8 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 	m_pInput->MapCommand(controllerIndx, ControllerButton::DPadRight, new MoveRightCommand(this));
 	m_pInput->MapCommand(controllerIndx, ControllerButton::DPadLeft, new MoveLeftCommand(this));
 	m_pInput->MapCommand(controllerIndx, ControllerButton::DPadUp, new MoveUpCommand(this), true);
+	m_pInput->MapCommand(controllerIndx, ControllerButton::DPadDown, new MoveDownCommand(this));
+	m_pInput->MapCommand(controllerIndx, ControllerButton::ButtonB, new AttackCommand(this), true);
 
 	// Keyboard Input
 	if (controllerIndx == 0)
@@ -92,12 +109,16 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 		m_pInput->MapCommand('D', new MoveRightCommand(this));
 		m_pInput->MapCommand('A', new MoveLeftCommand(this));
 		m_pInput->MapCommand('W', new MoveUpCommand(this), true);
+		m_pInput->MapCommand('S', new MoveDownCommand(this));
+		m_pInput->MapCommand(' ', new AttackCommand(this), true);
 	}
 	else
 	{
 		m_pInput->MapCommand(VK_RIGHT, new MoveRightCommand(this));
 		m_pInput->MapCommand(VK_LEFT, new MoveLeftCommand(this));
 		m_pInput->MapCommand(VK_UP, new MoveUpCommand(this), true);
+		m_pInput->MapCommand(VK_DOWN, new MoveDownCommand(this));
+		m_pInput->MapCommand(VK_LSHIFT, new AttackCommand(this));
 	}
 
 	m_pBox2D = new Box2DComponent(m_pOwner, m_pTransform, pPhysicsWorld, 
@@ -113,7 +134,36 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 
 void PlayerBehaviour::Update()
 {
-	m_IsGrounded = false;
+	if (m_AttackTimer < m_AttackCooldown)
+	{
+		m_AttackTimer += m_GameTime.GetElapsed();
+	}
+
+	if (m_pAnimator->GetCurrentStateName() == "Death")
+	{
+		if (m_IsHit)
+		{
+			m_IsHit = false;
+			// disable physics emulation
+			m_pBox2D->SetIsEnabled(false);
+			if (m_Lives == 0)
+			{
+				// go to failure screen (for now just the main menu screen)
+				SceneService.SetActiveScene(0);
+				return;
+			}
+		}
+		return;
+	}
+
+	if (!m_pBox2D->GetIsEnabled())
+	{
+		// re-enable physics and respawn the player
+		//m_pTransform->SetPosition(m_SpawnPos.x, m_SpawnPos.y, 0.f);
+		m_pBox2D->SetIsEnabled(true);
+		m_pBox2D->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
+	}
+
 	if (m_Vel.x > m_Speed)
 	{
 		m_Vel.x = m_Speed;
@@ -135,17 +185,27 @@ void PlayerBehaviour::Update()
 	m_pBox2D->GetVelocity(curVel);
 	m_pBox2D->SetVelocity(m_Vel.x, curVel.y);
 	m_Vel.x = 0;
+	if (curVel.y > 0.2f)
+		m_IgnoreCollisions = false;
+
+
+	m_IsDropping = false;
 
 }
 
 void PlayerBehaviour::MoveUp()
 {
 	if (m_FootSensorCounter != 0)
+	{
 		m_JumpForce = b2Vec2(0.f, -500.f);
+		m_IgnoreCollisions = true;
+	}
 }
 
 void PlayerBehaviour::MoveDown()
 {
+	m_IsDropping = true;
+	m_IgnoreCollisions = true;
 }
 
 void PlayerBehaviour::MoveRight()
@@ -160,7 +220,45 @@ void PlayerBehaviour::MoveLeft()
 	m_pRenderComp->SetIsFlipped(true);
 }
 
-// Collision Callback Functions //
+void PlayerBehaviour::Attack()
+{
+	if (m_AttackTimer >= m_AttackCooldown)
+	{
+		SpawnBubble();
+		m_AttackTimer = 0;
+	}
+}
+
+void PlayerBehaviour::SpawnBubble()
+{
+	float spawnVel = 1;
+	// spawn a bubble in the current facing direction
+	if (m_pRenderComp->GetIsFlipped()) // if flipped, left direction
+	{
+		spawnVel = -1;
+	}
+	auto* go = new GameObject();
+	auto* tc = new TransformComponent(go);
+	go->AddComponent(tc);
+	auto* rc = new RenderComponent(go, tc, "", 8, 8, true, 8, 8, 19, 40);
+	rc->SetTexture("Resources/Player1.png");
+	go->AddComponent(rc);
+	auto* collider = new Box2DComponent(go, tc, SceneService.GetActiveScene()->GetPhysicsWorld(), rc->GetWidth(), rc->GetHeight(), "", 0.f, 1.f, true,
+		b2Vec2{ 0.f, 0.f }, true, true, false, false);
+	go->AddComponent(collider);
+	Bubble* bubble = new Bubble(go, spawnVel * 100, collider);
+	go->AddComponent(bubble);
+	collider->SetPosition(m_pTransform->GetPosition().x, m_pTransform->GetPosition().y);
+	collider->SetCollisionCallbackScript(bubble);
+	
+	SceneService.GetActiveScene()->Add(go);
+}
+
+// Collision Callback Functions // => The way these calls work is you first check ShouldCollide, if that returns false everything else is skipped
+// if it returns true, OnContactBegin is called, then PreSolve and PostSolve get called repeatedly during the collision to resolve it.
+// Once the two fixtures/collision boxes get seperated again the OnContactEnd functions gets called
+
+// OnContactBegin and End are used for checking if we are grounded and should be allowed to jump or not
 void PlayerBehaviour::OnContactBegin(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other)
 {
 	Box2DComponent* collider1 = static_cast<Box2DComponent*>(contact->GetFixtureA()->GetUserData());
@@ -172,6 +270,28 @@ void PlayerBehaviour::OnContactBegin(b2Contact* contact, Box2DComponent* thisCol
 		fixture = contact->GetFixtureB();
 	if (fixture->IsSensor() && (other->GetGameObject()->GetTag() == "TileMap" || other->GetGameObject()->GetTag() == "LevelEdge"))
 		IncrementFootCounter();
+
+	// handle collisions with enemies appropriately
+	if (other->GetGameObject()->GetTag() == "Enemy")
+	{
+		ZenBehaviour* enemy = other->GetGameObject()->GetComponent<ZenBehaviour>("Enemy");
+		if (enemy)
+		{
+			if (enemy->GetIsBubbled())
+			{
+				enemy->Kill();
+			}
+			else
+			{
+				// make sure player gets taken out of the physics emulation, play death animation, remove 1 life
+				m_IsHit = true;
+				m_pAnimator->SetTrigger("Death");
+				if (m_Lives > 0)
+					m_Lives--;
+			}
+		}
+	}
+
 }
 
 void PlayerBehaviour::OnContactEnd(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other)
@@ -185,4 +305,40 @@ void PlayerBehaviour::OnContactEnd(b2Contact* contact, Box2DComponent* thisColli
 		fixture = contact->GetFixtureB();
 	if (fixture->IsSensor() && (other->GetGameObject()->GetTag() == "TileMap" || other->GetGameObject()->GetTag() == "LevelEdge"))
 		DecrementFootCounter();
+}
+
+// used for dropping down through platforms as longs as the down button is pressed
+void PlayerBehaviour::PreSolve(b2Contact* contact, const b2Manifold* manifold, Box2DComponent* thisCollider, Box2DComponent* other)
+{
+	Box2DComponent* collider1 = static_cast<Box2DComponent*>(contact->GetFixtureA()->GetUserData());
+	Box2DComponent* collider2 = static_cast<Box2DComponent*>(contact->GetFixtureB()->GetUserData());
+	b2Fixture* fixture = nullptr;
+	if (collider1 == thisCollider)
+		fixture = contact->GetFixtureA();
+	else
+		fixture = contact->GetFixtureB();
+	if (!fixture->IsSensor() && other->GetGameObject()->GetTag() == "TileMap" && m_IsDropping)
+	{
+		contact->SetEnabled(false);
+	}
+}
+
+// used for one way platform (jumping through them)
+bool PlayerBehaviour::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB, Box2DComponent* thisCollider, Box2DComponent* other)
+{
+	Box2DComponent* collider1 = static_cast<Box2DComponent*>(fixtureA->GetUserData());
+	Box2DComponent* collider2 = static_cast<Box2DComponent*>(fixtureB->GetUserData());
+	b2Fixture* fixture = nullptr;
+	if (collider1 == thisCollider)
+		fixture = fixtureA;
+	else
+		fixture = fixtureB;
+
+	if (!fixture->IsSensor()) // ignore the foot sensor for this
+	{
+		if (m_IgnoreCollisions && other->GetGameObject()->GetTag() == "TileMap")
+			return false;
+	}
+
+	return true;
 }

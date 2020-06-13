@@ -7,7 +7,7 @@
 #include "GameTime.h"
 #include "Box2DComponent.h"
 #include "InputManager.h"
-#include "PhysicsVariables.h"
+#include "Services.h"
 
 
 unsigned int Scene::m_IdCounter = 0;
@@ -16,6 +16,8 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 {
 	// Set up the physics for this scene
 	m_pPhysicsWorld = new b2World(b2Vec2(0.f, 10.f));
+	m_pPhysicsWorld->SetContactListener(PhysicsVariablesService.GetContactListener());
+	m_pPhysicsWorld->SetContactFilter(PhysicsVariablesService.GetContactFilter());
 
 	m_pInputManager = new InputManager();
 
@@ -198,6 +200,8 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 
 Scene::~Scene()
 {
+	m_pPhysicsWorld->SetContactFilter(nullptr);
+	m_pPhysicsWorld->SetContactListener(nullptr);
 	for (size_t i{}; i < m_Objects.size(); i++)
 	{
 		if (m_Objects[i] != ServiceLocator<GameTime, GameTime>::GetService().GetRenderingObject())
@@ -212,7 +216,17 @@ Scene::~Scene()
 
 void Scene::Add(GameObject* object)
 {
+	object->SetIndx(int(m_Objects.size()));
+	object->SetParentScene(this);
 	m_Objects.push_back(object);
+}
+
+void Scene::Remove(int indx)
+{
+	if (indx < m_Objects.size())
+	{
+		m_ToRemoveObjects.push_back(indx);
+	}
 }
 
 void Scene::OnLoad()
@@ -225,6 +239,24 @@ void Scene::OnLoad()
 
 bool Scene::Update()
 {
+	if (!m_ToRemoveObjects.empty())
+	{
+		for (size_t i{}; i < m_ToRemoveObjects.size(); i++)
+		{
+			delete m_Objects[m_ToRemoveObjects[i]];
+			m_Objects[m_ToRemoveObjects[i]] = nullptr;
+		}
+		for (auto it{m_Objects.begin()}; it != m_Objects.end(); it++)
+		{
+			if (!(*it))
+			{
+				it = m_Objects.erase(it);
+				it--;
+			}
+		}
+		m_ToRemoveObjects.clear();
+	}
+
 	// process scene specific input
 	bool keepPlaying = m_pInputManager->ProcessInput();
 	auto& physicsVars = ServiceLocator<PhysicsVariables, PhysicsVariables>::GetService();
