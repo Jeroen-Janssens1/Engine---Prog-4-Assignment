@@ -9,11 +9,9 @@
 #include "InputManager.h"
 #include "Services.h"
 
-
-unsigned int Scene::m_IdCounter = 0;
-
 Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath) : m_Name(name)
 {
+	m_PassedTime = 0;
 	// Set up the physics for this scene
 	m_pPhysicsWorld = new b2World(b2Vec2(0.f, 10.f));
 	m_pPhysicsWorld->SetContactListener(PhysicsVariablesService.GetContactListener());
@@ -221,11 +219,11 @@ void Scene::Add(GameObject* object)
 	m_Objects.push_back(object);
 }
 
-void Scene::Remove(int indx)
+void Scene::Remove(GameObject* object)
 {
-	if (indx < m_Objects.size())
+	if (std::find(m_Objects.cbegin(), m_Objects.cend(), object) != m_Objects.cend()) // only add to remove list if it actually exists in the scene
 	{
-		m_ToRemoveObjects.push_back(indx);
+		m_ToRemoveObjects.push_back(object);
 	}
 }
 
@@ -243,16 +241,9 @@ bool Scene::Update()
 	{
 		for (size_t i{}; i < m_ToRemoveObjects.size(); i++)
 		{
-			delete m_Objects[m_ToRemoveObjects[i]];
-			m_Objects[m_ToRemoveObjects[i]] = nullptr;
-		}
-		for (auto it{m_Objects.begin()}; it != m_Objects.end(); it++)
-		{
-			if (!(*it))
-			{
-				it = m_Objects.erase(it);
-				it--;
-			}
+			auto it = std::find(m_Objects.cbegin(), m_Objects.cend(), m_ToRemoveObjects[i]);
+			delete (*it);
+			m_Objects.erase(it);
 		}
 		m_ToRemoveObjects.clear();
 	}
@@ -260,10 +251,11 @@ bool Scene::Update()
 	// process scene specific input
 	bool keepPlaying = m_pInputManager->ProcessInput();
 	auto& physicsVars = ServiceLocator<PhysicsVariables, PhysicsVariables>::GetService();
-
-	// update physics
-	m_pPhysicsWorld->Step(physicsVars.GetTimeStep(), physicsVars.GetVelocityIterations(),
-		physicsVars.GetPositionIterations());
+	float timeStep = physicsVars.GetTimeStep();
+	// update physics using a fixed timestep
+	for(m_PassedTime += GameTimeService.GetElapsed(); m_PassedTime >= timeStep; m_PassedTime -= timeStep)
+		m_pPhysicsWorld->Step(timeStep, physicsVars.GetVelocityIterations(),
+			physicsVars.GetPositionIterations());
 
 	for(auto& object : m_Objects)
 	{

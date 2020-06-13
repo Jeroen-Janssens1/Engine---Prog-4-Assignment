@@ -6,7 +6,7 @@ class TextRenderComponent;
 class GameTime final
 {
 public:
-#define TimePoint std::chrono::steady_clock::time_point
+#define TimePoint std::chrono::high_resolution_clock::time_point
 	GameTime() = default;
 	~GameTime();
 
@@ -29,9 +29,7 @@ private:
 	int m_FPS;
 	float m_FPSTimer;
 	int m_FPSCount;
-
 	GameObject* m_pGameObject;
-
 	TextRenderComponent* m_pTextRenderer;
 };
 

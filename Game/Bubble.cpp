@@ -8,6 +8,7 @@ Bubble::Bubble(GameObject* pOwner, float velocity, Box2DComponent* box2D)
 	,m_Lifetime(1.f)
 	,m_Velocity{velocity}
 	,m_Box2D{box2D}
+	,m_HasHit{false}
 {
 }
 
@@ -29,10 +30,11 @@ void Bubble::OnContactBegin(b2Contact* contact, Box2DComponent* thisCollider, Bo
 		ZenBehaviour* enemy = other->GetGameObject()->GetComponent<ZenBehaviour>("Enemy");
 		if (enemy)
 		{
-			if (!enemy->GetIsBubbled())
+			if (!enemy->GetIsBubbled() && !m_HasHit)
 			{
 				enemy->Hit();
-				m_pOwner->Destroy();
+				m_pOwner->Destroy(); // destroys object at start of next frame
+				m_HasHit = true;
 			}
 		}
 	}

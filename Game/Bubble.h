@@ -16,5 +16,6 @@ private:
 	float m_Lifetime;
 	float m_Velocity;
 	Box2DComponent* m_Box2D;
+	bool m_HasHit;
 };
 

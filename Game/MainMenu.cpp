@@ -4,6 +4,7 @@
 #include "Font.h"
 #include "Services.h"
 #include "InputCommands.h"
+#include "LevelBehaviour.h"
 
 MainMenu::MainMenu(GameObject* pOwner, Scene* scene)
 	:BaseComponent(pOwner)
@@ -118,17 +119,24 @@ void MainMenu::SelectDown()
 
 bool MainMenu::ConfirmSelection()
 {
+	LevelBehaviour::SetPlayer1Lives(4);
+	LevelBehaviour::SetPlayer2Lives(4);
+	LevelBehaviour::SetPlayer1Score(0);
+	LevelBehaviour::SetPlayer2Score(0);
 	switch (m_SelectedButton)
 	{
 	case Buttons::SinglePlayer:
+		LevelBehaviour::SetGameType(LevelBehaviour::GameType::SinglePlayer);
 		SceneService.SetActiveScene(1);
 		return true;
 		break;
 	case Buttons::Coop:
+		LevelBehaviour::SetGameType(LevelBehaviour::GameType::Coop);
 		SceneService.SetActiveScene(1);
 		return true;
 		break;
 	case Buttons::Versus:
+		LevelBehaviour::SetGameType(LevelBehaviour::GameType::Versus);
 		SceneService.SetActiveScene(1);
 		return true;
 		break;

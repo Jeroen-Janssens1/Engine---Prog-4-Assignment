@@ -5,6 +5,7 @@
 #include "TextRenderComponent.h"
 #include "GameObject.h"
 #include "ServiceLocator.h"
+#include <thread>
 
 
 GameTime::~GameTime()
@@ -36,15 +37,13 @@ void GameTime::Init()
 
 void GameTime::Update()
 {
-	TimePoint currTime = std::chrono::high_resolution_clock::now();
-	m_CurTime = currTime;
-	
+	m_CurTime = std::chrono::high_resolution_clock::now();
+
 	std::chrono::duration<float> diff = m_CurTime - m_PrevTime;
 	m_DeltaTime = diff.count();
-	m_PrevTime = m_CurTime;
 	
-	if (m_DeltaTime < 0.f)
-		m_DeltaTime = 0.f;
+	/*if (m_DeltaTime < 0.f)
+		m_DeltaTime = 0.f;*/
 
 	m_FPSTimer += m_DeltaTime;
 	m_FPSCount++;
@@ -55,7 +54,7 @@ void GameTime::Update()
 		m_FPSCount = 0;
 		m_pTextRenderer->SetText(std::to_string(m_FPS) + " FPS");
 	}
-	
+	m_PrevTime = m_CurTime;
 }
 
 void GameTime::Render()

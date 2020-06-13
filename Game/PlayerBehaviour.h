@@ -14,10 +14,11 @@ public:
 	PlayerBehaviour(GameObject* pOwner);
 	~PlayerBehaviour() = default;
 
-	void Initialize(InputManager * pInput, b2World * pPhysicsWorld, unsigned int controllerIndx, float xPos, float yPos);
+	void Initialize(InputManager * pInput, b2World * pPhysicsWorld, unsigned int controllerIndx, float xPos, float yPos, unsigned int lives = 4,
+		unsigned int score = 0);
 	void Update() override;
 	void Render() const override {};
-	void OnLoad() override {};
+	void OnLoad() override;
 
 	void OnContactBegin(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other) override;
 	void OnContactEnd(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other) override;
@@ -26,6 +27,12 @@ public:
 	bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB, Box2DComponent* thisCollider, Box2DComponent* other) override;
 
 	unsigned int GetLives() const { return m_Lives; }
+	unsigned int GetScore() const { return m_Score; }
+	void SetLives(unsigned int value) { m_Lives = value; }
+	void SetScore(unsigned int value) { m_Score = value; }
+
+	void Kill();
+	void Reset();
 
 	void IncrementFootCounter() { m_FootSensorCounter++; };
 	void DecrementFootCounter() { m_FootSensorCounter--; if (m_FootSensorCounter < 0) m_FootSensorCounter = 0; };
@@ -52,7 +59,7 @@ private:
 	b2Vec2 m_JumpForce;
 	b2Vec2 m_SpawnPos;
 
-	const float m_Speed = 10000.f;
+	const float m_Speed = 200.f;
 
 	unsigned int m_FootSensorCounter;
 
@@ -65,6 +72,8 @@ private:
 
 	const float m_AttackCooldown = 1.f;
 	float m_AttackTimer;
+
+	unsigned int m_Score;
 
 };
 
