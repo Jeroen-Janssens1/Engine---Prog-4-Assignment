@@ -31,7 +31,7 @@ void LevelBehaviour::Initialize(const std::string& levelName, const std::string&
 	m_pPlayer2Transform = nullptr;
 	m_NextScene = nextScene;
 	// Load the level from the levelPath file using the binary reader from the engine
-	auto binReader = BinaryReader();
+	BinaryReader binReader{};
 	Scene* scene = nullptr;
 	float p1XPos{};
 	float p1YPos{};

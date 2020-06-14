@@ -61,9 +61,6 @@
     <ClCompile Include="Main.cpp">
       <Filter>Core Game Files</Filter>
     </ClCompile>
-    <ClCompile Include="InputCommands.cpp">
-      <Filter>Core Game Files</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerBehaviour.cpp">
       <Filter>Scripts\Player</Filter>
     </ClCompile>

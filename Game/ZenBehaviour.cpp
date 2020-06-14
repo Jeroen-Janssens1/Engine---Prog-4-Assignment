@@ -79,7 +79,7 @@ void ZenBehaviour::Initialize(b2World* pPhysicsWorld, float xPos, float yPos, Tr
 	m_pOwner->AddComponent(m_pBox2D);
 
 	// add sensors to this body
-	m_pFootSensor = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 16.f, 8.f, 0.f, 0.f, b2Vec2(0.f, (m_pRenderComp->GetHeight() / 2.f) + 4.f), true);
+	m_pFootSensorFixture = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 16.f, 8.f, 0.f, 0.f, b2Vec2(0.f, (m_pRenderComp->GetHeight() / 2.f) + 4.f), true);
 	m_pLeftSensor = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 16.f, 8.f, 0.f, 0.f, b2Vec2(-m_pRenderComp->GetWidth()/2.f, (m_pRenderComp->GetHeight() / 2.f) + 4.f), true);
 	m_pRightSensor = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 16.f, 8.f, 0.f, 0.f, b2Vec2(m_pRenderComp->GetWidth() / 2.f, (m_pRenderComp->GetHeight() / 2.f) + 4.f), true);
 	m_pTopSensor = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 20.f, 8.f, 0.f, 0.f, b2Vec2(0.f, (-m_pRenderComp->GetHeight() / 2.f) - 32.f), true);
@@ -283,7 +283,7 @@ void ZenBehaviour::OnContactBegin(b2Contact* contact, Box2DComponent* thisCollid
 	if (other->GetGameObject()->GetTag() == "TileMap" || other->GetGameObject()->GetTag() == "LevelEdge")
 	{
 		// keep track of how many objects are in each sensor for AI purposes
-		if (fixture == m_pFootSensor)
+		if (fixture == m_pFootSensorFixture)
 			m_FootSensorCounter++;
 		if (fixture == m_pRightSensor)
 			m_RightSensorCounter++;
@@ -308,7 +308,7 @@ void ZenBehaviour::OnContactEnd(b2Contact* contact, Box2DComponent* thisCollider
 	if (other->GetGameObject()->GetTag() == "TileMap" || other->GetGameObject()->GetTag() == "LevelEdge")
 	{
 		// keep track of how many objects are in each sensor for AI purposes
-		if (fixture == m_pFootSensor)
+		if (fixture == m_pFootSensorFixture)
 			m_FootSensorCounter--;
 		if (fixture == m_pRightSensor)
 			m_RightSensorCounter--;

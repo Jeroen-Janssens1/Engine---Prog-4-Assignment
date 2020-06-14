@@ -6,6 +6,11 @@
 
 class GameObject;
 class b2Fixture;
+class b2World;
+class TransformComponent;
+class Box2DComponent;
+class SpriteAnimatorComponent;
+class RenderComponent;
 class ZenBehaviour :
 	public BaseComponent
 {
@@ -44,7 +49,7 @@ protected:
 	Box2DComponent* m_pFootSensor;
 	SpriteAnimatorComponent* m_pAnimator;
 	RenderComponent* m_pRenderComp;
-	b2Fixture* m_pFootSensor;
+	b2Fixture* m_pFootSensorFixture;
 	b2Fixture* m_pLeftSensor;
 	b2Fixture* m_pRightSensor;
 	b2Fixture* m_pTopSensor;
