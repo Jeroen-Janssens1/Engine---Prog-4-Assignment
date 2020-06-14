@@ -46,7 +46,8 @@ void GameObject::Render() const
 
 void GameObject::AddComponent(BaseComponent* pComponent)
 {
-	m_Components.push_back(pComponent);
+	if(std::find(m_Components.cbegin(), m_Components.cend(), pComponent) == m_Components.cend())
+		m_Components.push_back(pComponent);
 }
 
 void GameObject::OnLoad()

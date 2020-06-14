@@ -12,10 +12,10 @@ class ZenBehaviour :
 	public BaseComponent
 {
 public:
-	ZenBehaviour(GameObject* pOwner);
+	ZenBehaviour(GameObject* pOwner, unsigned int score = 100);
 	~ZenBehaviour() = default;
 
-	void Initialize(b2World * pPhysicsWorld, float xPos, float yPos, TransformComponent* pPlayer = nullptr, TransformComponent* pPlayer2 = nullptr);
+	virtual void Initialize(b2World * pPhysicsWorld, float xPos, float yPos, TransformComponent* pPlayer = nullptr, TransformComponent* pPlayer2 = nullptr);
 	void Update() override;
 	void Render() const override {};
 	void OnLoad() override;
@@ -35,7 +35,7 @@ public:
 
 	unsigned int GetScore() const { return m_Score; }
 
-private:
+protected:
 	bool MoveUp();
 	bool MoveDown();
 	bool MoveRight();

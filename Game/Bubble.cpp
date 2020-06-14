@@ -2,6 +2,7 @@
 #include "Services.h"
 #include "GameObject.h"
 #include "ZenBehaviour.h"
+#include "PlayerBehaviour.h"
 
 Bubble::Bubble(GameObject* pOwner, float velocity, Box2DComponent* box2D)
 	:BaseComponent(pOwner)
@@ -28,11 +29,21 @@ void Bubble::OnContactBegin(b2Contact* contact, Box2DComponent* thisCollider, Bo
 	if (other->GetGameObject()->GetTag() == "Enemy")
 	{
 		ZenBehaviour* enemy = other->GetGameObject()->GetComponent<ZenBehaviour>("Enemy");
+		PlayerBehaviour* playerEnemy = other->GetGameObject()->GetComponent<PlayerBehaviour>();
 		if (enemy)
 		{
 			if (!enemy->GetIsBubbled() && !m_HasHit)
 			{
 				enemy->Hit();
+				m_pOwner->Destroy(); // destroys object at start of next frame
+				m_HasHit = true;
+			}
+		}
+		else if (playerEnemy)
+		{
+			if (!playerEnemy->GetIsBubbled() && !m_HasHit)
+			{
+				playerEnemy->Hit();
 				m_pOwner->Destroy(); // destroys object at start of next frame
 				m_HasHit = true;
 			}

@@ -222,9 +222,8 @@ void Scene::Add(GameObject* object)
 void Scene::Remove(GameObject* object)
 {
 	if (std::find(m_Objects.cbegin(), m_Objects.cend(), object) != m_Objects.cend()) // only add to remove list if it actually exists in the scene
-	{
-		m_ToRemoveObjects.push_back(object);
-	}
+		if(std::find(m_ToRemoveObjects.cbegin(), m_ToRemoveObjects.cend(), object) == m_ToRemoveObjects.cend()) // only add if not already waiting to be removed
+			m_ToRemoveObjects.push_back(object);
 }
 
 void Scene::OnLoad()

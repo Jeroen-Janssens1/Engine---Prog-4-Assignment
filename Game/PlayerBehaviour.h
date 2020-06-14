@@ -1,12 +1,18 @@
 #pragma once
 #include "BaseComponent.h"
-#include "InputManager.h"
 #include "GameTime.h"
-#include "GameObject.h"
 #include <memory>
 #include "Command.h"
 #include "box2d\b2_math.h"
 
+class b2World;
+class Box2DComponent;
+class RenderComponent;
+class SpriteAnimatorComponent;
+class TransformComponent;
+class SubjectComponent;
+class GameObject;
+class InputManager;
 class PlayerBehaviour :
 	public BaseComponent
 {
@@ -15,7 +21,7 @@ public:
 	~PlayerBehaviour() = default;
 
 	void Initialize(InputManager * pInput, b2World * pPhysicsWorld, unsigned int controllerIndx, float xPos, float yPos, unsigned int lives = 4,
-		unsigned int score = 0);
+		unsigned int score = 0, bool isMaita = false);
 	void Update() override;
 	void Render() const override {};
 	void OnLoad() override;
@@ -30,7 +36,13 @@ public:
 	unsigned int GetScore() const { return m_Score; }
 	void SetLives(unsigned int value) { m_Lives = value; }
 	void SetScore(unsigned int value) { m_Score = value; }
+	SubjectComponent* GetSubject() const { return m_pSubject; }
 
+	bool GetIsBubbled() const { return m_IsBubbled; }
+
+	void SetIsMaita(bool value);
+
+	void Hit();
 	void Kill();
 	void Reset();
 
@@ -46,6 +58,7 @@ public:
 
 private:
 	void SpawnBubble();
+	void ThrowBoulder();
 
 	TransformComponent* m_pTransform;
 	InputManager* m_pInput;
@@ -53,7 +66,9 @@ private:
 	Box2DComponent* m_pBox2D;
 	Box2DComponent* m_pFootSensor;
 	SpriteAnimatorComponent* m_pAnimator;
+	SpriteAnimatorComponent* m_pMaitaAnimator;
 	RenderComponent* m_pRenderComp;
+	SubjectComponent* m_pSubject;
 
 	b2Vec2 m_Vel;
 	b2Vec2 m_JumpForce;
@@ -74,6 +89,12 @@ private:
 	float m_AttackTimer;
 
 	unsigned int m_Score;
+
+	bool m_IsMaita;
+
+	float m_BubbledTimer;
+	const float m_BubbledDuration = 5.f;
+	bool m_IsBubbled;
 
 };
 

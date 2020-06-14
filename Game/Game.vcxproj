@@ -93,11 +93,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\include;$(SolutionDir)3rdParty\Box2D\include;$(SolutionDir)\Game;$(SolutionDir)\Minigin;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\VLD\include;$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\include;$(SolutionDir)3rdParty\Box2D\include;$(SolutionDir)\Game;$(SolutionDir)\Minigin;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\VLD\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)3rdParty\SDL2\lib\x64\SDL2.dll" "$(OutputPath)" /R /Y
@@ -113,12 +114,12 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\include;$(SolutionDir)3rdParty\Box2D\include;$(SolutionDir)\Game;$(SolutionDir)\Minigin;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\VLD\include;$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\include;$(SolutionDir)3rdParty\Box2D\include;$(SolutionDir)\Game;$(SolutionDir)\Minigin;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProgramFiles)\Visual Leak Detector\lib\Win$(PlatformArchitecture);</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\VLD\lib\x86;</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -138,7 +139,7 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\include;$(SolutionDir)3rdParty\Box2D\include;$(SolutionDir)\Game;$(SolutionDir)\Minigin;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\VLD\include;$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\include;$(SolutionDir)3rdParty\Box2D\include;$(SolutionDir)\Game;$(SolutionDir)\Minigin;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -163,7 +164,7 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\include;$(SolutionDir)3rdParty\Box2D\include;$(SolutionDir)\Game;$(SolutionDir)\Minigin;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\VLD\include;$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\include;$(SolutionDir)3rdParty\Box2D\include;$(SolutionDir)\Game;$(SolutionDir)\Minigin;$(SolutionDir)3rdParty\SDL2_ttf\include;$(SolutionDir)3rdParty\SDL2_image\include;$(SolutionDir)3rdParty\glm;$(SolutionDir)3rdParty\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -180,12 +181,13 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Achievement.h" />
+    <ClInclude Include="UIObserver.h" />
+    <ClInclude Include="Boulder.h" />
     <ClInclude Include="Bubble.h" />
     <ClInclude Include="InputCommands.h" />
-    <ClInclude Include="InputSubject.h" />
     <ClInclude Include="LevelBehaviour.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MaitaBehaviour.h" />
     <ClInclude Include="PlayerBehaviour.h" />
     <ClInclude Include="ZenBehaviour.h" />
   </ItemGroup>
@@ -195,13 +197,14 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Achievement.cpp" />
+    <ClCompile Include="UIObserver.cpp" />
+    <ClCompile Include="Boulder.cpp" />
     <ClCompile Include="Bubble.cpp" />
-    <ClCompile Include="InputSubject.cpp" />
     <ClCompile Include="LevelBehaviour.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="InputCommands.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="MaitaBehaviour.cpp" />
     <ClCompile Include="PlayerBehaviour.cpp" />
     <ClCompile Include="ZenBehaviour.cpp" />
   </ItemGroup>

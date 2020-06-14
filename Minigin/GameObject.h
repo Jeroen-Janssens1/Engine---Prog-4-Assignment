@@ -21,6 +21,8 @@ public:
 
 	void SetIndx(int value) { m_Indx = value; }
 	void SetParentScene(Scene* value) { m_ParentScene = value; }
+
+	void SetTag(const std::string& value) { m_Tag = value; }
 		
 	// This function is extremely slow! Do not use it in update and drawing/rendering functions!
 	template<typename T>

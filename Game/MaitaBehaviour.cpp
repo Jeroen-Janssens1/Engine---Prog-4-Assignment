@@ -1,18 +1,16 @@
-#include "ZenBehaviour.h"
-#include "Services.h"
+#include "MaitaBehaviour.h"
 #include "AnimatorIncludes.h"
+#include "Services.h"
+#include "Boulder.h"
+#include "Scene.h"
 
-ZenBehaviour::ZenBehaviour(GameObject* pOwner, unsigned int score)
-	:BaseComponent(pOwner)
-	,m_GameTime(GameTimeService)
-	,m_pPlayerTransform{nullptr}
-	,m_pPlayer2Transform{nullptr}
-	,m_Score{score}
-	,m_2Players{false}
+MaitaBehaviour::MaitaBehaviour(GameObject* pOwner)
+	:ZenBehaviour(pOwner, 200)
 {
+
 }
 
-void ZenBehaviour::Initialize(b2World* pPhysicsWorld, float xPos, float yPos, TransformComponent* pPlayer, TransformComponent* pPlayer2)
+void MaitaBehaviour::Initialize(b2World* pPhysicsWorld, float xPos, float yPos, TransformComponent* pPlayer, TransformComponent* pPlayer2)
 {
 	m_SpawnPos.x = xPos;
 	m_SpawnPos.y = yPos;
@@ -42,7 +40,7 @@ void ZenBehaviour::Initialize(b2World* pPhysicsWorld, float xPos, float yPos, Tr
 	std::vector<Animation*> animations{};
 	b2Vec2 framePos{};
 	framePos.x = 0;
-	framePos.y = 0;
+	framePos.y = 21;
 	for (int i{}; i < nrOfAnimations; i++)
 	{
 		int nrOfFrames{};
@@ -55,7 +53,7 @@ void ZenBehaviour::Initialize(b2World* pPhysicsWorld, float xPos, float yPos, Tr
 			nrOfFrames = 2;
 			framePos.x = 124;
 		}
-		
+
 		// for this you first need to set up the frame positions
 		for (int j{}; j < nrOfFrames; j++)
 		{
@@ -88,14 +86,14 @@ void ZenBehaviour::Initialize(b2World* pPhysicsWorld, float xPos, float yPos, Tr
 
 	// add sensors to this body
 	m_FootSensor = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 16.f, 8.f, 0.f, 0.f, b2Vec2(0.f, (m_pRenderComp->GetHeight() / 2.f) + 4.f), true);
-	m_LeftSensor = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 16.f, 8.f, 0.f, 0.f, b2Vec2(-m_pRenderComp->GetWidth()/2.f, (m_pRenderComp->GetHeight() / 2.f) + 4.f), true);
+	m_LeftSensor = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 16.f, 8.f, 0.f, 0.f, b2Vec2(-m_pRenderComp->GetWidth() / 2.f, (m_pRenderComp->GetHeight() / 2.f) + 4.f), true);
 	m_RightSensor = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 16.f, 8.f, 0.f, 0.f, b2Vec2(m_pRenderComp->GetWidth() / 2.f, (m_pRenderComp->GetHeight() / 2.f) + 4.f), true);
 	m_TopSensor = m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 20.f, 8.f, 0.f, 0.f, b2Vec2(0.f, (-m_pRenderComp->GetHeight() / 2.f) - 32.f), true);
-	
+
 	m_pBox2D->SetCollisionCallbackScript(this);
 }
 
-void ZenBehaviour::Update()
+void MaitaBehaviour::Update()
 {
 	if (m_IsKilled)
 	{
@@ -155,7 +153,7 @@ void ZenBehaviour::Update()
 					// move down
 					MoveDown();
 				}
-				else // move right or left
+				else if(xDif2 > m_AttackRange) // move right or left
 				{
 					if (xDif2 > 0) // move right
 					{
@@ -165,6 +163,10 @@ void ZenBehaviour::Update()
 					{
 						MoveLeft();
 					}
+				}
+				else
+				{
+					ThrowBoulder();
 				}
 			}
 			else
@@ -191,7 +193,7 @@ void ZenBehaviour::Update()
 					// move down
 					MoveDown();
 				}
-				else // move right or left
+				else if(xDif > m_AttackRange) // move right or left
 				{
 					if (xDif > 0) // move right
 					{
@@ -201,6 +203,10 @@ void ZenBehaviour::Update()
 					{
 						MoveLeft();
 					}
+				}
+				else
+				{
+					ThrowBoulder();
 				}
 			}
 		}
@@ -228,7 +234,7 @@ void ZenBehaviour::Update()
 				// move down
 				MoveDown();
 			}
-			else // move right or left
+			else if(xDif > m_AttackRange) // move right or left
 			{
 				if (xDif > 0) // move right
 				{
@@ -238,6 +244,10 @@ void ZenBehaviour::Update()
 				{
 					MoveLeft();
 				}
+			}
+			else
+			{
+				ThrowBoulder();
 			}
 		}
 
@@ -257,165 +267,37 @@ void ZenBehaviour::Update()
 
 		if (m_JumpTimer < m_JumpCooldown)
 			m_JumpTimer += m_GameTime.GetElapsed();
+
+		if (m_AttackTimer < m_AttackCooldown)
+			m_AttackTimer += m_GameTime.GetElapsed();
 	}
 }
 
-void ZenBehaviour::OnLoad()
+void MaitaBehaviour::ThrowBoulder()
 {
-	m_pBox2D->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
-}
+	if (m_AttackTimer < m_AttackCooldown)
+		return;
 
-void ZenBehaviour::Hit()
-{
-	m_pAnimator->SetTrigger("Bubbled");
-	m_BubbledTimer = 0.f;
-	m_IsBubbled = true;
-}
-
-void ZenBehaviour::Kill()
-{
-	m_IsKilled = true;
-}
-
-void ZenBehaviour::Reset()
-{
-	m_pOwner->SetIsEnabled(true);
-	m_pBox2D->SetIsEnabled(true);
-	m_IsKilled = false;
-	m_pAnimator->ResetAnimator();
-	m_IsBubbled = false;
-}
-
-
-void ZenBehaviour::OnContactBegin(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other)
-{
-	Box2DComponent* collider1 = static_cast<Box2DComponent*>(contact->GetFixtureA()->GetUserData());
-	Box2DComponent* collider2 = static_cast<Box2DComponent*>(contact->GetFixtureB()->GetUserData());
-	b2Fixture* fixture = nullptr;
-	if (collider1 == thisCollider)
-		fixture = contact->GetFixtureA();
-	else
-		fixture = contact->GetFixtureB();
-	if (other->GetGameObject()->GetTag() == "TileMap" || other->GetGameObject()->GetTag() == "LevelEdge")
+	m_AttackTimer = 0;
+	float spawnVel = 1;
+	// spawn a bubble in the current facing direction
+	if (!m_pRenderComp->GetIsFlipped()) // if flipped, left direction
 	{
-		if (fixture == m_FootSensor)
-			m_FootSensorCounter++;
-		if (fixture == m_RightSensor)
-			m_RightSensorCounter++;
-		if (fixture == m_LeftSensor)
-			m_LeftSensorCounter++;
-		if (fixture == m_TopSensor)
-			m_TopSensorCounter++;
+		spawnVel = -1;
 	}
-	if (!fixture->IsSensor() && other->GetGameObject()->GetTag() == "TileMap")
-	{
-		m_NrOfOverlappers++;
-	}
-}
+	auto* go = new GameObject("Enemy");
+	auto* tc = new TransformComponent(go);
+	go->AddComponent(tc);
+	auto* rc = new RenderComponent(go, tc, "", 30, 30, true, 16, 16, 5, 0);
+	rc->SetTexture("Resources/Boulder.png");
+	go->AddComponent(rc);
+	auto* collider = new Box2DComponent(go, tc, SceneService.GetActiveScene()->GetPhysicsWorld(), rc->GetWidth(), rc->GetHeight(), "", 0.f, 1.f, true,
+		b2Vec2{ 0.f, 0.f }, true, true, false, false);
+	go->AddComponent(collider);
+	Boulder* boulder = new Boulder(go, spawnVel * 100, collider);
+	go->AddComponent(boulder);
+	collider->SetPosition(m_pTransform->GetPosition().x, m_pTransform->GetPosition().y);
+	collider->SetCollisionCallbackScript(boulder);
 
-void ZenBehaviour::OnContactEnd(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other)
-{
-	Box2DComponent* collider1 = static_cast<Box2DComponent*>(contact->GetFixtureA()->GetUserData());
-	Box2DComponent* collider2 = static_cast<Box2DComponent*>(contact->GetFixtureB()->GetUserData());
-	b2Fixture* fixture = nullptr;
-	if (collider1 == thisCollider)
-		fixture = contact->GetFixtureA();
-	else
-		fixture = contact->GetFixtureB();
-	if (other->GetGameObject()->GetTag() == "TileMap" || other->GetGameObject()->GetTag() == "LevelEdge")
-	{
-		if (fixture == m_FootSensor)
-			m_FootSensorCounter--;
-		if (fixture == m_RightSensor)
-			m_RightSensorCounter--;
-		if (fixture == m_LeftSensor)
-			m_LeftSensorCounter--;
-		if (fixture == m_TopSensor)
-			m_TopSensorCounter--;
-	}
-	if (!fixture->IsSensor() && other->GetGameObject()->GetTag() == "TileMap")
-		m_NrOfOverlappers--;
-}
-
-// used for dropping down through platforms as longs as the down button is pressed
-void ZenBehaviour::PreSolve(b2Contact* contact, const b2Manifold* manifold, Box2DComponent* thisCollider, Box2DComponent* other)
-{
-	Box2DComponent* collider1 = static_cast<Box2DComponent*>(contact->GetFixtureA()->GetUserData());
-	Box2DComponent* collider2 = static_cast<Box2DComponent*>(contact->GetFixtureB()->GetUserData());
-	b2Fixture* fixture = nullptr;
-	if (collider1 == thisCollider)
-		fixture = contact->GetFixtureA();
-	else
-		fixture = contact->GetFixtureB();
-	if (!fixture->IsSensor() && other->GetGameObject()->GetTag() == "TileMap" && m_IsDropping)
-	{
-		contact->SetEnabled(false);
-	}
-}
-
-// used for one way platform (jumping through them)
-bool ZenBehaviour::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB, Box2DComponent* thisCollider, Box2DComponent* other)
-{
-	Box2DComponent* collider1 = static_cast<Box2DComponent*>(fixtureA->GetUserData());
-	Box2DComponent* collider2 = static_cast<Box2DComponent*>(fixtureB->GetUserData());
-	b2Fixture* fixture = nullptr;
-	if (collider1 == thisCollider)
-		fixture = fixtureA;
-	else
-		fixture = fixtureB;
-
-	if (!fixture->IsSensor()) // ignore the foot sensor for this
-	{
-		if (m_IgnoreCollisions && other->GetGameObject()->GetTag() == "TileMap")
-			return false;
-		if (other->GetGameObject()->GetTag() == "Enemy")
-			return false;
-	}
-
-	return true;
-}
-
-bool ZenBehaviour::MoveUp()
-{
-	// check if we can move up
-	if (m_JumpTimer < m_JumpCooldown)
-		return false;
-	b2Vec2 vel;
-	m_pBox2D->GetVelocity(vel);
-	if (m_TopSensorCounter == 0 && vel.y > 0)
-		return false;
-	
-	if (m_FootSensorCounter != 0)
-	{
-		m_JumpForce = b2Vec2(0.f, -300.f);
-		m_JumpTimer = 0;
-		m_IgnoreCollisions = true;
-	}
-	return true;
-}
-
-bool ZenBehaviour::MoveDown()
-{
-	m_IsDropping = true;
-	m_IgnoreCollisions = true;
-	m_JumpTimer = 0;
-	return true;
-}
-
-bool ZenBehaviour::MoveRight()
-{
-	if (m_RightSensorCounter == 0)
-		return false;
-	m_Vel.x += m_Speed;
-	m_pRenderComp->SetIsFlipped(true);
-	return true;
-}
-
-bool ZenBehaviour::MoveLeft()
-{
-	if (m_LeftSensorCounter == 0)
-		return false;
-	m_Vel.x += -m_Speed;
-	m_pRenderComp->SetIsFlipped(false);
-	return true;
+	SceneService.GetActiveScene()->Add(go);
 }

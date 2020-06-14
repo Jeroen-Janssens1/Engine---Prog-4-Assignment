@@ -2,6 +2,7 @@
 #include "BaseComponent.h"
 #include <string>
 #include <vector>
+
 class TextRenderComponent;
 class GameObject;
 class b2ContactListener;
@@ -27,7 +28,7 @@ public:
 		Versus
 	};
 	LevelBehaviour(GameObject* pOwner);
-	~LevelBehaviour();
+	~LevelBehaviour()=default;
 
 	void Initialize(const std::string& levelName, const std::string& levelPath, const std::string& nextScene);
 	void Update() override;
@@ -42,20 +43,24 @@ public:
 
 private:
 	void CreateZen(float xPos, float yPos, b2World* physicsWorld, Scene* scene);
+	void CreateMaita(float xPos, float yPos, b2World* physicsWorld, Scene* scene);
+
+	static GameType m_GameMode;
+	static unsigned int m_Player1Lives;
+	static unsigned int m_Player2Lives;
+	static unsigned int m_Player1Score;
+	static unsigned int m_Player2Score;
+
 	std::vector<GameObject*> m_Enemies;
+	std::vector<TransformComponent*> m_EnemyTransforms;
 	float m_Timer;
 	std::string m_NextScene;
 	PlayerBehaviour* m_Player;
 	TransformComponent* m_PlayerTransform;
 	TransformComponent* m_Player2Transform;
 	PlayerBehaviour* m_Player2;
-	b2ContactListener* m_ContactListener;
 	std::vector<TextRenderComponent*> m_UIRenders;
-	static GameType m_GameMode;
-
-	static unsigned int m_Player1Lives;
-	static unsigned int m_Player2Lives;
-	static unsigned int m_Player1Score;
-	static unsigned int m_Player2Score;
+	float m_TopY;
+	float m_BottomY;
 };
 

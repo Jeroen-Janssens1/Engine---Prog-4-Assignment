@@ -29,12 +29,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Achievement.h">
-      <Filter>Observers And Subjects</Filter>
-    </ClInclude>
-    <ClInclude Include="InputSubject.h">
-      <Filter>Observers And Subjects</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerBehaviour.h">
       <Filter>Scripts\Player</Filter>
     </ClInclude>
@@ -53,6 +47,15 @@
     <ClInclude Include="Bubble.h">
       <Filter>Scripts\Player</Filter>
     </ClInclude>
+    <ClInclude Include="MaitaBehaviour.h">
+      <Filter>Scripts\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Boulder.h">
+      <Filter>Scripts\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObserver.h">
+      <Filter>Observers And Subjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -60,12 +63,6 @@
     </ClCompile>
     <ClCompile Include="InputCommands.cpp">
       <Filter>Core Game Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Achievement.cpp">
-      <Filter>Observers And Subjects</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSubject.cpp">
-      <Filter>Observers And Subjects</Filter>
     </ClCompile>
     <ClCompile Include="PlayerBehaviour.cpp">
       <Filter>Scripts\Player</Filter>
@@ -81,6 +78,15 @@
     </ClCompile>
     <ClCompile Include="Bubble.cpp">
       <Filter>Scripts\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaBehaviour.cpp">
+      <Filter>Scripts\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Boulder.cpp">
+      <Filter>Scripts\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObserver.cpp">
+      <Filter>Observers And Subjects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
