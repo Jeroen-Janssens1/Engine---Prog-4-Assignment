@@ -4,7 +4,7 @@
 
 Texture2D::~Texture2D()
 {
-	SDL_DestroyTexture(m_Texture);
+	SDL_DestroyTexture(m_pTexture);
 }
 
 void Texture2D::GetFileName(std::string& fileName) const
@@ -14,11 +14,11 @@ void Texture2D::GetFileName(std::string& fileName) const
 
 SDL_Texture* Texture2D::GetSDLTexture() const
 {
-	return m_Texture;
+	return m_pTexture;
 }
 
 Texture2D::Texture2D(SDL_Texture* texture, const std::string& fileName)
 {
-	m_Texture = texture;
+	m_pTexture = texture;
 	m_FileName = fileName;
 }

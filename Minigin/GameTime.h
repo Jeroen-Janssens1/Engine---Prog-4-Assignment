@@ -10,16 +10,19 @@ public:
 	GameTime() = default;
 	~GameTime();
 
+	GameTime(const GameTime&) = delete;
+	GameTime(GameTime&&) = delete;
+	GameTime& operator=(const GameTime&) = delete;
+	GameTime& operator=(GameTime&&) = delete;
+
 	void Init();
 	void Update();
-	void Render();
+	void Render() {};
 	void Reset();
 
 	void SetFont(const std::string& path);
 	void SetFontSize(unsigned int size);
-
 	GameObject* GetRenderingObject();
-
 	float GetElapsed();
 
 private:

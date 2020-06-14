@@ -6,6 +6,7 @@ class UIObserver final :
 {
 public:
 	UIObserver(GameObject* pOwner, TextRenderComponent* livesText, TextRenderComponent* scoreText );
+	UIObserver() = default;
 
 	void onNotify(const GameObject* go, Event event) override;
 	virtual void Update() override {};

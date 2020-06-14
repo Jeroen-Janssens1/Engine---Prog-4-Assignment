@@ -1,8 +1,4 @@
 #pragma once
-// Example of usage of the template would be for an Audio service
-// T = Audio
-// DEFAULT = NullAudio, an audio class that does nothing and inherits from Audio.
-// All services to be using a Service Locator should have a DEFAULT option!
 template<class T, class DEFAULT>
 class ServiceLocator
 {

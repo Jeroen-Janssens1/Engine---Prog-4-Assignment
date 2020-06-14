@@ -28,32 +28,29 @@ class InputManager final
 public:
 	InputManager();
 	~InputManager();
+
+	InputManager(const InputManager&) = delete;
+	InputManager(InputManager&&) = delete;
+	InputManager& operator=(const InputManager&) = delete;
+	InputManager& operator=(InputManager&&) = delete;
+
 	bool ProcessInput();
 	bool IsPressed(unsigned int controllerIndx, ControllerButton button);
 	bool IsPressed(int keyboardCode);
 	void MapCommand(unsigned int controllerIndx, ControllerButton button, Command* command, bool usesPressedCheck = false);
 	void MapCommand(int keyboardCode, Command* command, bool usesPressedCheck = false);
 private:
-
 	// Controller related variables //
-
 	int m_CurControllerIndx;
 	std::vector<int*> m_XButtons;
-
 	std::vector<bool> m_IsControllerActive;
 	std::vector<int> m_XInputToControllerIndx;
-
 	std::vector<XINPUT_STATE> m_CurrentState;
 	std::vector<std::vector<bool>> m_CommandWasPressed;
-
-	// all commands for our buttons will be stored in here
 	std::vector<std::vector <Command*>> m_Commands;
 	std::vector<std::vector<bool>> m_CommandUsesPressed;
 
-
-
 	// Keyboard related variables //
-
 	// commands for keyboard binds
 	std::vector<Command*> m_KbCommands;
 	std::vector<bool> m_KbCommandUsesPressed;

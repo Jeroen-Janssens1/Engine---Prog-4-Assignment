@@ -13,13 +13,13 @@ public:
 
 	SoundManager() = default;
 	~SoundManager();
+
 	SoundManager(const SoundManager&) = delete;
 	SoundManager(SoundManager&&) = delete;
 	SoundManager& operator=(const SoundManager&) = delete;
 	SoundManager& operator=(SoundManager&&) = delete;
-
+	
 	void AddSound(unsigned int id, const std::string& path, const std::string& soundName, bool isStream = true);
-
 	//Play and stop functions
 	void EditSound(const std::string& sound, Action action, int loops = 0, bool isStream = true) const;
 	void EditSound(unsigned int id, Action action, int loops = 0, bool isStream = true) const;
@@ -35,7 +35,6 @@ private:
 	const std::string m_Path{ "Resources/Sounds/" };
 	std::vector<SoundStream*> m_SoundStreams;
 	std::vector<SoundEffect*> m_SoundEffects;
-	
 	std::map<std::string, size_t> m_SoundEffectNames;
 	std::map<std::string, size_t> m_SoundStreamNames;
 	std::map<unsigned int, size_t> m_SoundEffectIds;

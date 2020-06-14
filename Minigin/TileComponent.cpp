@@ -9,16 +9,6 @@ TileComponent::TileComponent(int xPos, int yPos,
 	,m_YPos{yPos}
 {
 }
-
-void TileComponent::Update()
-{
-	
-}
-
-void TileComponent::Render() const
-{
-}
-
 int TileComponent::GetXPos()
 {
 	return m_XPos;

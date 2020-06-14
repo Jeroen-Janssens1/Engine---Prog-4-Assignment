@@ -20,7 +20,6 @@ void Animation::Update()
 {
 	auto& gameTime = ServiceLocator<GameTime, GameTime>::GetService();
 	m_CurrentTime += gameTime.GetElapsed();
-
 	// while loop in case the duration per frame is so small that it is possible that a frame gets skipped in the animation
 	while (m_CurrentTime >= m_DurationPerFrame)
 	{
@@ -51,6 +50,5 @@ bool Animation::HandleTransitions(State** newState)
 {
 	if (m_ForceFullAnimation && m_CurrentFrame != m_NrFrames - 1)
 		return false;
-
 	return State::HandleTransitions(newState);
 }

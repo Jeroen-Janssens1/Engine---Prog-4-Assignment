@@ -19,18 +19,15 @@ public:
 
 	float GetWidth() const { return m_Width; }
 	float GetHeight() const { return m_Height; }
-
 	int GetCellWidth() const { return m_CellWidth; }
 	int GetCellHeight() const { return m_CellHeight; }
-
 	void SetTexture(const std::string& filename);
 	void SetSpritePos(int xPos, int yPos);
-
 	void SetIsFlipped(bool value) { m_IsFlipped = value; }
 	bool GetIsFlipped() const { return m_IsFlipped; }
 
 protected:
-	Texture2D* m_Texture;
+	Texture2D* m_pTexture;
 	TransformComponent* m_pTransformParent;
 	int m_CellWidth;
 	int m_CellHeight;

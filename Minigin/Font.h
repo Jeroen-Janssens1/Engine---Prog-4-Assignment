@@ -11,17 +11,16 @@ struct _TTF_Font;
 		explicit Font(const std::string& fullPath, unsigned int size);
 		~Font();
 
-		void GetFileName(std::string& fileName) const;
+		Font(const Font&) = delete;
+		Font(Font&&) = delete;
+		Font& operator= (const Font&) = delete;
+		Font& operator= (const Font&&) = delete;
 
+		void GetFileName(std::string& fileName) const;
 		void SetSize(unsigned int size);
 		unsigned int GetSize() const { return m_Size; }
-
-		Font(const Font &) = delete;
-		Font(Font &&) = delete;
-		Font & operator= (const Font &) = delete;
-		Font & operator= (const Font &&) = delete;
 	private:
-		_TTF_Font* m_Font;
+		_TTF_Font* m_pFont;
 		unsigned int m_Size;
 		const std::string m_FileName;
 	};

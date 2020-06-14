@@ -27,8 +27,8 @@ LevelBehaviour::LevelBehaviour(GameObject* pOwner)
 
 void LevelBehaviour::Initialize(const std::string& levelName, const std::string& levelPath, const std::string& nextScene)
 {
-	m_PlayerTransform = nullptr;
-	m_Player2Transform = nullptr;
+	m_pPlayerTransform = nullptr;
+	m_pPlayer2Transform = nullptr;
 	m_NextScene = nextScene;
 	// Load the level from the levelPath file using the binary reader from the engine
 	auto binReader = BinaryReader();
@@ -39,11 +39,9 @@ void LevelBehaviour::Initialize(const std::string& levelName, const std::string&
 	float p2YPos{};
 	if (binReader.OpenFile(levelPath))
 	{
-		// The level file contains the position for player 1, the position for player 2 (for co-op and versus), nr of enemies
+		// The level file contains the position for player 1, the position for player 2 (for co-op and versus) 
+		//// then it has a string that holds the path to the .tm file for creating the scene and nr of enemies
 		// and for every enemy it holds the type in a string and their position
-		// then it has a string that holds the path to the .tm file for creating the scene
-
-		// for now, skip the player positions and the enemy nr since they aren't relevant yet
 		int nrEnemies{};
 		binReader.Read<float>(p1XPos);
 		binReader.Read<float>(p1YPos);
@@ -52,37 +50,36 @@ void LevelBehaviour::Initialize(const std::string& levelName, const std::string&
 
 		std::string tmPath{};
 		binReader.ReadString(tmPath);
+		// create a level using the path to the .tm file
 		scene = SceneService.CreateScene(levelName, true, tmPath);
 
 		if (scene)
 		{
 			scene->Add(m_pOwner);
-			// add the created enemies and players into the scene here once it becomes relevant
 			// add player
 			auto* go = new GameObject("Player");
-			m_Player = new PlayerBehaviour(go);
-			go->AddComponent(m_Player);
-			m_Player->Initialize(scene->GetInputManager(), scene->GetPhysicsWorld(), 0, p1XPos, p1YPos);
+			m_pPlayer = new PlayerBehaviour(go);
+			go->AddComponent(m_pPlayer);
+			m_pPlayer->Initialize(scene->GetInputManager(), scene->GetPhysicsWorld(), 0, p1XPos, p1YPos);
 			scene->Add(go);
-			m_PlayerTransform = go->GetComponent<TransformComponent>();
+			m_pPlayerTransform = go->GetComponent<TransformComponent>();
 
-			// add player
+			// add player 2
 			go = new GameObject("Player");
-			m_Player2 = new PlayerBehaviour(go);
-			go->AddComponent(m_Player2);
-			m_Player2->Initialize(scene->GetInputManager(), scene->GetPhysicsWorld(), 1, p2XPos, p2YPos);
+			m_pPlayer2 = new PlayerBehaviour(go);
+			go->AddComponent(m_pPlayer2);
+			m_pPlayer2->Initialize(scene->GetInputManager(), scene->GetPhysicsWorld(), 1, p2XPos, p2YPos);
 			scene->Add(go);
-			m_Player2Transform = go->GetComponent<TransformComponent>();
+			m_pPlayer2Transform = go->GetComponent<TransformComponent>();
 
+			// add FPS counter
 			go = GameTimeService.GetRenderingObject();
 			auto* tc = go->GetComponent<TransformComponent>();
 			tc->SetPosition(100.f, 450.f, 0.f);
 			scene->Add(go);
 
-
 			// Load in the enemies
 			binReader.Read<int>(nrEnemies);
-
 			for (int i{}; i < nrEnemies; i++)
 			{
 				float xPos{};
@@ -126,35 +123,38 @@ void LevelBehaviour::Initialize(const std::string& levelName, const std::string&
 
 		m_UIRenders[i] = trc;
 	}
+	// reset static variables
 	m_Player1Lives = 0;
 	m_Player2Lives = 0;
 	m_Player1Score = 0;
 	m_Player2Score = 0;
+
+	// create the observers for the UI that will be observing the player characters
 	auto* observer = new UIObserver(m_pOwner, m_UIRenders[int(UIIcon::P1Life)], m_UIRenders[int(UIIcon::P1Score)]);
-	m_Player->GetSubject()->AddObserver(observer);
+	m_pPlayer->GetSubject()->AddObserver(observer);
 	m_pOwner->AddComponent(observer);
 	observer = new UIObserver(m_pOwner, m_UIRenders[int(UIIcon::P2Life)], m_UIRenders[int(UIIcon::P2Score)]);
-	m_Player2->GetSubject()->AddObserver(observer);
+	m_pPlayer2->GetSubject()->AddObserver(observer);
 	m_pOwner->AddComponent(observer);
 }
 
 void LevelBehaviour::Update()
 {
+	// kill players if they're supposed to be death
 	if (m_Player1Lives == 0)
-		m_Player->Kill();
+		m_pPlayer->Kill();
 	if (m_Player2Lives == 0)
-		m_Player2->Kill();
-
-	// keep everything in the boundaries of the level
-	if (m_PlayerTransform->GetPosition().y > m_BottomY)
-		m_PlayerTransform->GetGameObject()->GetComponent<Box2DComponent>()->SetPosition(m_PlayerTransform->GetPosition().x, m_TopY);
-	if (m_PlayerTransform->GetPosition().y < m_TopY)
-		m_PlayerTransform->GetGameObject()->GetComponent<Box2DComponent>()->SetPosition(m_PlayerTransform->GetPosition().x, m_BottomY);
-	if (m_Player2Transform->GetPosition().y > m_BottomY)
-		m_Player2Transform->GetGameObject()->GetComponent<Box2DComponent>()->SetPosition(m_Player2Transform->GetPosition().x, m_TopY);
-	if (m_Player2Transform->GetPosition().y < m_TopY)
-		m_Player2Transform->GetGameObject()->GetComponent<Box2DComponent>()->SetPosition(m_Player2Transform->GetPosition().x, m_BottomY);
+		m_pPlayer2->Kill();
 	
+	// keep everything in the boundaries of the level
+	if (m_pPlayerTransform->GetPosition().y > m_BottomY)
+		m_pPlayerTransform->GetGameObject()->GetComponent<Box2DComponent>()->SetPosition(m_pPlayerTransform->GetPosition().x, m_TopY);
+	if (m_pPlayerTransform->GetPosition().y < m_TopY)
+		m_pPlayerTransform->GetGameObject()->GetComponent<Box2DComponent>()->SetPosition(m_pPlayerTransform->GetPosition().x, m_BottomY);
+	if (m_pPlayer2Transform->GetPosition().y > m_BottomY)
+		m_pPlayer2Transform->GetGameObject()->GetComponent<Box2DComponent>()->SetPosition(m_pPlayer2Transform->GetPosition().x, m_TopY);
+	if (m_pPlayer2Transform->GetPosition().y < m_TopY)
+		m_pPlayer2Transform->GetGameObject()->GetComponent<Box2DComponent>()->SetPosition(m_pPlayer2Transform->GetPosition().x, m_BottomY);
 	for (auto* enemy : m_EnemyTransforms)
 	{
 		if (enemy->GetPosition().y > m_BottomY)
@@ -163,7 +163,8 @@ void LevelBehaviour::Update()
 			enemy->GetGameObject()->GetComponent<Box2DComponent>()->SetPosition(enemy->GetPosition().x, m_BottomY);
 	}
 
-	if(!m_Player->GetGameObject()->GetIsEnabled() && !m_Player2->GetGameObject()->GetIsEnabled())
+	//  if both players are disabled/death, return to main menu
+	if(!m_pPlayer->GetGameObject()->GetIsEnabled() && !m_pPlayer2->GetGameObject()->GetIsEnabled())
 		SceneService.SetActiveScene(0);
 
 	auto& gameTime = GameTimeService;
@@ -180,7 +181,8 @@ void LevelBehaviour::Update()
 	}
 	else
 	{
-		if (m_Player->GetGameObject()->GetIsEnabled() && m_Player2->GetGameObject()->GetIsEnabled())
+		// check if one of the two players is dead in case of the Versus game mode
+		if (m_pPlayer->GetGameObject()->GetIsEnabled() && m_pPlayer2->GetGameObject()->GetIsEnabled())
 			return;
 	}
 
@@ -192,13 +194,14 @@ void LevelBehaviour::Update()
 	{
 		if (m_GameMode != GameType::Versus)
 		{
-			m_Player1Lives = m_Player->GetLives();
-			m_Player1Score = m_Player->GetScore();
-			m_Player2Lives = m_Player2->GetLives();
-			m_Player2Score = m_Player2->GetScore();
+			m_Player1Lives = m_pPlayer->GetLives();
+			m_Player1Score = m_pPlayer->GetScore();
+			m_Player2Lives = m_pPlayer2->GetLives();
+			m_Player2Score = m_pPlayer2->GetScore();
 			SceneService.SetActiveScene(m_NextScene);
 			return;
 		}
+		// if Versus game mode there is no next scene, just return to main menu
 		SceneService.SetActiveScene(0);
 	}
 }
@@ -213,25 +216,21 @@ void LevelBehaviour::OnLoad()
 	// set player to correct location based on game mode
 	m_Timer = 5.f;
 	// set player lives and score to correct values from previous level
-	m_Player->Reset();
-	m_Player2->Reset();
-	m_Player->SetLives(m_Player1Lives);
-	m_Player->SetScore(m_Player1Score);
-	m_Player2->SetLives(m_Player2Lives);
-	m_Player2->SetScore(m_Player2Score);
-	m_UIRenders[int(UIIcon::P1Life)]->SetText(std::to_string(m_Player1Lives));
-	m_UIRenders[int(UIIcon::P2Life)]->SetText(std::to_string(m_Player2Lives));
-	m_UIRenders[int(UIIcon::P1Score)]->SetText(std::to_string(m_Player1Score));
-	m_UIRenders[int(UIIcon::P2Score)]->SetText(std::to_string(m_Player2Score));
+	m_pPlayer->Reset();
+	m_pPlayer2->Reset();
+	m_pPlayer->SetLives(m_Player1Lives);
+	m_pPlayer->SetScore(m_Player1Score);
+	m_pPlayer2->SetLives(m_Player2Lives);
+	m_pPlayer2->SetScore(m_Player2Score);
 
 	if (m_GameMode == GameType::SinglePlayer)
 	{
 		// disable player 2
-		m_Player2->GetGameObject()->SetIsEnabled(false);
-		m_Player2->GetGameObject()->GetComponent<Box2DComponent>()->SetIsEnabled(false);
-		m_Player2->SetIsMaita(false);
+		m_pPlayer2->GetGameObject()->SetIsEnabled(false);
+		m_pPlayer2->GetGameObject()->GetComponent<Box2DComponent>()->SetIsEnabled(false);
+		m_pPlayer2->SetIsMaita(false);
 		m_Player2Lives = 0;
-		m_Player2->SetLives(m_Player2Lives);
+		m_pPlayer2->SetLives(m_Player2Lives);
 
 		for (int i{}; i < m_Enemies.size(); i++)
 		{
@@ -242,10 +241,10 @@ void LevelBehaviour::OnLoad()
 	}
 	else if(m_GameMode == GameType::Coop)
 	{
-		// enable player 2 and set is Maita to false
-		m_Player2->GetGameObject()->SetIsEnabled(true);
-		m_Player2->GetGameObject()->GetComponent<Box2DComponent>()->SetIsEnabled(true);
-		m_Player2->SetIsMaita(false);
+		// enable player 2 and set isMaita to false
+		m_pPlayer2->GetGameObject()->SetIsEnabled(true);
+		m_pPlayer2->GetGameObject()->GetComponent<Box2DComponent>()->SetIsEnabled(true);
+		m_pPlayer2->SetIsMaita(false);
 		for (int i{}; i < m_Enemies.size(); i++)
 		{
 			ZenBehaviour* enemy = m_Enemies[i]->GetComponent<ZenBehaviour>();
@@ -256,9 +255,9 @@ void LevelBehaviour::OnLoad()
 	else if (m_GameMode == GameType::Versus)
 	{
 		// enable player 2 and set IsMaita variable to true
-		m_Player2->GetGameObject()->SetIsEnabled(true);
-		m_Player2->GetGameObject()->GetComponent<Box2DComponent>()->SetIsEnabled(true);
-		m_Player2->SetIsMaita(true);
+		m_pPlayer2->GetGameObject()->SetIsEnabled(true);
+		m_pPlayer2->GetGameObject()->GetComponent<Box2DComponent>()->SetIsEnabled(true);
+		m_pPlayer2->SetIsMaita(true);
 		for (int i{}; i < m_Enemies.size(); i++)
 		{
 			// Disable all enemies in versus mode
@@ -267,25 +266,24 @@ void LevelBehaviour::OnLoad()
 	}
 }
 
-void LevelBehaviour::CreateZen(float xPos, float yPos, b2World* physicsWorld, Scene* scene)
+void LevelBehaviour::CreateZen(float xPos, float yPos, b2World* pPhysicsWorld, Scene* pScene)
 {
 	auto* go = new GameObject("Enemy");
 	auto* zenBehaviour = new ZenBehaviour(go);
-	zenBehaviour->Initialize(physicsWorld, xPos, yPos, m_PlayerTransform, m_Player2Transform);
+	zenBehaviour->Initialize(pPhysicsWorld, xPos, yPos, m_pPlayerTransform, m_pPlayer2Transform);
 	go->AddComponent(zenBehaviour);
-	scene->Add(go);
+	pScene->Add(go);
 	m_Enemies.push_back(go);
 	m_EnemyTransforms.push_back(go->GetComponent<TransformComponent>());
-	
 }
 
-void LevelBehaviour::CreateMaita(float xPos, float yPos, b2World* physicsWorld, Scene* scene)
+void LevelBehaviour::CreateMaita(float xPos, float yPos, b2World* pPhysicsWorld, Scene* pScene)
 {
 	auto* go = new GameObject("Enemy");
 	auto* maitaBehaviour = new MaitaBehaviour(go);
-	maitaBehaviour->Initialize(physicsWorld, xPos, yPos, m_PlayerTransform, m_Player2Transform);
+	maitaBehaviour->Initialize(pPhysicsWorld, xPos, yPos, m_pPlayerTransform, m_pPlayer2Transform);
 	go->AddComponent(maitaBehaviour);
-	scene->Add(go);
+	pScene->Add(go);
 	m_Enemies.push_back(go);
 	m_EnemyTransforms.push_back(go->GetComponent<TransformComponent>());
 }

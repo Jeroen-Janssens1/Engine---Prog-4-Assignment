@@ -7,8 +7,8 @@ SpriteAnimatorComponent::SpriteAnimatorComponent(GameObject* pOwner, std::vector
 	:BaseComponent(pOwner, tag)
 	,m_Animations{animations}
 {
-	m_ActiveAnimation = m_Animations[0];
-	m_ActiveAnimation->Entry();
+	m_pActiveAnimation = m_Animations[0];
+	m_pActiveAnimation->Entry();
 	// Add all transitions (no duplicates) to m_Transitions for deletion during cleanup
 	std::vector<Transition*> transitions;
 	for (size_t i{}; i < m_Animations.size(); i++)
@@ -36,27 +36,23 @@ SpriteAnimatorComponent::~SpriteAnimatorComponent()
 
 void SpriteAnimatorComponent::Update()
 {
-	m_ActiveAnimation->Update();
+	m_pActiveAnimation->Update();
 	// check transitions for current state
 	State* newState = nullptr;
-	if (m_ActiveAnimation->HandleTransitions(&newState))
+	if (m_pActiveAnimation->HandleTransitions(&newState))
 	{
 		// transition from one to the other
-		m_ActiveAnimation->Exit();
-		m_ActiveAnimation = newState;
-		m_ActiveAnimation->Entry();
+		m_pActiveAnimation->Exit();
+		m_pActiveAnimation = newState;
+		m_pActiveAnimation->Entry();
 	}
-}
-
-void SpriteAnimatorComponent::Render() const
-{
 }
 
 void SpriteAnimatorComponent::ResetAnimator()
 {
-	m_ActiveAnimation->Exit();
-	m_ActiveAnimation = m_Animations[0];
-	m_ActiveAnimation->Entry();
+	m_pActiveAnimation->Exit();
+	m_pActiveAnimation = m_Animations[0];
+	m_pActiveAnimation->Entry();
 }
 
 void SpriteAnimatorComponent::SetTrigger(const std::string& name)
@@ -109,5 +105,5 @@ void SpriteAnimatorComponent::SetBool(const std::string& name, bool value)
 
 const std::string& SpriteAnimatorComponent::GetCurrentStateName() const
 {
-	 return m_ActiveAnimation->GetName();
+	 return m_pActiveAnimation->GetName();
 }

@@ -1,12 +1,10 @@
 #pragma once
 #include "BaseComponent.h"
-#include "InputManager.h"
 #include "GameTime.h"
-#include "GameObject.h"
 #include <memory>
-#include "Command.h"
 #include "box2d\b2_math.h"
 
+class GameObject;
 class b2Fixture;
 class ZenBehaviour :
 	public BaseComponent
@@ -27,11 +25,10 @@ public:
 
 	bool GetIsBubbled() const { return m_IsBubbled; }
 
-	void OnContactBegin(b2Contact * contact, Box2DComponent * thisCollider, Box2DComponent * other) override;
-	void OnContactEnd(b2Contact * contact, Box2DComponent * thisCollider, Box2DComponent * other) override;
-	void PreSolve(b2Contact * contact, const b2Manifold * manifold, Box2DComponent * thisCollider, Box2DComponent * other) override;
-	//void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse, Box2DComponent* thisCollider, Box2DComponent* other) override;
-	bool ShouldCollide(b2Fixture * fixtureA, b2Fixture * fixtureB, Box2DComponent * thisCollider, Box2DComponent * other) override;
+	void OnContactBegin(b2Contact * pContact, Box2DComponent * pThisCollider, Box2DComponent * pOther) override;
+	void OnContactEnd(b2Contact * pContact, Box2DComponent * pThisCollider, Box2DComponent * pTther) override;
+	void PreSolve(b2Contact * pContact, const b2Manifold * pManifold, Box2DComponent * pThisCollider, Box2DComponent * pOther) override;
+	bool ShouldCollide(b2Fixture * pFixtureA, b2Fixture * pFixtureB, Box2DComponent * pThisCollider, Box2DComponent * pOther) override;
 
 	unsigned int GetScore() const { return m_Score; }
 
@@ -47,40 +44,30 @@ protected:
 	Box2DComponent* m_pFootSensor;
 	SpriteAnimatorComponent* m_pAnimator;
 	RenderComponent* m_pRenderComp;
-
-	b2Fixture* m_FootSensor;
-	b2Fixture* m_LeftSensor;
-	b2Fixture* m_RightSensor;
-	b2Fixture* m_TopSensor;
-
+	b2Fixture* m_pFootSensor;
+	b2Fixture* m_pLeftSensor;
+	b2Fixture* m_pRightSensor;
+	b2Fixture* m_pTopSensor;
 	b2Vec2 m_Vel;
 	b2Vec2 m_JumpForce;
-
 	const float m_Speed = 100.f;
-
 	unsigned int m_FootSensorCounter;
 	unsigned int m_LeftSensorCounter;
 	unsigned int m_RightSensorCounter;
 	unsigned int m_TopSensorCounter;
-
 	unsigned int m_NrOfOverlappers;
 	bool m_IgnoreCollisions;
 	bool m_IsDropping;
 	bool m_IsKilled;
-
 	float m_BubbledTimer;
 	const float m_BubbledDuration = 5.f;
 	bool m_IsBubbled;
-
 	const float m_JumpCooldown = 3.f;
 	float m_JumpTimer;
 	const unsigned int m_Score;
-
 	TransformComponent* m_pPlayerTransform;
 	TransformComponent* m_pPlayer2Transform;
-
 	b2Vec2 m_SpawnPos;
-
 	bool m_2Players;
 };
 

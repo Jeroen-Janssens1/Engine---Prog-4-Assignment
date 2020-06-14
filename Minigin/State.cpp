@@ -21,7 +21,6 @@ bool State::HandleTransitions(State** newState)
 		if (m_pBoolTransition->Condition())
 			return false;
 	}
-
 	for (auto* transition : m_pTransitions)
 	{
 		if (transition->Condition())

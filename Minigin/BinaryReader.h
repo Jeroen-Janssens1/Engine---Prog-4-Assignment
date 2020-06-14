@@ -8,6 +8,7 @@ class BinaryReader
 {
 public:
 	BinaryReader() = default;
+	~BinaryReader() = default;
 
 	template <class myType>
 	void Read(myType& myPod)
@@ -30,9 +31,7 @@ public:
 		std::cout << "Failed to read from file," << std::endl << "file not opened." << std::endl << std::endl;
 		return;
 	}
-
 	void ReadString(std::string& string);
-
 	bool OpenFile(const std::string& fileName);
 	bool CloseFile();
 

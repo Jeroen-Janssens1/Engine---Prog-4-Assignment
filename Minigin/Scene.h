@@ -18,6 +18,11 @@ struct TileType
 	{
 		friend Scene* SceneManager::CreateScene(const std::string& name, bool isTileMap, const std::string& levelDataPath);
 	public:
+		~Scene();
+		Scene(const Scene& other) = delete;
+		Scene(Scene&& other) = delete;
+		Scene& operator=(const Scene& other) = delete;
+		Scene& operator=(Scene&& other) = delete;
 
 		void Add(GameObject* pObject);
 		void Remove(GameObject* object);
@@ -25,19 +30,14 @@ struct TileType
 		InputManager* GetInputManager() const { return m_pInputManager; }
 
 		void OnLoad();
-
-		bool Update();
+		void Update();
+		void PhysicsUpdate();
+		bool ProcessInput();
 		void Render() const;
+
 		std::string& GetName();
 		b2World* GetPhysicsWorld();
-
 		void SetGravity(const b2Vec2& gravity) { m_pPhysicsWorld->SetGravity(gravity); }
-
-		~Scene();
-		Scene(const Scene& other) = delete;
-		Scene(Scene&& other) = delete;
-		Scene& operator=(const Scene& other) = delete;
-		Scene& operator=(Scene&& other) = delete;
 
 	private: 
 		explicit Scene(const std::string& name, bool isTileMap, const std::string& levelDataPath);

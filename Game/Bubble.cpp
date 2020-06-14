@@ -4,23 +4,21 @@
 #include "ZenBehaviour.h"
 #include "PlayerBehaviour.h"
 
-Bubble::Bubble(GameObject* pOwner, float velocity, Box2DComponent* box2D)
+Bubble::Bubble(GameObject* pOwner, float velocity, Box2DComponent* pBox2D)
 	:BaseComponent(pOwner)
 	,m_Lifetime(1.f)
 	,m_Velocity{velocity}
-	,m_Box2D{box2D}
+	,m_pBox2D{pBox2D}
 	,m_HasHit{false}
 {
 }
 
 void Bubble::Update()
 {
-	m_Box2D->SetVelocity(m_Velocity, 0);
+	m_pBox2D->SetVelocity(m_Velocity, 0);
 	m_Lifetime -= GameTimeService.GetElapsed();
 	if (m_Lifetime <= 0)
-	{
 		m_pOwner->Destroy();
-	}
 }
 
 void Bubble::OnContactBegin(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other)
@@ -39,7 +37,7 @@ void Bubble::OnContactBegin(b2Contact* contact, Box2DComponent* thisCollider, Bo
 				m_HasHit = true;
 			}
 		}
-		else if (playerEnemy)
+		else if (playerEnemy) // for Versus mode
 		{
 			if (!playerEnemy->GetIsBubbled() && !m_HasHit)
 			{

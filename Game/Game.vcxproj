@@ -102,8 +102,10 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)3rdParty\SDL2\lib\x64\SDL2.dll" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)3rdParty\VLD\lib\x64\vld_x64.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x64\SDL2_mixer.dll" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x64\libmpg123-0.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command>
     </PostBuildEvent>
@@ -127,6 +129,7 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command
 xcopy "$(SolutionDir)3rdParty\SDL2\lib\x86\SDL2.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x86\SDL2_mixer.dll" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x86\libmpg123-0.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command>
     </PostBuildEvent>
@@ -152,6 +155,7 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command
 xcopy "$(SolutionDir)3rdParty\SDL2\lib\x86\SDL2.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x86\SDL2_mixer.dll" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x86\libmpg123-0.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command>
     </PostBuildEvent>
@@ -176,6 +180,7 @@ xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command
       <Command>xcopy "$(SolutionDir)3rdParty\SDL2\lib\x64\SDL2.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x64\SDL2_mixer.dll" "$(OutputPath)" /R /Y
+xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\x64\libmpg123-0.dll" "$(OutputPath)" /R /Y
 
 xcopy "$(SolutionDir)Game\Resources" "$(OutputPath)Resources\" /R /Y /E</Command>
     </PostBuildEvent>

@@ -27,13 +27,10 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 	{
 		int nrOfTileTypes;
 		binReader.Read<int>(nrOfTileTypes);
-
 		std::string tileSheetPath;
 		binReader.ReadString(tileSheetPath);
-
 		binReader.Read<int>(m_CellWidth);
 		binReader.Read<int>(m_CellHeight);
-
 		binReader.Read<int>(m_NrCols);
 		binReader.Read<int>(m_NrRows);
 		int tileWidth{};
@@ -42,18 +39,14 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 		int tileHeight;
 		binReader.Read<int>(tileHeight);
 		m_TileHeight = float(tileHeight);
-
-
 		std::vector<TileType> tileTypes;
 		tileTypes.resize(nrOfTileTypes);
-
 		for (int i{}; i < nrOfTileTypes; i++)
 		{
-			// Sprite Sheet data
+			// Tile Type Data
 			binReader.Read<int>(tileTypes[i].tileId);
 			if (tileTypes[i].tileId == 0)
 				continue;
-
 			binReader.Read<int>(tileTypes[i].xPos);
 			binReader.Read<int>(tileTypes[i].yPos);
 			binReader.Read<bool>(tileTypes[i].usesPhysics);
@@ -83,22 +76,13 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 
 			int curRow = int(i) / m_NrCols;
 			int curCol = (i - (m_NrCols*curRow)) % m_NrCols;
-			// scale tiles according to window size
 			float x = (curCol * m_TileWidth) + (m_TileWidth/2);
 			float y = (curRow * m_TileHeight) + (m_TileHeight / 2);
 			float z = 0;
 			transformComponent->SetPosition(x, y, z);
-
-
-			// Add The Physics Data
-			if (tileTypes[tileId].usesPhysics)
-			{
-				//auto collider = new Box2DComponent(go, transformComponent, m_pPhysicsWorld, m_TileWidth, m_TileHeight);
-				//go->AddComponent(collider);
-			}
 		}
 
-		// create joint collision boxes
+		// create merged collision boxes
 		std::vector<bool> tileUsed{};
 		tileUsed.resize(map.size(), false);
 
@@ -106,9 +90,9 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 		{
 			for (int j{}; j < m_NrCols; j++)
 			{
-				// i*nrOfCols + j = indx
+				// loop over the entire map, for every tile, preform the following checks
 				int indx = (i * m_NrCols) + j;
-				if (map[indx] == 0 || !tileTypes[map[indx]].usesPhysics || tileUsed[indx])
+				if (map[indx] == 0 || !tileTypes[map[indx]].usesPhysics || tileUsed[indx]) // if empty tile, not using physics or already in another collision box, then ignore
 					continue;
 
 				// this gives us the top left pos of the collision box
@@ -130,11 +114,11 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 						break;
 					tileUsed[indx] = true; // add tile to this collision box
 				}
-				width = indx - topLeft;
+				width = indx - topLeft; // we now have the width
 
 
 				int height = 1;
-				// check downwards to get the bottom left pos
+				// check downwards to get the bottom left pos and thus the height
 				for (int k{ i + 1 }; k < m_NrRows + 1; k++)
 				{
 					if (k == m_NrRows)
@@ -189,8 +173,6 @@ Scene::Scene(const std::string& name, bool isTileMap, const std::string& levelDa
 				go->AddComponent(box2DComp);
 				go->AddComponent(tc);
 				Add(go);
-
-				// normally level 1 would create 14 collisions using this system
 			}
 		}
 	}
@@ -234,7 +216,7 @@ void Scene::OnLoad()
 	}
 }
 
-bool Scene::Update()
+void Scene::Update()
 {
 	if (!m_ToRemoveObjects.empty())
 	{
@@ -247,22 +229,27 @@ bool Scene::Update()
 		m_ToRemoveObjects.clear();
 	}
 
-	// process scene specific input
-	bool keepPlaying = m_pInputManager->ProcessInput();
-	auto& physicsVars = ServiceLocator<PhysicsVariables, PhysicsVariables>::GetService();
-	float timeStep = physicsVars.GetTimeStep();
-	// update physics using a fixed timestep
-	for(m_PassedTime += GameTimeService.GetElapsed(); m_PassedTime >= timeStep; m_PassedTime -= timeStep)
-		m_pPhysicsWorld->Step(timeStep, physicsVars.GetVelocityIterations(),
-			physicsVars.GetPositionIterations());
-
 	for(auto& object : m_Objects)
 	{
 		if(object->GetIsEnabled())
 			object->Update();
 	}
+}
 
-	return keepPlaying;
+void Scene::PhysicsUpdate()
+{
+	auto& physicsVars = ServiceLocator<PhysicsVariables, PhysicsVariables>::GetService();
+	float timeStep = physicsVars.GetTimeStep();
+	// update physics using a fixed timestep. If timestep = 60FPS and game runs at 30FPS, physics will be progressed twice to match the time passed
+	for (m_PassedTime += GameTimeService.GetElapsed(); m_PassedTime >= timeStep; m_PassedTime -= timeStep)
+		m_pPhysicsWorld->Step(timeStep, physicsVars.GetVelocityIterations(),
+			physicsVars.GetPositionIterations());
+}
+
+bool Scene::ProcessInput()
+{
+	// process scene specific input
+	return m_pInputManager->ProcessInput();
 }
 
 void Scene::Render() const

@@ -8,8 +8,8 @@
 
 void Renderer::Init(SDL_Window * window)
 {
-	m_Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (m_Renderer == nullptr) 
+	m_pRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (m_pRenderer == nullptr) 
 	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
@@ -17,19 +17,19 @@ void Renderer::Init(SDL_Window * window)
 
 void Renderer::Render() const
 {
-	SDL_RenderClear(m_Renderer);
+	SDL_RenderClear(m_pRenderer);
 
 	ServiceLocator<SceneManager, SceneManager>::GetService().Render();
 	
-	SDL_RenderPresent(m_Renderer);
+	SDL_RenderPresent(m_pRenderer);
 }
 
 void Renderer::Destroy()
 {
-	if (m_Renderer != nullptr)
+	if (m_pRenderer != nullptr)
 	{
-		SDL_DestroyRenderer(m_Renderer);
-		m_Renderer = nullptr;
+		SDL_DestroyRenderer(m_pRenderer);
+		m_pRenderer = nullptr;
 	}
 }
 
@@ -39,6 +39,7 @@ void Renderer::RenderTexture(const Texture2D& texture, const float x, const floa
 	dst.x = static_cast<int>(x);
 	dst.y = static_cast<int>(y);
 	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
+	// render using transform position as center
 	dst.x -= dst.w / 2;
 	dst.y -= dst.h / 2;
 	if (isFlipped)
@@ -59,6 +60,7 @@ void Renderer::RenderTexture(const Texture2D& texture, const float x, const floa
 	dst.y = static_cast<int>(y);
 	dst.w = static_cast<int>(width);
 	dst.h = static_cast<int>(height);
+	// render using transform position as center
 	dst.x -= dst.w / 2;
 	dst.y -= dst.h / 2;
 	if (isFlipped)
@@ -90,6 +92,7 @@ void Renderer::RenderTexture(const Texture2D& texture, float x, float y, int xPo
 		dst.w = static_cast<int>(width);
 		dst.h = static_cast<int>(height);
 	}
+	// render using transform position as center
 	dst.x -= dst.w / 2;
 	dst.y -= dst.h / 2;
 	src.x = xPos;

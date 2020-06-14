@@ -42,25 +42,23 @@ public:
 	static void SetPlayer2Score(unsigned int value) { m_Player2Score = value; }
 
 private:
-	void CreateZen(float xPos, float yPos, b2World* physicsWorld, Scene* scene);
-	void CreateMaita(float xPos, float yPos, b2World* physicsWorld, Scene* scene);
+	void CreateZen(float xPos, float yPos, b2World* pPhysicsWorld, Scene* pScene);
+	void CreateMaita(float xPos, float yPos, b2World* pPhysicsWorld, Scene* pScene);
 
 	static GameType m_GameMode;
 	static unsigned int m_Player1Lives;
 	static unsigned int m_Player2Lives;
 	static unsigned int m_Player1Score;
 	static unsigned int m_Player2Score;
-
 	std::vector<GameObject*> m_Enemies;
 	std::vector<TransformComponent*> m_EnemyTransforms;
 	float m_Timer;
 	std::string m_NextScene;
-	PlayerBehaviour* m_Player;
-	TransformComponent* m_PlayerTransform;
-	TransformComponent* m_Player2Transform;
-	PlayerBehaviour* m_Player2;
+	PlayerBehaviour* m_pPlayer;
+	TransformComponent* m_pPlayerTransform;
+	TransformComponent* m_pPlayer2Transform;
+	PlayerBehaviour* m_pPlayer2;
 	std::vector<TextRenderComponent*> m_UIRenders;
 	float m_TopY;
 	float m_BottomY;
 };
-

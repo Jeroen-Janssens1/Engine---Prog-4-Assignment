@@ -6,6 +6,7 @@ class SoundStream
 public:
 	explicit SoundStream( const std::string& path );
 	~SoundStream( );
+
 	SoundStream( const SoundStream& other ) = delete;
 	SoundStream& operator=( const SoundStream& rhs ) = delete;
 	SoundStream(SoundStream&& other) = delete;

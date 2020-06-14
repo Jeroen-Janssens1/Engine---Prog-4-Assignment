@@ -6,6 +6,7 @@ class SoundEffect
 public:
 	explicit SoundEffect( const std::string& path );
 	~SoundEffect( );
+
 	SoundEffect(const SoundEffect& other) = delete;
 	SoundEffect& operator=(const SoundEffect& rhs) = delete;
 	SoundEffect( SoundEffect&& other) = delete;

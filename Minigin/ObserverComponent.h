@@ -11,7 +11,12 @@ public:
 	ObserverComponent(GameObject* pOwner, const std::string& tag = "");
 	virtual ~ObserverComponent();
 
-	void AddSubject(SubjectComponent* subject) { m_Subjects.push_front(subject); };
+	ObserverComponent(const ObserverComponent& other) = delete;
+	ObserverComponent(ObserverComponent&& other) = delete;
+	ObserverComponent& operator=(const ObserverComponent& other) = delete;
+	ObserverComponent& operator=(ObserverComponent&& other) = delete;
+
+	void AddSubject(SubjectComponent* pSubject) { m_Subjects.push_front(pSubject); };
 	void OnLoad() override {}
 
 	ObserverComponent(const ObserverComponent& other) = delete;
@@ -23,9 +28,5 @@ public:
 
 protected:
 	std::list<SubjectComponent*> m_Subjects;
-
-private:
-
-
 };
 

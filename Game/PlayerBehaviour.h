@@ -2,9 +2,7 @@
 #include "BaseComponent.h"
 #include "GameTime.h"
 #include <memory>
-#include "Command.h"
 #include "box2d\b2_math.h"
-
 class b2World;
 class Box2DComponent;
 class RenderComponent;
@@ -29,17 +27,14 @@ public:
 	void OnContactBegin(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other) override;
 	void OnContactEnd(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other) override;
 	void PreSolve(b2Contact* contact, const b2Manifold* manifold, Box2DComponent* thisCollider, Box2DComponent* other) override;
-	//void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse, Box2DComponent* thisCollider, Box2DComponent* other) override;
 	bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB, Box2DComponent* thisCollider, Box2DComponent* other) override;
 
 	unsigned int GetLives() const { return m_Lives; }
 	unsigned int GetScore() const { return m_Score; }
-	void SetLives(unsigned int value) { m_Lives = value; }
-	void SetScore(unsigned int value) { m_Score = value; }
+	void SetLives(unsigned int value);
+	void SetScore(unsigned int value);
 	SubjectComponent* GetSubject() const { return m_pSubject; }
-
 	bool GetIsBubbled() const { return m_IsBubbled; }
-
 	void SetIsMaita(bool value);
 
 	void Hit();
@@ -69,32 +64,22 @@ private:
 	SpriteAnimatorComponent* m_pMaitaAnimator;
 	RenderComponent* m_pRenderComp;
 	SubjectComponent* m_pSubject;
-
 	b2Vec2 m_Vel;
 	b2Vec2 m_JumpForce;
 	b2Vec2 m_SpawnPos;
-
 	const float m_Speed = 200.f;
-
 	unsigned int m_FootSensorCounter;
-
 	unsigned int m_NrOfOverlappers;
 	bool m_IgnoreCollisions;
 	bool m_IsDropping;
 	bool m_IsHit;
-
 	unsigned int m_Lives;
-
 	const float m_AttackCooldown = 1.f;
 	float m_AttackTimer;
-
 	unsigned int m_Score;
-
 	bool m_IsMaita;
-
 	float m_BubbledTimer;
 	const float m_BubbledDuration = 5.f;
 	bool m_IsBubbled;
-
 };
 

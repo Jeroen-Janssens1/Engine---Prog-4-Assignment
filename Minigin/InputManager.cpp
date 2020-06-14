@@ -33,11 +33,9 @@ InputManager::InputManager()
 		m_KbCommands[i] = new NullCommand();
 	m_KbCommandUsesPressed.resize(255, false);
 	m_KbCommandWasPressed.resize(255, false);
-
 	// Set up the controller input
 	// This array is used so that you can map your physical buttons to different XInput buttons
 	// in case your controller uses different mappings
-
 	// Get all connected controllers
 	m_CurrentState.resize(XUSER_MAX_COUNT, XINPUT_STATE());
 	m_IsControllerActive.resize(XUSER_MAX_COUNT, false);
@@ -51,6 +49,7 @@ InputManager::InputManager()
 		ZeroMemory(&tempState, sizeof(XINPUT_STATE));
 		if (XInputGetState(i, &tempState) == ERROR_SUCCESS)
 		{
+			// if controller index not take yet
 			if (m_XInputToControllerIndx[i] == -1)
 			{
 				m_XInputToControllerIndx[i] = m_CurControllerIndx;
@@ -82,6 +81,7 @@ InputManager::InputManager()
 		m_CommandUsesPressed.push_back(usesPressed);
 		m_CommandWasPressed.push_back(usesPressed);
 
+		// push back all controller controls that are currently supported and their hardware mappings
 		m_XButtons.back()[int(ControllerButton::ButtonA)] = XINPUT_GAMEPAD_A;
 		m_Commands.back()[int(ControllerButton::ButtonA)] = new NullCommand();
 
@@ -140,19 +140,16 @@ void InputManager::MapCommand(unsigned int controllerIndx, ControllerButton butt
 {
 	if (!(m_IsControllerActive.size() > controllerIndx))
 		return;
-
 	for (size_t i{}; i < m_Commands.size(); i++)
 	{
 		auto it = std::find(m_Commands[i].cbegin(), m_Commands[i].cend(), command);
-		// can't map an already existing command to the same button, instead make a new allocation of an identical command!
+		// can't map an already existing command to the same button
 		if (it != m_Commands[i].cend())
 			return;
 	}
-
-	auto it = std::find(m_KbCommands.cbegin(), m_KbCommands.cend(), command);
+	auto it = std::find(m_KbCommands.cbegin(), m_KbCommands.cend(), command); // command may not exist in KbCommands either to prevent deletion errors
 	if (it != m_KbCommands.cend())
 		return;
-
 	// actual mapping code
 	delete m_Commands[controllerIndx][int(button)];
 	m_Commands[controllerIndx][int(button)] = command;
@@ -165,15 +162,13 @@ void InputManager::MapCommand(int keyboardCode, Command* command, bool usesPress
 	for (size_t i{}; i < m_Commands.size(); i++)
 	{
 		auto it = std::find(m_Commands[i].cbegin(), m_Commands[i].cend(), command);
-		// can't map an already existing command to the same button, instead make a new allocation of an identical command!
+		// can't map an already existing command to the same button
 		if (it != m_Commands[i].cend())
 			return;
 	}
-
 	auto it = std::find(m_KbCommands.cbegin(), m_KbCommands.cend(), command);
 	if (it != m_KbCommands.cend())
 		return;
-
 	// actual mapping code
 	delete m_KbCommands[keyboardCode];
 	m_KbCommands[keyboardCode] = command;
@@ -249,9 +244,6 @@ bool InputManager::ProcessInput()
 		if (!keepPlaying)
 			return keepPlaying;
 	}
-
-	
-
 	return keepPlaying;
 }
 
@@ -259,14 +251,12 @@ bool InputManager::IsPressed(unsigned int controllerIndx, ControllerButton butto
 {
 	if (!(m_IsControllerActive.size() > controllerIndx))
 		return false;
-
 	if (!m_IsControllerActive[controllerIndx])
 		return false;
 	// First check if the button is in the Pressed checking mode.
 	// If it is, check if the button was already pressed last frame,
 	// if it was we didn't press it this frame so we return false.
 	bool isPressed = m_CurrentState[controllerIndx].Gamepad.wButtons & m_XButtons[controllerIndx][int(button)];
-
 	if (m_CommandUsesPressed[controllerIndx][int(button)])
 	{
 		if (m_CommandWasPressed[controllerIndx][int(button)])
@@ -274,8 +264,6 @@ bool InputManager::IsPressed(unsigned int controllerIndx, ControllerButton butto
 			m_CommandWasPressed[controllerIndx][int(button)] = isPressed;
 			return false;
 		}
-
-		
 	}
 	m_CommandWasPressed[controllerIndx][int(button)] = isPressed;
 	// If the button isn't in Pressed checking mode we just check if the button

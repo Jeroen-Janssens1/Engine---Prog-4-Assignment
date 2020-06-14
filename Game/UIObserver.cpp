@@ -14,6 +14,7 @@ UIObserver::UIObserver(GameObject* pOwner, TextRenderComponent* livesText, TextR
 void UIObserver::onNotify(const GameObject* go, Event event)
 {
 	ObserverComponent::onNotify(go, event);
+	// we also need to accept the Enemy tag because of player 2 in the Versus game mode
 	if (go->GetTag() != "Player" && go->GetTag() != "Enemy")
 		return;
 	switch (event)

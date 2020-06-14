@@ -24,6 +24,5 @@ private:
 	size_t m_CurrentFrame;
 	bool m_IsLooping;
 	bool m_ForceFullAnimation;
-	
 };
 

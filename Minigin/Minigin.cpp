@@ -19,9 +19,16 @@
 #include "ServiceLocator.h"
 #include "PhysicsVariables.h"
 #include "SDL_ttf.h"
+#include <future>
 
 using namespace std;
 using namespace std::chrono;
+
+Minigin::~Minigin()
+{
+	delete m_pContactFilter;
+	delete m_pContactListener;
+}
 
 void Minigin::Initialize()
 {
@@ -42,13 +49,6 @@ void Minigin::Initialize()
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
-	// Initialize SDL_ttf
-	if (TTF_Init() == -1)
-	{
-		std::cerr << "Core::Initialize( ), error when calling TTF_Init: " << TTF_GetError() << std::endl;
-		return;
-	}
-
 	// init sdl audio
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
@@ -71,14 +71,11 @@ void Minigin::Initialize()
 	ServiceLocator<ResourceManager, ResourceManager>::GetService().Init("../Data/");
 	ServiceLocator<GameTime, GameTime>::GetService().Init();
 
-
 	m_IsInitialized = true;
 }
 
 void Minigin::Cleanup()
 {
-	delete m_pContactFilter;
-	delete m_pContactListener;
 	ServiceLocator<Renderer, Renderer>::GetService().Destroy();
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;
@@ -89,25 +86,26 @@ void Minigin::Run()
 {
 	if(!m_IsInitialized)
 		Initialize();
-	
-	{
-		auto& renderer = ServiceLocator<Renderer, Renderer>::GetService();
-		auto& sceneManager = ServiceLocator<SceneManager, SceneManager>::GetService();
-		auto& gameTime = ServiceLocator<GameTime, GameTime>::GetService();
 
-		bool doContinue = true;
-		while (doContinue)
-		{
-			//const auto currentTime = high_resolution_clock::now();
-			
-			gameTime.Update();
-			doContinue = sceneManager.Update();
-			renderer.Render();
-			if(doContinue)
-				doContinue = ServiceLocator<InputManager, InputManager>::GetService().ProcessInput();
-		}
+	auto& renderer = ServiceLocator<Renderer, Renderer>::GetService();
+	auto& sceneManager = ServiceLocator<SceneManager, SceneManager>::GetService();
+	auto& gameTime = ServiceLocator<GameTime, GameTime>::GetService();
+
+	bool doContinue = true;
+	while (doContinue)
+	{	
+		gameTime.Update(); // update deltaTime and FPS counter
+		doContinue = sceneManager.ProcessInput();
+		// only check global input if scene specific input didn't request to stop playing
+		if (doContinue)
+			doContinue = ServiceLocator<InputManager, InputManager>::GetService().ProcessInput();
+		sceneManager.Update();
+		// run the physics update for the next frame in a threat and simultaniously run the renderer to visualize the current frame
+		std::thread t(&SceneManager::PhysicsUpdate, std::ref(sceneManager));
+		renderer.Render();
+		// make sure the physics are done updating before continuing to the next frame
+		t.join();
 	}
-
 	Cleanup();
 }
 void Minigin::GetWindowSize(int& width, int& height)

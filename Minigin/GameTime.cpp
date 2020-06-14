@@ -5,7 +5,6 @@
 #include "TextRenderComponent.h"
 #include "GameObject.h"
 #include "ServiceLocator.h"
-#include <thread>
 
 
 GameTime::~GameTime()
@@ -23,28 +22,19 @@ void GameTime::Init()
 	m_FPSCount = 0;
 
 	auto font = ServiceLocator<ResourceManager, ResourceManager>::GetService().LoadFont("Resources/Lingua.otf", 24);
-
 	m_pGameObject = new GameObject();
-
 	auto transformComponent = new TransformComponent{ m_pGameObject };
 	m_pGameObject->AddComponent(transformComponent);
-
 	m_pTextRenderer = new TextRenderComponent(m_pGameObject, transformComponent, "0 FPS", font);
 	m_pGameObject->AddComponent(m_pTextRenderer);
-
 	transformComponent->SetPosition(0, 0, 0);
 }
 
 void GameTime::Update()
 {
 	m_CurTime = std::chrono::high_resolution_clock::now();
-
 	std::chrono::duration<float> diff = m_CurTime - m_PrevTime;
 	m_DeltaTime = diff.count();
-	
-	/*if (m_DeltaTime < 0.f)
-		m_DeltaTime = 0.f;*/
-
 	m_FPSTimer += m_DeltaTime;
 	m_FPSCount++;
 	if (m_FPSTimer > 1.f)
@@ -55,11 +45,6 @@ void GameTime::Update()
 		m_pTextRenderer->SetText(std::to_string(m_FPS) + " FPS");
 	}
 	m_PrevTime = m_CurTime;
-}
-
-void GameTime::Render()
-{
-
 }
 
 void GameTime::Reset()
@@ -75,7 +60,6 @@ void GameTime::Reset()
 void GameTime::SetFont(const std::string& path)
 {
 	auto font = ServiceLocator<ResourceManager, ResourceManager>::GetService().LoadFont(path, 36);
-
 	m_pTextRenderer->SetFont(font);
 }
 

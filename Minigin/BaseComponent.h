@@ -25,9 +25,7 @@ public:
 	virtual bool ShouldCollide(b2Fixture*, b2Fixture*, Box2DComponent*, Box2DComponent*) { return true; };
 
 	GameObject* GetGameObject() const { return m_pOwner; }
-
 	const std::string& GetTag() const { return m_Tag; }
-
 	virtual void SetIsEnabled(bool value) { m_IsEnabled = value; };
 	bool GetIsEnabled() const { return m_IsEnabled; };
 

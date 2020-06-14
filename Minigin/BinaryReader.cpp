@@ -3,7 +3,6 @@
 #include <type_traits>
 #include <iostream>
 
-
 void BinaryReader::ReadString(std::string& string)
 {
 	if (file.is_open())

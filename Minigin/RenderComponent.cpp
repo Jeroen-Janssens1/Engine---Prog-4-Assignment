@@ -9,7 +9,7 @@ RenderComponent::RenderComponent(GameObject* pOwner, TransformComponent* pTransf
 	float width, float height, bool isSpriteSheet, int cellWidth, int cellHeight, int xPos, int yPos)
 	:BaseComponent{pOwner, tag}
 	,m_pTransformParent{pTransform}
-	,m_Texture{}
+	,m_pTexture{}
 	,m_IsSpriteSheet{isSpriteSheet}
 	//,m_NrCols{nrCols}
 	//,m_NrRows{nrRows}
@@ -33,16 +33,16 @@ void RenderComponent::Render() const
 {
 	if (m_IsSpriteSheet)
 	{
-		ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y,
+		ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_pTexture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y,
 			m_XPos, m_YPos, m_CellWidth, m_CellHeight, m_Width, m_Height, m_IsFlipped);
 		return;
 	}
-	ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_Texture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y, m_IsFlipped);
+	ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_pTexture, m_pTransformParent->GetPosition().x, m_pTransformParent->GetPosition().y, m_IsFlipped);
 }
 
 void RenderComponent::SetTexture(const std::string& filename)
 {
-	m_Texture = ServiceLocator<ResourceManager, ResourceManager>::GetService().LoadTexture(filename);
+	m_pTexture = ServiceLocator<ResourceManager, ResourceManager>::GetService().LoadTexture(filename);
 }
 
 void RenderComponent::SetSpritePos(int xPos, int yPos)

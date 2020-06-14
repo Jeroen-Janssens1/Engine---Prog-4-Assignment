@@ -23,7 +23,7 @@ GameObject::~GameObject()
 // use this function if you want to delete an object from a scene, never use delete yourself!
 void GameObject::Destroy()
 {
-	m_ParentScene->Remove(this);
+	m_pParentScene->Remove(this);
 }
 
 void GameObject::Update()

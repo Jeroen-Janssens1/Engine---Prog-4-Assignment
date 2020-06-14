@@ -1,6 +1,5 @@
 #include "PlayerBehaviour.h"
 #include "InputCommands.h"
-#include "glm\common.hpp"
 #include "Scene.h"
 #include "AnimatorIncludes.h"
 #include "InputManager.h"
@@ -11,7 +10,6 @@
 #include "Components.h"
 #include "ZenBehaviour.h"
 #include "Boulder.h"
-
 #include <iostream>
 
 PlayerBehaviour::PlayerBehaviour(GameObject* pOwner)
@@ -43,6 +41,7 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 	m_pRenderComp = new RenderComponent(m_pOwner, m_pTransform, "", 32, 32, true, 18, 16, 0, 0);
 	m_pOwner->AddComponent(m_pRenderComp);
 
+	// set correct texture
 	if (m_IsMaita)
 		m_pRenderComp->SetTexture("Resources/enemySheet.png");
 	else if (controllerIndx == 0)
@@ -52,6 +51,7 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 
 
 	// after setting up the render component, create all the animations you need
+	// Each animation takes a vector of b2Vec2. These are used as positions on the sprite sheet, each position representing 1 frame of the animation
 	int nrOfAnimations = 3;
 	std::vector<Animation*> animations{};
 	b2Vec2 framePos{};
@@ -71,7 +71,7 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 			framePos.y = 54;
 		}
 		framePos.x = 0;
-		// for this you first need to set up the frame positions
+		// set the frame positions up
 		for (int j{}; j < nrOfFrames; j++)
 		{
 			framePositions.push_back(framePos);
@@ -101,13 +101,11 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 	transition = new Transition(animations[0]);
 	animations[2]->AddTransition(transition);
 
-	//Make the actual animator component, this component will take care of all the deletion of the animations and transitions
+	//Make the actual animator component
 	m_pAnimator = new SpriteAnimatorComponent(m_pOwner, animations);
 	m_pOwner->AddComponent(m_pAnimator);
 
-
-	m_Tag = "Enemy";
-	// after setting up the render component, create all the animations you need
+	// set up for the second animator
 	nrOfAnimations = 4;
 	animations.clear();
 	framePos.x = 0;
@@ -131,8 +129,6 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 		}
 		else if (i == 0)
 			nrOfFrames = 1;
-
-		// for this you first need to set up the frame positions
 		for (int j{}; j < nrOfFrames; j++)
 		{
 			framePositions.push_back(framePos);
@@ -141,11 +137,8 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 			else
 				framePos.x += 21;
 		}
-		// Then you push back the new animation
 		if (i == 0)
-		{
 			animations.push_back(new Animation("Idle", m_pRenderComp, framePositions, 0.3f));
-		}
 		else if (i == 1)
 			animations.push_back(new Animation("Bubbled", m_pRenderComp, framePositions, 0.3f));
 		else if (i == 2)
@@ -153,7 +146,6 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 		else if (i == 3)
 			animations.push_back(new Animation("Walking", m_pRenderComp, framePositions, 0.25f));
 	}
-	// now you need to set up the transitions
 	transition = new Transition(animations[3], true, false, "Walking");
 	animations[0]->AddTransition(transition);
 	transition = new Transition(animations[0], true, false, "Still");
@@ -166,16 +158,12 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 	transition = new Transition(animations[1], true, false, "Bubbled");
 	animations[3]->AddTransition(transition);
 	animations[0]->AddTransition(transition);
-		
-
-	//Make the actual animator component, this component will take care of all the deletion of the animations and transitions
 	m_pMaitaAnimator = new SpriteAnimatorComponent(m_pOwner, animations);
 	m_pOwner->AddComponent(m_pMaitaAnimator);
 
+	// select the correct animator
 	if (m_IsMaita)
-	{
 		m_pAnimator->SetIsEnabled(false);
-	}
 	else
 		m_pMaitaAnimator->SetIsEnabled(false);
 
@@ -187,7 +175,6 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 	m_pInput->MapCommand(controllerIndx, ControllerButton::DPadUp, new MoveUpCommand(this), true);
 	m_pInput->MapCommand(controllerIndx, ControllerButton::DPadDown, new MoveDownCommand(this));
 	m_pInput->MapCommand(controllerIndx, ControllerButton::ButtonB, new AttackCommand(this), true);
-
 	// Keyboard Input
 	if (controllerIndx == 0)
 	{
@@ -205,18 +192,13 @@ void PlayerBehaviour::Initialize(InputManager* pInput, b2World* pPhysicsWorld, u
 		m_pInput->MapCommand(VK_DOWN, new MoveDownCommand(this));
 		m_pInput->MapCommand(VK_RSHIFT, new AttackCommand(this));
 	}
-
 	m_pBox2D = new Box2DComponent(m_pOwner, m_pTransform, pPhysicsWorld, 
 		m_pRenderComp->GetWidth() - 10.f, m_pRenderComp->GetHeight(), "FootSensor", 1.f, 2.f, true, b2Vec2(0.f, 0.f), false, true);
 	m_pOwner->AddComponent(m_pBox2D);
-
 	// add footsensor fixture to this body
 	m_pBox2D->AddFixture(m_pRenderComp->GetWidth() - 16.f, 8.f, 0.f, 0.f, b2Vec2(0.f, (m_pRenderComp->GetHeight() / 2.f) + 4.f), true);
-
 	m_pBox2D->SetCollisionCallbackScript(this);
-
 	m_pSubject = new SubjectComponent(m_pOwner);
-
 	m_pOwner->AddComponent(m_pSubject);
 }
 
@@ -227,7 +209,7 @@ void PlayerBehaviour::Update()
 		m_AttackTimer += m_GameTime.GetElapsed();
 	}
 
-	if (m_pMaitaAnimator->GetCurrentStateName() == "Bubbled" && m_IsMaita)
+	if (m_pMaitaAnimator->GetCurrentStateName() == "Bubbled" && m_IsMaita) // Versus Game Mode
 	{
 		m_pMaitaAnimator->ResetTrigger("Still");
 		m_pBox2D->SetVelocity(0.f, 0.f);
@@ -259,14 +241,8 @@ void PlayerBehaviour::Update()
 	if (!m_pBox2D->GetIsEnabled())
 	{
 		// re-enable physics and respawn the player
-		//m_pTransform->SetPosition(m_SpawnPos.x, m_SpawnPos.y, 0.f);
 		m_pBox2D->SetIsEnabled(true);
 		m_pBox2D->SetPosition(m_SpawnPos.x, m_SpawnPos.y);
-	}
-
-	if (m_Vel.x > m_Speed)
-	{
-		m_Vel.x = m_Speed;
 	}
 
 	std::string trigger = "Still";
@@ -295,10 +271,8 @@ void PlayerBehaviour::Update()
 	m_Vel.x = 0;
 	if (curVel.y > 0.2f)
 		m_IgnoreCollisions = false;
-
 	if (m_NrOfOverlappers == 0)
 		m_IsDropping = false;
-
 }
 
 void PlayerBehaviour::OnLoad()
@@ -310,8 +284,10 @@ void PlayerBehaviour::MoveUp()
 {
 	b2Vec2 vel{};
 	m_pBox2D->GetVelocity(vel);
+	// only jump if grounded and not already going up (negative y means up)
 	if (m_FootSensorCounter != 0 && vel.y >= -0.1)
 	{
+		SoundService.EditSound(1, SoundManager::Action::Play, 0, false);
 		m_JumpForce = b2Vec2(0.f, -600.f);
 		m_IgnoreCollisions = true;
 	}
@@ -350,6 +326,7 @@ void PlayerBehaviour::Attack()
 		return;
 	if (m_AttackTimer >= m_AttackCooldown)
 	{
+		SoundService.EditSound(2, SoundManager::Action::Play, 0, false);
 		if(!m_IsMaita)
 			SpawnBubble();
 		else
@@ -379,7 +356,6 @@ void PlayerBehaviour::SpawnBubble()
 	go->AddComponent(bubble);
 	collider->SetPosition(m_pTransform->GetPosition().x, m_pTransform->GetPosition().y);
 	collider->SetCollisionCallbackScript(bubble);
-	
 	SceneService.GetActiveScene()->Add(go);
 }
 void PlayerBehaviour::ThrowBoulder()
@@ -390,7 +366,7 @@ void PlayerBehaviour::ThrowBoulder()
 	m_AttackTimer = 0;
 	float spawnVel = 1;
 	// spawn a bubble in the current facing direction
-	if (!m_pRenderComp->GetIsFlipped()) // if flipped, left direction
+	if (!m_pRenderComp->GetIsFlipped()) // if not flipped, left direction
 	{
 		spawnVel = -1;
 	}
@@ -416,33 +392,33 @@ void PlayerBehaviour::ThrowBoulder()
 // Once the two fixtures/collision boxes get seperated again the OnContactEnd functions gets called
 
 // OnContactBegin and End are used for checking if we are grounded and should be allowed to jump or not
-void PlayerBehaviour::OnContactBegin(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other)
+void PlayerBehaviour::OnContactBegin(b2Contact* pContact, Box2DComponent* pthisCollider, Box2DComponent* pOther)
 {
-	Box2DComponent* collider1 = static_cast<Box2DComponent*>(contact->GetFixtureA()->GetUserData());
-	Box2DComponent* collider2 = static_cast<Box2DComponent*>(contact->GetFixtureB()->GetUserData());
+	Box2DComponent* collider1 = static_cast<Box2DComponent*>(pContact->GetFixtureA()->GetUserData());
+	Box2DComponent* collider2 = static_cast<Box2DComponent*>(pContact->GetFixtureB()->GetUserData());
 	b2Fixture* fixture = nullptr;
 	b2Fixture* otherFixture = nullptr;
-	if (collider1 == thisCollider)
+	if (collider1 == pthisCollider)
 	{
-		fixture = contact->GetFixtureA();
-		otherFixture = contact->GetFixtureB();
+		fixture = pContact->GetFixtureA();
+		otherFixture = pContact->GetFixtureB();
 	}
 	else
 	{
-		fixture = contact->GetFixtureB();
-		otherFixture = contact->GetFixtureA();
+		fixture = pContact->GetFixtureB();
+		otherFixture = pContact->GetFixtureA();
 	}
-	if (fixture->IsSensor() && (other->GetGameObject()->GetTag() == "TileMap" || other->GetGameObject()->GetTag() == "LevelEdge"))
+	if (fixture->IsSensor() && (pOther->GetGameObject()->GetTag() == "TileMap" || pOther->GetGameObject()->GetTag() == "LevelEdge"))
 		IncrementFootCounter();
 
-	if (!fixture->IsSensor() && other->GetGameObject()->GetTag() == "TileMap")
+	if (!fixture->IsSensor() && pOther->GetGameObject()->GetTag() == "TileMap")
 		m_NrOfOverlappers++;
 
 	// handle collisions with enemies appropriately
-	if (other->GetGameObject()->GetTag() == "Enemy" && !fixture->IsSensor() && !m_IsMaita)
+	if (pOther->GetGameObject()->GetTag() == "Enemy" && !fixture->IsSensor() && !m_IsMaita)
 	{
-		ZenBehaviour* enemy = other->GetGameObject()->GetComponent<ZenBehaviour>("Enemy");
-		PlayerBehaviour* playerEnemy = other->GetGameObject()->GetComponent<PlayerBehaviour>();
+		ZenBehaviour* enemy = pOther->GetGameObject()->GetComponent<ZenBehaviour>("Enemy");
+		PlayerBehaviour* playerEnemy = pOther->GetGameObject()->GetComponent<PlayerBehaviour>();
 		if (enemy)
 		{
 			if (!otherFixture->IsSensor())
@@ -466,7 +442,7 @@ void PlayerBehaviour::OnContactBegin(b2Contact* contact, Box2DComponent* thisCol
 				}
 			}
 		}
-		else if (other->GetGameObject()->GetComponent<Boulder>() && !m_IsHit)
+		else if (pOther->GetGameObject()->GetComponent<Boulder>() && !m_IsHit)
 		{
 			// make sure player gets taken out of the physics emulation, play death animation, remove 1 life
 			m_IsHit = true;
@@ -477,7 +453,7 @@ void PlayerBehaviour::OnContactBegin(b2Contact* contact, Box2DComponent* thisCol
 				m_pSubject->Notify(m_pOwner, Event::LivesUpdate);
 			}
 		}
-		else if (playerEnemy)
+		else if (playerEnemy) // Versus specific code
 		{
 			if (!otherFixture->IsSensor())
 			{
@@ -506,57 +482,55 @@ void PlayerBehaviour::OnContactBegin(b2Contact* contact, Box2DComponent* thisCol
 			}
 		}
 	}
-
 }
 
-void PlayerBehaviour::OnContactEnd(b2Contact* contact, Box2DComponent* thisCollider, Box2DComponent* other)
+void PlayerBehaviour::OnContactEnd(b2Contact* pContact, Box2DComponent* pThisCollider, Box2DComponent* pOther)
 {
-	Box2DComponent* collider1 = static_cast<Box2DComponent*>(contact->GetFixtureA()->GetUserData());
-	Box2DComponent* collider2 = static_cast<Box2DComponent*>(contact->GetFixtureB()->GetUserData());
+	Box2DComponent* collider1 = static_cast<Box2DComponent*>(pContact->GetFixtureA()->GetUserData());
+	Box2DComponent* collider2 = static_cast<Box2DComponent*>(pContact->GetFixtureB()->GetUserData());
 	b2Fixture* fixture = nullptr;
-	if (collider1 == thisCollider)
-		fixture = contact->GetFixtureA();
+	if (collider1 == pThisCollider)
+		fixture = pContact->GetFixtureA();
 	else
-		fixture = contact->GetFixtureB();
-	if (fixture->IsSensor() && (other->GetGameObject()->GetTag() == "TileMap" || other->GetGameObject()->GetTag() == "LevelEdge"))
+		fixture = pContact->GetFixtureB();
+	if (fixture->IsSensor() && (pOther->GetGameObject()->GetTag() == "TileMap" || pOther->GetGameObject()->GetTag() == "LevelEdge"))
 		DecrementFootCounter();
 
-	if (!fixture->IsSensor() && other->GetGameObject()->GetTag() == "TileMap")
+	if (!fixture->IsSensor() && pOther->GetGameObject()->GetTag() == "TileMap")
 	{
 		m_NrOfOverlappers--;
 	}
 }
 
 // used for dropping down through platforms as longs as the down button is pressed
-void PlayerBehaviour::PreSolve(b2Contact* contact, const b2Manifold* manifold, Box2DComponent* thisCollider, Box2DComponent* other)
+void PlayerBehaviour::PreSolve(b2Contact* pContact, const b2Manifold* pManifold, Box2DComponent* pThisCollider, Box2DComponent* pOther)
 {
-	Box2DComponent* collider1 = static_cast<Box2DComponent*>(contact->GetFixtureA()->GetUserData());
-	Box2DComponent* collider2 = static_cast<Box2DComponent*>(contact->GetFixtureB()->GetUserData());
+	Box2DComponent* collider1 = static_cast<Box2DComponent*>(pContact->GetFixtureA()->GetUserData());
+	Box2DComponent* collider2 = static_cast<Box2DComponent*>(pContact->GetFixtureB()->GetUserData());
 	b2Fixture* fixture = nullptr;
-	if (collider1 == thisCollider)
-		fixture = contact->GetFixtureA();
+	if (collider1 == pThisCollider)
+		fixture = pContact->GetFixtureA();
 	else
-		fixture = contact->GetFixtureB();
-	if (!fixture->IsSensor() && other->GetGameObject()->GetTag() == "TileMap" && m_IsDropping)
+		fixture = pContact->GetFixtureB();
+	if (!fixture->IsSensor() && pOther->GetGameObject()->GetTag() == "TileMap" && m_IsDropping)
 	{
-		contact->SetEnabled(false);
+		pContact->SetEnabled(false);
 	}
 }
 
 // used for one way platform (jumping through them)
-bool PlayerBehaviour::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB, Box2DComponent* thisCollider, Box2DComponent* other)
+bool PlayerBehaviour::ShouldCollide(b2Fixture* pFixtureA, b2Fixture* pFixtureB, Box2DComponent* pThisCollider, Box2DComponent* pOther)
 {
-	Box2DComponent* collider1 = static_cast<Box2DComponent*>(fixtureA->GetUserData());
-	Box2DComponent* collider2 = static_cast<Box2DComponent*>(fixtureB->GetUserData());
+	Box2DComponent* collider1 = static_cast<Box2DComponent*>(pFixtureA->GetUserData());
+	Box2DComponent* collider2 = static_cast<Box2DComponent*>(pFixtureB->GetUserData());
 	b2Fixture* fixture = nullptr;
-	if (collider1 == thisCollider)
-		fixture = fixtureA;
+	if (collider1 == pThisCollider)
+		fixture = pFixtureA;
 	else
-		fixture = fixtureB;
-
+		fixture = pFixtureB;
 	if (!fixture->IsSensor()) // ignore the foot sensor for this
 	{
-		if (m_IgnoreCollisions && other->GetGameObject()->GetTag() == "TileMap")
+		if (m_IgnoreCollisions && pOther->GetGameObject()->GetTag() == "TileMap")
 			return false;
 	}
 
@@ -606,4 +580,13 @@ void PlayerBehaviour::Hit()
 	m_pMaitaAnimator->SetTrigger("Bubbled");
 	m_BubbledTimer = 0.f;
 	m_IsBubbled = true;
+}
+
+void PlayerBehaviour::SetLives(unsigned int value)
+{
+	m_Lives = value; m_pSubject->Notify(m_pOwner, Event::LivesUpdate);
+}
+void PlayerBehaviour::SetScore(unsigned int value)
+{ 
+	m_Score = value; m_pSubject->Notify(m_pOwner, Event::ScoreUpdate);
 }

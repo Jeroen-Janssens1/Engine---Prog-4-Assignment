@@ -3,24 +3,19 @@
 #include "ServiceLocator.h"
 class Command
 {
-protected:
-	void (*Function)();
-
 public:
 	virtual ~Command() = default;
 	virtual bool Execute() = 0;
-	virtual void SetFunction(void (*function)())
-	{
-		Function = function;
-	}
 };
 
+// empty command
 class NullCommand : public Command
 {
 public:
 	bool Execute() override { return true; }
 };
 
+// empty command that returns false
 class QuitCommand : public Command
 {
 public:

@@ -76,7 +76,6 @@ void SoundManager::SetAllVolume(int volume)
 
 void SoundManager::AdjustSoundStream(SoundStream* pSoundStream, Action action) const
 {
-	SoundEffect sound{""};
 	if (pSoundStream->IsLoaded())
 	{
 		switch (action)

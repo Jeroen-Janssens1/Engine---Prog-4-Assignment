@@ -12,11 +12,8 @@ public:
 	virtual void Exit();
 
 	virtual bool HandleTransitions(State** newState);
-
 	const std::vector<Transition*>& GetTransitions() const { return m_pTransitions; }
-
 	const std::string& GetName() const { return m_Name; }
-
 	// push_back if the transition isn't already present in the state
 	void AddTransition(Transition* pTransition) { if(std::find(m_pTransitions.cbegin(), m_pTransitions.cend(), pTransition) == m_pTransitions.cend())
 		m_pTransitions.push_back(pTransition); };

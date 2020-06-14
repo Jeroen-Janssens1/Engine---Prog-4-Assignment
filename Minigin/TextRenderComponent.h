@@ -15,27 +15,27 @@ public:
 		SDL_Color color = SDL_Color{255, 255, 255}, const std::string& tag = "");
 	virtual ~TextRenderComponent();
 
+	TextRenderComponent(const TextRenderComponent&) = delete;
+	TextRenderComponent(TextRenderComponent&&) = delete;
+	TextRenderComponent& operator=(const TextRenderComponent&) = delete;
+	TextRenderComponent& operator=(TextRenderComponent&&) = delete;
+
 	void Update() override;
 	void Render() const override;
 	void OnLoad() override {}
 
 	void SetText(const std::string& text);
-
-	void SetFont(Font* font) { m_Font = font; m_NeedsUpdate = true; }
-
-	void SetFontSize(unsigned int size) { m_Font->SetSize(size); m_NeedsUpdate = true; }
-
+	void SetFont(Font* font) { m_pFont = font; m_NeedsUpdate = true; }
+	void SetFontSize(unsigned int size) { m_pFont->SetSize(size); m_NeedsUpdate = true; }
 	void SetColor(SDL_Color color) { m_Color = color; m_NeedsUpdate = true; }
 	
 
 protected:
 	bool m_NeedsUpdate;
 	std::string m_Text;
-	Font* m_Font;
-
-	Texture2D* m_Texture;
+	Font* m_pFont;
+	Texture2D* m_pTexture;
 	TransformComponent* m_pTransformParent;
-
 	SDL_Color m_Color;
 
 };

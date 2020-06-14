@@ -7,24 +7,27 @@ class Texture2D;
 class GameObject final
 {
 public:
+	GameObject(const std::string& tag = "");
+	virtual ~GameObject();
+
+	GameObject(const GameObject& other) = delete;
+	GameObject(GameObject&& other) = delete;
+	GameObject& operator=(const GameObject& other) = delete;
+	GameObject& operator=(GameObject&& other) = delete;
+
 	virtual void Update();
 	virtual void Render() const;
-
-	void AddComponent(BaseComponent* pComponent);
-
 	void OnLoad();
 
+	void AddComponent(BaseComponent* pComponent);
 	const std::string& GetTag() const { return m_Tag; }
-
 	bool GetIsEnabled() const { return m_IsEnabled; }
 	void SetIsEnabled(bool value) { m_IsEnabled = value; }
-
 	void SetIndx(int value) { m_Indx = value; }
-	void SetParentScene(Scene* value) { m_ParentScene = value; }
-
+	void SetParentScene(Scene* value) { m_pParentScene = value; }
 	void SetTag(const std::string& value) { m_Tag = value; }
 		
-	// This function is extremely slow! Do not use it in update and drawing/rendering functions!
+	// This function is  slow because of the dynamic casting! Do not use it in update and drawing/rendering functions unless absolutely necessary!
 	template<typename T>
 	T* GetComponent(const std::string& tag = "") const
 	{
@@ -36,18 +39,10 @@ public:
 		}
 		return nullptr;
 	}
-
 	void Destroy();
 
-	GameObject(const std::string& tag = "");
-	virtual ~GameObject();
-	GameObject(const GameObject& other) = delete;
-	GameObject(GameObject&& other) = delete;
-	GameObject& operator=(const GameObject& other) = delete;
-	GameObject& operator=(GameObject&& other) = delete;
-
 private:
-	Scene* m_ParentScene;
+	Scene* m_pParentScene;
 	std::vector<BaseComponent*> m_Components;
 	std::string m_Tag;
 	bool m_IsEnabled;

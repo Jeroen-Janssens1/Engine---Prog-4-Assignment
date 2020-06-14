@@ -6,8 +6,6 @@ class PhysicsContactListener : public b2ContactListener
 {
     void BeginContact(b2Contact* contact) override
     {
-        //check if fixture A was the foot sensor
-        // we know for a fact that user data is always a Box2DComponent pointer
         Box2DComponent* collider1 = static_cast<Box2DComponent*>(contact->GetFixtureA()->GetUserData());
         Box2DComponent* collider2 = static_cast<Box2DComponent*>(contact->GetFixtureB()->GetUserData());
         if (collider1->GetCollisionCallbackScript())

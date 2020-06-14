@@ -4,25 +4,6 @@
 #include "SoundManager.h"
 #include "PlayerBehaviour.h"
 #include "MainMenu.h"
- ////////////////////////////////////
-// Only for debugging purposes
-class NextSceneCommand : public Command
-{
-private:
-	static int index;
-	void NextScene()
-	{
-		//ServiceLocator::GetAudio().Playsound(0);
-		ServiceLocator<SceneManager, SceneManager>::GetService().SetActiveScene(index);
-		index = (index + 1) % ServiceLocator<SceneManager, SceneManager>::GetService().GetAmountOfScenes();
-	}
-
-public:
-	bool Execute() override { NextScene(); return true; }
-};
- // Debugging commands end here
-//////////////////////////////////////
-
 class AttackCommand : public Command
 {
 public:
@@ -88,13 +69,13 @@ class MenuSelectUpCommand : public Command
 {
 public:
 	MenuSelectUpCommand(MainMenu* menu)
-		:m_Menu{menu}
+		:m_pMenu{menu}
 	{
 	}
-	bool Execute() override { m_Menu->SelectUp(); return true; }
+	bool Execute() override { m_pMenu->SelectUp(); return true; }
 
 private:
-	MainMenu* m_Menu;
+	MainMenu* m_pMenu;
 
 };
 
@@ -102,13 +83,13 @@ class MenuSelectDownCommand : public Command
 {
 public:
 	MenuSelectDownCommand(MainMenu* menu)
-		:m_Menu{ menu }
+		:m_pMenu{ menu }
 	{
 	}
-	bool Execute() override { m_Menu->SelectDown(); return true; }
+	bool Execute() override { m_pMenu->SelectDown(); return true; }
 
 private:
-	MainMenu* m_Menu;
+	MainMenu* m_pMenu;
 
 };
 
@@ -116,12 +97,12 @@ class MenuConfirmSelectionCommand : public Command
 {
 public:
 	MenuConfirmSelectionCommand(MainMenu* menu)
-		:m_Menu{ menu }
+		:m_pMenu{ menu }
 	{
 	}
-	bool Execute() override { return m_Menu->ConfirmSelection(); }
+	bool Execute() override { return m_pMenu->ConfirmSelection(); }
 
 private:
-	MainMenu* m_Menu;
+	MainMenu* m_pMenu;
 
 };

@@ -16,8 +16,8 @@ public:
 	SubjectComponent& operator=(SubjectComponent&& other) = delete;
 
 	void Notify(const GameObject* go, Event event);
-	void AddObserver(ObserverComponent* observer);
-	void RemoveObserver(ObserverComponent* observer);
+	void AddObserver(ObserverComponent* pObserver);
+	void RemoveObserver(ObserverComponent* pObserver);
 
 	void Update() override {}
 	void Render() const override {}
@@ -25,9 +25,5 @@ public:
 
 protected:
 	std::list<ObserverComponent*> m_Observers;
-
-private:
-
-
 };
 

@@ -7,31 +7,27 @@
 #include "Renderer.h"
 #include "TransformComponent.h"
 #include "Texture2D.h"
-
-
 TextRenderComponent::TextRenderComponent(GameObject* pOwner, TransformComponent* pTransform, const std::string& text, Font* font,
 	SDL_Color color, const std::string& tag)
 	:BaseComponent{pOwner, tag}
 	,m_Text{text}
-	,m_Font{font}
+	,m_pFont{font}
 	,m_NeedsUpdate{true}
 	,m_pTransformParent{pTransform}
 	,m_Color{color}
 {
-	
 }
 
 TextRenderComponent::~TextRenderComponent()
 {
-	delete m_Texture;
-
+	delete m_pTexture;
 }
 
 void TextRenderComponent::Update()
 {
 	if (m_NeedsUpdate)
 	{
-		const auto surf = TTF_RenderText_Blended(m_Font->GetFont() , m_Text.c_str(), m_Color);
+		const auto surf = TTF_RenderText_Blended(m_pFont->GetFont() , m_Text.c_str(), m_Color);
 		if (surf == nullptr)
 		{
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
@@ -42,22 +38,22 @@ void TextRenderComponent::Update()
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 		}
 		SDL_FreeSurface(surf);
-		if (m_Texture)
+		if (m_pTexture)
 		{
-			delete m_Texture;
-			m_Texture = nullptr;
+			delete m_pTexture;
+			m_pTexture = nullptr;
 		}
-		m_Texture = new Texture2D(texture, "");
+		m_pTexture = new Texture2D(texture, "");
 		m_NeedsUpdate = false;
 	}
 }
 
 void TextRenderComponent::Render() const
 {
-	if (m_Texture != nullptr)
+	if (m_pTexture != nullptr)
 	{
 		const auto pos = m_pTransformParent->GetPosition();
-		ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_Texture, pos.x, pos.y);
+		ServiceLocator<Renderer, Renderer>::GetService().RenderTexture(*m_pTexture, pos.x, pos.y);
 	}
 }
 

@@ -8,19 +8,16 @@ class TextRenderComponent;
 class MainMenu : public BaseComponent
 {
 public:
-	MainMenu(GameObject* pOwner, Scene* scene);
+	MainMenu(GameObject* pOwner, Scene* pScene);
+	~MainMenu() = default;
 
-	void Initialize(int width, int height, Font* font);
-
+	void Initialize(int width, int height, Font* pFont);
 	void Update() override;
-
 	void Render() const override;
-
 	void OnLoad() override;
 
 	void SelectUp();
 	void SelectDown();
-
 	bool ConfirmSelection();
 
 private:
@@ -35,9 +32,9 @@ private:
 	void MoveSelector();
 
 	Buttons m_SelectedButton;
-	Scene* m_Scene;
+	Scene* m_pScene;
 	std::vector<TransformComponent*> m_Buttons;
 	std::vector<TextRenderComponent*> m_ButtonRenders;
-	TransformComponent* m_SelectionIcon;
+	TransformComponent* m_pSelectionIcon;
 };
 

@@ -19,16 +19,16 @@ void SubjectComponent::Notify(const GameObject* go, Event event)
 		observer->onNotify(go, event);
 }
 
-void SubjectComponent::AddObserver(ObserverComponent* observer)
+void SubjectComponent::AddObserver(ObserverComponent* pObserver)
 {
-	if (std::find(m_Observers.cbegin(), m_Observers.cend(), observer) == m_Observers.cend())
+	if (std::find(m_Observers.cbegin(), m_Observers.cend(), pObserver) == m_Observers.cend())
 	{
-		m_Observers.push_back(observer);
-		observer->AddSubject(this);
+		m_Observers.push_back(pObserver);
+		pObserver->AddSubject(this);
 	}
 }
 
-void SubjectComponent::RemoveObserver(ObserverComponent* observer)
+void SubjectComponent::RemoveObserver(ObserverComponent* pObserver)
 {
-	m_Observers.remove(observer);
+	m_Observers.remove(pObserver);
 }
