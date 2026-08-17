@@ -11,7 +11,14 @@ it properly again in this README file although that won't be likely to happen so
 
 The Minigin folder holds the actual core engine. The Game folder holds a game that I made using the engine that is fully playable as a proof of functionality for the engine / framework.
 
-Side note: The multithreading implementation is basically non-functional in this project, everything else does work though. This essentially means that preformance of games running on this engine could be better. 
+The two build folders hold everything you need to play the example game I made using this framework.
+
+## Controls for the game:
+- Move: wasd
+- Shoot: spacebar
+
+## Side Note
+The multithreading implementation is basically non-functional in this project, everything else does work though. This essentially means that preformance of games running on this engine could be better. 
 Should still be more than fine enough for smaller 2D games though.
 I'm unlikely to return to this project to try and fix the multithreading though as I have other projects I'm currently working on. Maybe someday I'll update this with a graphical user interface and fix the multithreading. 
 For now though this project is permanetly on hold.
